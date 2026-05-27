@@ -1,0 +1,2993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Biology Cohort // SI Leader Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,300..800&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+
+  /* ====== VIEW SWITCHING ====== */
+  .view { display: none; }
+  .view.active { display: block; }
+  .view-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--cream);
+    opacity: 0.7;
+    padding: 0;
+  }
+  .view-back:hover { opacity: 1; }
+
+
+  :root {
+    --bg: #1A1715;
+    --cream: #F2E6CE;
+    --cream-2: #E8D9BD;
+    --cream-3: #F8EFDB;
+    --ink: #1A1715;
+    --pink: #F2A88E;
+    --pink-light: #F8C7B3;
+    --pink-deep: #E8896A;
+    --display: "Bricolage Grotesque", "Helvetica Neue", sans-serif;
+    --body: "Archivo", -apple-system, BlinkMacSystemFont, sans-serif;
+    --mono: "JetBrains Mono", "SF Mono", monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: var(--bg);
+    color: var(--cream);
+    font-family: var(--body);
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+  body {
+    background-image:
+      radial-gradient(circle at 12% 8%, rgba(242, 168, 142, 0.05) 0%, transparent 35%),
+      radial-gradient(circle at 88% 92%, rgba(242, 168, 142, 0.04) 0%, transparent 38%);
+    padding: 22px 20px 28px;
+  }
+  .page { max-width: 1240px; margin: 0 auto; }
+
+  /* ====== TOP STRIP ====== */
+  .top-strip {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--cream-2);
+    opacity: 0.55;
+  }
+  .top-strip .left { display: flex; gap: 14px; }
+  .blink::after {
+    content: "_";
+    margin-left: 2px;
+    animation: blink 1.1s steps(2) infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* ====== OUTER WINDOW ====== */
+  .window {
+    background: var(--cream);
+    color: var(--ink);
+    border: 2.5px solid var(--ink);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 7px 7px 0 0 var(--pink);
+  }
+  .win-bar {
+    background: var(--cream);
+    border-bottom: 2.5px solid var(--ink);
+    padding: 9px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+  }
+  .win-dots { display: flex; gap: 6px; }
+  .win-dots span {
+    width: 11px; height: 11px;
+    border-radius: 50%;
+    border: 1.5px solid var(--ink);
+    background: var(--cream);
+  }
+  .win-bar .title { font-weight: 500; }
+  .win-bar .right { display: flex; gap: 10px; align-items: center; }
+  .win-bar .right span {
+    width: 11px; height: 11px;
+    border: 1.5px solid var(--ink);
+    display: inline-block;
+  }
+  .win-bar .right .circle { border-radius: 50%; }
+
+  /* ====== HEADER STRIP ====== */
+  .header {
+    padding: 18px 24px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 22px;
+    align-items: center;
+    border-bottom: 2.5px solid var(--ink);
+    background: var(--cream);
+    position: relative;
+  }
+  .header-id { display: flex; align-items: center; gap: 16px; }
+  .header-mark {
+    width: 54px; height: 54px;
+    background: var(--ink);
+    color: var(--pink);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 26px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    font-variation-settings: "wdth" 78;
+    flex-shrink: 0;
+  }
+  .header-title {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 38px;
+    line-height: 0.95;
+    letter-spacing: -0.025em;
+    text-transform: uppercase;
+    font-variation-settings: "wdth" 80, "opsz" 48;
+    margin-bottom: 4px;
+  }
+  .header-meta {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    color: var(--ink);
+    opacity: 0.65;
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .header-meta b { font-weight: 500; opacity: 0.8; }
+  .header-right { text-align: right; }
+  .week-pill {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: 6px;
+  }
+  .week-pill .dot {
+    width: 6px; height: 6px;
+    background: var(--pink);
+    border-radius: 50%;
+    animation: pulse 2.5s infinite;
+  }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+  .next-meet {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    opacity: 0.7;
+  }
+
+  /* ====== MAIN DASHBOARD GRID ====== */
+  /* ====== STATUS ROW (announcement + upcoming) ====== */
+  .status-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border-bottom: 2.5px solid var(--ink);
+  }
+  .status-row .side-block:first-child {
+    padding: 18px 22px;
+    border-right: 2.5px solid var(--ink);
+  }
+  .status-row .side-block:last-child {
+    padding: 18px 22px;
+  }
+
+  /* ====== TILES (full width) ====== */
+  .tiles {
+    padding: 20px 22px;
+    border-bottom: 2.5px solid var(--ink);
+  }
+  .tiles-h {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    opacity: 0.6;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .tiles-h::before, .tiles-h::after {
+    content: "";
+    flex: 0 0 16px;
+    height: 1px;
+    background: var(--ink);
+    opacity: 0.3;
+  }
+  .tiles-h::after { flex: 1; }
+  .tiles-h::before { flex: 0; }
+  .tile-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+  }
+  .tile {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-decoration: none;
+    color: var(--ink);
+    background: var(--cream-3);
+    border: 2px solid var(--ink);
+    border-radius: 5px;
+    padding: 12px 13px 12px;
+    cursor: pointer;
+    transition: transform 0.12s, box-shadow 0.12s;
+    min-height: 130px;
+    position: relative;
+    box-shadow: 3px 3px 0 0 var(--ink);
+  }
+  .tile:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 5px 5px 0 0 var(--pink-deep);
+  }
+  .tile.featured {
+    background: var(--pink);
+    box-shadow: 3px 3px 0 0 var(--ink);
+  }
+  .tile.featured:hover { box-shadow: 5px 5px 0 0 var(--ink); }
+  .tile.coming {
+    background: var(--cream-2);
+    opacity: 0.55;
+    cursor: not-allowed;
+    box-shadow: 2px 2px 0 0 var(--ink);
+  }
+  .tile.coming:hover { transform: none; box-shadow: 2px 2px 0 0 var(--ink); }
+
+  .tile-cat {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink);
+    opacity: 0.7;
+    margin-bottom: 4px;
+  }
+  .tile.featured .tile-cat { opacity: 0.85; }
+  .tile-name {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 0.98;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    font-variation-settings: "wdth" 78, "opsz" 28;
+    margin-bottom: 6px;
+  }
+  .tile-sub {
+    font-size: 11.5px;
+    line-height: 1.4;
+    opacity: 0.78;
+  }
+  .tile-go {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .tile-go .arr { font-size: 13px; }
+  .tile-num {
+    position: absolute;
+    top: 8px; right: 11px;
+    font-family: var(--mono);
+    font-size: 9px;
+    opacity: 0.4;
+  }
+
+  /* ====== RIGHT SIDEBAR ====== */
+  .safety-bar {
+    padding: 18px 22px;
+  }
+  .side-block {
+    display: flex;
+    flex-direction: column;
+  }
+  .side-h {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    opacity: 0.6;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .side-h .accent { color: var(--pink-deep); opacity: 1; font-weight: 500; }
+
+  /* Announcement card */
+  .announce {
+    background: var(--pink);
+    border: 2px solid var(--ink);
+    border-radius: 5px;
+    padding: 12px 14px;
+    box-shadow: 3px 3px 0 0 var(--ink);
+  }
+  .announce-eyebrow {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    color: var(--ink);
+    opacity: 0.75;
+  }
+  .announce-title {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 1.05;
+    letter-spacing: -0.015em;
+    margin-bottom: 3px;
+    font-variation-settings: "wdth" 84;
+  }
+  .announce-meta { font-size: 11.5px; line-height: 1.45; }
+
+  /* Upcoming list */
+  .upcoming-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .upcoming-row {
+    display: grid;
+    grid-template-columns: 60px 1fr auto;
+    gap: 10px;
+    align-items: center;
+    padding: 7px 10px;
+    background: var(--cream-3);
+    border: 1.5px solid var(--ink);
+    border-radius: 4px;
+  }
+  .upcoming-row .when {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: var(--ink);
+    color: var(--cream);
+    padding: 3px 6px;
+    border-radius: 3px;
+    text-align: center;
+    font-weight: 500;
+  }
+  .upcoming-row .label {
+    font-size: 12.5px;
+    line-height: 1.2;
+  }
+  .upcoming-row .label b {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: -0.01em;
+    display: block;
+    margin-bottom: 1px;
+    font-variation-settings: "wdth" 88;
+  }
+  .upcoming-row .countdown {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    opacity: 0.65;
+  }
+
+  /* Safety panel */
+  .safety {
+    background: var(--ink);
+    color: var(--cream);
+    border: 2px solid var(--ink);
+    border-radius: 5px;
+    padding: 12px 14px;
+    box-shadow: 3px 3px 0 0 var(--pink);
+  }
+  .safety-h {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+  }
+  .safety-h .icon {
+    width: 22px; height: 22px;
+    background: var(--pink);
+    color: var(--ink);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+  .safety-h .title {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    font-variation-settings: "wdth" 84;
+  }
+  .safety-blurb {
+    font-size: 11px;
+    opacity: 0.7;
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+  .safety-rows { display: flex; flex-direction: column; gap: 6px; }
+  .safety-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 10px;
+    background: rgba(242, 230, 206, 0.08);
+    border: 1px solid rgba(242, 168, 142, 0.3);
+    border-radius: 3px;
+    text-decoration: none;
+    color: var(--cream);
+    transition: background 0.15s;
+  }
+  .safety-row:hover { background: rgba(242, 168, 142, 0.15); border-color: var(--pink); }
+  .safety-row .name {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 12.5px;
+    letter-spacing: -0.005em;
+    text-transform: uppercase;
+    font-variation-settings: "wdth" 88;
+  }
+  .safety-row .meta {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.04em;
+    opacity: 0.7;
+  }
+  .safety-row .arr { font-family: var(--mono); font-size: 11px; }
+
+  /* ====== FOOTER LINKS ====== */
+  .links-bar {
+    border-top: 2.5px solid var(--ink);
+    background: var(--cream-2);
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .links-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    opacity: 0.6;
+    margin-right: 2px;
+  }
+  .qlink {
+    font-family: var(--body);
+    font-size: 11.5px;
+    font-weight: 500;
+    padding: 5px 11px;
+    border: 1.5px solid var(--ink);
+    border-radius: 18px;
+    background: var(--cream);
+    color: var(--ink);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    transition: background 0.12s, color 0.12s;
+  }
+  .qlink:hover {
+    background: var(--ink);
+    color: var(--cream);
+  }
+  .qlink .arr { font-family: var(--mono); font-size: 10px; }
+
+  /* ====== RESPONSIVE ====== */
+  @media (max-width: 1020px) {
+    /* Layout already stacks vertically by default; no override needed. */
+  }
+  @media (max-width: 720px) {
+    body { padding: 16px 12px 20px; font-size: 13.5px; }
+    .header { padding: 14px 16px; grid-template-columns: 1fr; }
+    .header-right { text-align: left; }
+    .header-title { font-size: 30px; }
+    .header-mark { width: 44px; height: 44px; font-size: 22px; }
+    .tile-grid { grid-template-columns: 1fr 1fr; }
+    .status-row { grid-template-columns: 1fr; }
+    .status-row .side-block:first-child { border-right: none; border-bottom: 2.5px solid var(--ink); }
+    .tiles, .safety-bar { padding: 14px; }
+    .status-row .side-block:first-child,
+    .status-row .side-block:last-child { padding: 14px; }
+    .links-bar { padding: 10px 14px; gap: 8px; }
+  }
+  @media (max-width: 480px) {
+    .tile-grid { grid-template-columns: 1fr; }
+  }
+
+/* ====== Lesson plan specific ====== */
+
+  .container { max-width: 980px; margin: 0 auto; }
+
+
+  /* TOP STRIP */
+  .top-strip {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 20px;
+    font-family: var(--mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--cream-2);
+    opacity: 0.7;
+  }
+
+  .top-strip a { color: var(--cream); text-decoration: none; opacity: 0.8; }
+
+  .top-strip a:hover { opacity: 1; }
+
+
+  /* WINDOW */
+  .window {
+    background: var(--cream); color: var(--ink);
+    border: 2.5px solid var(--ink);
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 22px;
+    box-shadow: 6px 6px 0 0 var(--pink);
+  }
+
+  .window.pink { background: var(--pink); }
+
+  .window.pink .win-bar { background: var(--pink); }
+
+
+  /* HERO */
+  .hero { padding: 28px 28px 24px; }
+
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    margin-bottom: 14px;
+    display: flex; gap: 12px; align-items: center;
+  }
+
+  .hero-eyebrow .badge {
+    background: var(--ink); color: var(--cream);
+    padding: 3px 8px; border-radius: 2px;
+    text-transform: uppercase; letter-spacing: 0.1em; font-size: 10px;
+  }
+
+  .hero-eyebrow a { color: var(--ink); text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
+
+  .hero-title {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: clamp(48px, 8vw, 96px);
+    line-height: 0.92;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    font-variation-settings: "wdth" 80, "opsz" 96;
+    margin-bottom: 14px;
+  }
+
+  .hero-sub {
+    font-size: 15px;
+    max-width: 580px;
+    line-height: 1.55;
+  }
+
+
+  /* PROGRESS STEPS */
+  .steps-bar {
+    display: flex;
+    gap: 6px;
+    padding: 16px 22px;
+    border-top: 2.5px solid var(--ink);
+    background: var(--cream-2);
+    flex-wrap: wrap;
+  }
+
+  .step-pill {
+    flex: 1;
+    min-width: 110px;
+    padding: 10px 12px;
+    border: 2px solid var(--ink);
+    border-radius: 4px;
+    background: var(--cream);
+    font-family: var(--mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .step-pill .pill-num {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 15px;
+    background: var(--ink);
+    color: var(--cream);
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    line-height: 1;
+  }
+
+  .step-pill.active {
+    background: var(--ink);
+    color: var(--cream);
+  }
+
+  .step-pill.active .pill-num {
+    background: var(--pink);
+    color: var(--ink);
+  }
+
+  .step-pill:hover:not(.active) { background: var(--pink-light); }
+
+  .step-pill.done .pill-num { background: var(--pink); color: var(--ink); }
+
+
+  /* STEP CONTENT */
+  .step-window { padding: 28px 30px 30px; }
+
+  .step-window.hidden { display: none; }
+
+  .step-eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    opacity: 0.7;
+  }
+
+  .step-title {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 36px;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    font-variation-settings: "wdth" 82, "opsz" 36;
+  }
+
+  .step-desc {
+    font-size: 14.5px;
+    line-height: 1.55;
+    margin-bottom: 24px;
+    max-width: 580px;
+  }
+
+
+  /* FORM FIELDS */
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .field-row.solo { grid-template-columns: 1fr; }
+
+  .field label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink);
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+
+  .field input[type="text"],
+  .field textarea,
+  .field select {
+    width: 100%;
+    padding: 11px 13px;
+    border: 2px solid var(--ink);
+    border-radius: 4px;
+    background: var(--cream-3);
+    font-family: var(--body);
+    font-size: 14.5px;
+    color: var(--ink);
+    outline: none;
+    transition: background 0.15s, box-shadow 0.15s;
+  }
+
+  .field input[type="text"]:focus,
+  .field textarea:focus,
+  .field select:focus {
+    background: #fff;
+    box-shadow: 3px 3px 0 0 var(--pink);
+  }
+
+  .field textarea {
+    resize: vertical;
+    min-height: 80px;
+    line-height: 1.5;
+  }
+
+  .field-helper {
+    font-family: var(--mono);
+    font-size: 11px;
+    line-height: 1.6;
+    background: var(--pink-light);
+    border: 2px solid var(--ink);
+    border-radius: 4px;
+    padding: 10px 12px;
+    margin-bottom: 12px;
+  }
+
+  .field-helper em { font-style: italic; font-weight: 600; }
+
+  .field-helper strong { font-weight: 600; }
+
+  /* Slides upload field */
+  .slides-wrap {
+    display: flex;
+    align-items: stretch;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .slides-upload {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 18px;
+    border: 2px solid var(--ink);
+    border-radius: 4px;
+    background: var(--cream-3);
+    font-family: var(--body);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--ink);
+    transition: background 0.15s;
+    white-space: nowrap;
+    min-height: 46px;
+    box-sizing: border-box;
+  }
+  .slides-upload:hover {
+    background: var(--pink-light);
+  }
+  .slides-upload.has-file {
+    background: var(--pink);
+    border-color: var(--ink);
+  }
+  .slides-or {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    opacity: 0.55;
+    display: flex;
+    align-items: center;
+  }
+  .slides-link-input {
+    flex: 1;
+    min-width: 200px;
+    min-height: 46px;
+    box-sizing: border-box;
+  }
+
+  /* PHASES */
+  .phases { display: flex; flex-direction: column; gap: 14px; }
+
+  .phase {
+    background: var(--cream-3);
+    border: 2px solid var(--ink);
+    border-radius: 4px;
+    padding: 18px;
+    position: relative;
+  }
+
+  .phase-head {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 14px;
+  }
+
+  .phase-num {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    background: var(--ink);
+    color: var(--cream);
+    padding: 5px 10px;
+    border-radius: 3px;
+  }
+
+  .phase-remove {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink);
+    background: transparent;
+    border: 1.5px solid var(--ink);
+    border-radius: 3px;
+    padding: 4px 8px;
+    cursor: pointer;
+    letter-spacing: 0.06em;
+  }
+
+  .phase-remove:hover { background: var(--ink); color: var(--cream); }
+
+  .add-phase {
+    margin-top: 4px;
+    background: transparent;
+    border: 2px dashed var(--ink);
+    border-radius: 4px;
+    padding: 14px;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink);
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.15s;
+  }
+
+  .add-phase:hover { background: var(--pink-light); }
+
+  .add-phase:disabled { opacity: 0.4; cursor: not-allowed; }
+
+
+  /* SCENARIOS (step D) */
+  .scenario {
+    background: var(--cream-3);
+    border: 2px solid var(--ink);
+    border-radius: 4px;
+    padding: 16px 18px;
+    margin-bottom: 14px;
+  }
+
+  .scenario-q {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 17px;
+    line-height: 1.25;
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+
+  .scenario-starters {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    line-height: 1.7;
+    margin-bottom: 10px;
+    color: var(--ink);
+    opacity: 0.75;
+  }
+
+  .scenario-starters span {
+    display: inline-block;
+    background: var(--cream-2);
+    padding: 2px 8px;
+    border-radius: 3px;
+    margin: 2px 4px 2px 0;
+    cursor: pointer;
+    border: 1px solid transparent;
+  }
+
+  .scenario-starters span:hover { border-color: var(--ink); background: var(--pink-light); }
+
+
+  /* NAVIGATION */
+  .step-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 2px dashed var(--ink);
+  }
+
+  .nav-btn {
+    font-family: var(--body);
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 11px 22px;
+    border: 2px solid var(--ink);
+    border-radius: 24px;
+    cursor: pointer;
+    background: transparent;
+    color: var(--ink);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
+
+  .nav-btn.primary { background: var(--ink); color: var(--cream); }
+
+  .nav-btn:hover:not(:disabled) {
+    transform: translate(-1px, -1px);
+    box-shadow: 3px 3px 0 0 var(--pink);
+  }
+
+  .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+
+  /* REVIEW PANE */
+  .review-pane {
+    background: var(--cream-3);
+    border: 2px solid var(--ink);
+    border-radius: 4px;
+    padding: 28px 30px;
+    margin-bottom: 22px;
+  }
+
+  .review-block { margin-bottom: 22px; }
+
+  .review-block:last-child { margin-bottom: 0; }
+
+  .review-eyebrow {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    opacity: 0.6;
+    margin-bottom: 4px;
+  }
+
+  .review-h {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 20px;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    font-variation-settings: "wdth" 85;
+    border-bottom: 1.5px solid var(--ink);
+    padding-bottom: 8px;
+  }
+
+  .review-line {
+    font-size: 14.5px;
+    line-height: 1.55;
+    margin-bottom: 6px;
+  }
+
+  .review-line b {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 500;
+    opacity: 0.7;
+    margin-right: 8px;
+  }
+
+  .review-phase {
+    background: var(--cream);
+    border: 1.5px solid var(--ink);
+    border-radius: 3px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+  }
+
+  .review-phase-head {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .review-phase-time {
+    font-family: var(--mono);
+    font-size: 11px;
+    background: var(--pink);
+    padding: 2px 7px;
+    border-radius: 2px;
+  }
+
+  .review-phase-body { font-size: 13.5px; line-height: 1.5; }
+
+  .review-phase-body p { margin-bottom: 4px; }
+
+  .review-empty { opacity: 0.5; font-style: italic; font-size: 13px; }
+
+
+  .review-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 22px 30px;
+    border-top: 2.5px solid var(--ink);
+    background: var(--cream-2);
+  }
+
+  .action-btn {
+    font-family: var(--body);
+    font-weight: 600;
+    font-size: 12.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 11px 18px;
+    border: 2px solid var(--ink);
+    border-radius: 24px;
+    cursor: pointer;
+    background: var(--cream);
+    color: var(--ink);
+    display: inline-flex; align-items: center; gap: 8px;
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
+
+  .action-btn:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 3px 3px 0 0 var(--pink);
+  }
+
+  .action-btn.primary { background: var(--ink); color: var(--cream); }
+
+  .action-btn.primary:hover { box-shadow: 3px 3px 0 0 var(--pink); }
+
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--ink);
+    color: var(--cream);
+    padding: 12px 20px;
+    border-radius: 30px;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border: 2px solid var(--pink);
+    transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+    z-index: 50;
+  }
+
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+
+  /* AUTOSAVE */
+  .autosave {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0.5;
+  }
+
+
+  /* SUBMIT MODAL */
+  .submit-modal {
+    position: fixed; inset: 0;
+    background: rgba(15, 13, 12, 0.7);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    display: none;
+    align-items: center; justify-content: center;
+    padding: 20px;
+    z-index: 100;
+  }
+
+  .submit-modal.open { display: flex; }
+
+  .submit-modal-inner {
+    background: var(--cream);
+    color: var(--ink);
+    border: 2.5px solid var(--ink);
+    border-radius: 6px;
+    box-shadow: 8px 8px 0 0 var(--pink);
+    max-width: 500px;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .submit-modal-inner .win-bar { background: var(--pink); }
+
+  .submit-modal-body { padding: 26px 28px; }
+
+  .submit-modal-icon {
+    width: 56px; height: 56px;
+    background: var(--pink);
+    border: 2px solid var(--ink);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px;
+    margin-bottom: 18px;
+  }
+
+  .submit-modal-h {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 28px;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    font-variation-settings: "wdth" 85;
+  }
+
+  .submit-modal-p {
+    font-size: 14px;
+    line-height: 1.55;
+    margin-bottom: 20px;
+  }
+
+  .submit-modal-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+
+  /* RESPONSIVE */
+  @media (max-width: 720px) {
+    .field-row { grid-template-columns: 1fr; }
+    .hero-title { font-size: 42px; }
+    .step-title { font-size: 28px; }
+    .step-window { padding: 22px 20px 24px; }
+    .review-pane { padding: 20px 18px; }
+    .review-actions { padding: 18px 20px; }
+    .steps-bar { padding: 12px; }
+    .step-pill { min-width: auto; padding: 8px 10px; font-size: 10px; }
+  }
+/* ====== Strategies specific ====== */
+
+
+  .top-strip {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 20px;
+    font-family: var(--mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--cream-2);
+    opacity: 0.7;
+  }
+
+
+  .window {
+    background: var(--cream); color: var(--ink);
+    border: 2.5px solid var(--ink);
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 22px;
+    box-shadow: 6px 6px 0 0 var(--pink);
+  }
+
+  .hero-meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border-top: 2px dashed var(--ink);
+    padding-top: 14px;
+    display: flex; gap: 20px; flex-wrap: wrap;
+  }
+
+
+  /* SEARCH */
+  .search-bar {
+    padding: 16px 28px;
+    border-top: 2.5px solid var(--ink);
+    background: var(--cream-2);
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .search-bar input {
+    flex: 1;
+    min-width: 200px;
+    padding: 10px 14px;
+    border: 2px solid var(--ink);
+    border-radius: 24px;
+    background: var(--cream);
+    font-family: var(--body);
+    font-size: 13.5px;
+    color: var(--ink);
+    outline: none;
+  }
+
+  .search-bar input:focus {
+    background: #fff;
+    box-shadow: 3px 3px 0 0 var(--pink);
+  }
+
+  .filter-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+
+  .filter-pill {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 7px 12px;
+    border: 1.5px solid var(--ink);
+    border-radius: 18px;
+    background: var(--cream);
+    cursor: pointer;
+    color: var(--ink);
+  }
+
+  .filter-pill.active { background: var(--ink); color: var(--cream); }
+
+  .filter-pill:hover:not(.active) { background: var(--pink-light); }
+
+  /* ===== Category tips (pre-flight checklist for Exam Review) ===== */
+  .cat-tips {
+    background: var(--cream);
+    color: var(--ink);
+    border: 2.5px solid var(--ink);
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 22px;
+    box-shadow: 6px 6px 0 0 var(--pink);
+  }
+  .cat-tips .win-bar { background: var(--cream-2); }
+  .tips-body { padding: 22px 26px 24px; }
+  .tips-head {
+    margin-bottom: 16px;
+    padding-bottom: 14px;
+    border-bottom: 2px dashed var(--ink);
+  }
+  .tips-eyebrow {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    background: var(--pink);
+    color: var(--ink);
+    padding: 3px 9px;
+    border: 1.5px solid var(--ink);
+    border-radius: 2px;
+    margin-bottom: 10px;
+  }
+  .tips-head h3 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 28px;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    font-variation-settings: "wdth" 82, "opsz" 32;
+  }
+  .tips-head p {
+    font-size: 13px;
+    line-height: 1.5;
+    opacity: 0.75;
+    max-width: 540px;
+  }
+  .tips-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .tips-list li {
+    display: grid;
+    grid-template-columns: 36px 1fr;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .tips-num {
+    font-family: var(--mono);
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    background: var(--ink);
+    color: var(--pink);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .tips-list h4 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 17px;
+    letter-spacing: -0.005em;
+    margin-bottom: 4px;
+    font-variation-settings: "wdth" 86;
+    text-transform: none;
+  }
+  .tips-list p {
+    font-size: 13.5px;
+    line-height: 1.55;
+    opacity: 0.85;
+  }
+  .tips-list p em {
+    background: var(--pink-light);
+    padding: 0 4px;
+    border-radius: 2px;
+    font-style: normal;
+    font-weight: 500;
+  }
+  @media (max-width: 560px) {
+    .tips-body { padding: 18px 18px 20px; }
+    .tips-head h3 { font-size: 22px; }
+    .tips-list li { gap: 10px; grid-template-columns: 28px 1fr; }
+    .tips-num { width: 26px; height: 26px; font-size: 10px; }
+  }
+
+
+  /* CARD GRID */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-bottom: 30px;
+  }
+
+  .strat-card {
+    background: var(--cream);
+    color: var(--ink);
+    border: 2.5px solid var(--ink);
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 5px 5px 0 0 var(--pink);
+    transition: transform 0.15s, box-shadow 0.15s;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .strat-card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 7px 7px 0 0 var(--pink);
+  }
+
+  .strat-card .win-bar {
+    padding: 7px 12px;
+    font-size: 10px;
+    background: var(--cream);
+  }
+
+  .strat-card .win-bar .num {
+    font-family: var(--mono);
+    font-weight: 500;
+  }
+
+  .strat-card .win-bar .right { display: flex; align-items: center; gap: 6px; }
+
+
+  .strat-body { padding: 18px 20px 22px; flex: 1; display: flex; flex-direction: column; }
+
+  .strat-tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: var(--ink);
+    color: var(--cream);
+    padding: 3px 8px;
+    border-radius: 2px;
+    margin-bottom: 10px;
+    align-self: flex-start;
+  }
+
+  .strat-tag.pink-tag { background: var(--pink); color: var(--ink); }
+
+
+  .strat-title {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 24px;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    font-variation-settings: "wdth" 82, "opsz" 30;
+  }
+
+  .strat-desc {
+    font-size: 13.5px;
+    line-height: 1.55;
+    margin-bottom: 12px;
+  }
+
+  .strat-steps {
+    list-style: none;
+    counter-reset: stp;
+    margin: 8px 0 4px;
+  }
+
+  .strat-steps li {
+    counter-increment: stp;
+    position: relative;
+    padding-left: 26px;
+    margin-bottom: 6px;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .strat-steps li::before {
+    content: counter(stp);
+    position: absolute;
+    left: 0; top: 0;
+    width: 18px; height: 18px;
+    border: 1.5px solid var(--ink);
+    background: var(--pink);
+    border-radius: 50%;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    display: flex; align-items: center; justify-content: center;
+    line-height: 1;
+  }
+
+  .strat-callout {
+    background: var(--pink-light);
+    border: 1.5px solid var(--ink);
+    border-radius: 3px;
+    padding: 8px 12px;
+    margin-top: 10px;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    line-height: 1.5;
+  }
+
+  .strat-callout b { font-weight: 600; }
+
+  .strat-phrases {
+    background: var(--cream-3);
+    border-left: 3px solid var(--ink);
+    padding: 8px 12px;
+    margin-top: 10px;
+    font-size: 12.5px;
+    line-height: 1.65;
+  }
+
+  .strat-phrases-h {
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 500;
+    margin-bottom: 4px;
+    opacity: 0.7;
+  }
+
+
+  .strat-do {
+    background: var(--cream-3);
+    border: 1.5px solid var(--ink);
+    border-radius: 3px;
+    padding: 10px 12px;
+    margin-top: 10px;
+    font-size: 12.5px;
+    line-height: 1.6;
+  }
+
+  .strat-do-h {
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .strat-do.dont .strat-do-h { color: #A02020; }
+
+  .strat-do ul { list-style: none; padding-left: 0; }
+
+  .strat-do li { padding-left: 14px; position: relative; }
+
+  .strat-do li::before { content: "•"; position: absolute; left: 0; }
+
+  .strat-do.dont li::before { content: "✗"; color: #A02020; }
+
+  .strat-do.do li::before { content: "✓"; color: #1F7A1F; }
+
+
+  .empty {
+    background: var(--cream);
+    border: 2.5px dashed var(--ink);
+    border-radius: 6px;
+    padding: 40px;
+    text-align: center;
+    color: var(--ink);
+  }
+
+  .empty .h {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 22px;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+
+
+  footer {
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--cream-2);
+    opacity: 0.4;
+    margin-top: 40px;
+  }
+
+
+  @media (max-width: 760px) {
+    .card-grid { grid-template-columns: 1fr; }
+    .hero-title { font-size: 44px; }
+    .hero { padding: 22px 20px 22px; }
+    .strat-body { padding: 16px; }
+    .strat-title { font-size: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="view-dashboard" class="view active">
+<div class="page">
+
+  <!-- Top strip -->
+  <div class="top-strip">
+    <div class="left">
+      <span>SANGER LEARNING CENTER</span>
+      <span>// SUPPLEMENTAL INSTRUCTION</span>
+    </div>
+    <div class="blink">02 / 16 / 2026</div>
+  </div>
+
+  <!-- Main window -->
+  <div class="window">
+
+    <!-- Mac chrome -->
+    <div class="win-bar">
+      <div class="win-dots"><span></span><span></span><span></span></div>
+      <div class="title">biology_cohort.app</div>
+      <div class="right"><span class="circle"></span><span></span></div>
+    </div>
+
+    <!-- Header strip -->
+    <div class="header">
+      <div class="header-id">
+        <div class="header-mark">Bi</div>
+        <div>
+          <div class="header-title">Biology cohort</div>
+          <div class="header-meta">
+            <span><b>SI LEADER HUB</b> · SPRING 2026</span>
+          </div>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="week-pill"><span class="dot"></span>WEEK 05 / 13 · SP26</div>
+        <div class="next-meet">NEXT MEETING · WED 6 PM · RLP 0.108</div>
+      </div>
+    </div>
+
+    <!-- Dashboard grid -->
+    <!-- Status row: announcement + upcoming -->
+    <div class="status-row">
+
+      <!-- Announcement -->
+      <div class="side-block">
+        <div class="side-h"><span>ANNOUNCEMENT</span><span class="accent">● NEW</span></div>
+        <div class="announce">
+          <div class="announce-eyebrow">HEADS UP</div>
+          <div class="announce-title">Peer Observations #1 begin Feb 11</div>
+          <div class="announce-meta">Pair with another leader · log in SEATS by Feb 19</div>
+        </div>
+      </div>
+
+      <!-- Upcoming -->
+      <div class="side-block">
+        <div class="side-h"><span>UPCOMING</span><span>3 ITEMS</span></div>
+        <div class="upcoming-list">
+          <div class="upcoming-row">
+            <span class="when">SUN<br>02/16</span>
+            <div class="label"><b>Lesson plan due</b>weekly submission</div>
+            <span class="countdown">3D</span>
+          </div>
+          <div class="upcoming-row">
+            <span class="when">WED<br>02/25</span>
+            <div class="label"><b>MSFB releases</b>mid-semester feedback</div>
+            <span class="countdown">12D</span>
+          </div>
+          <div class="upcoming-row">
+            <span class="when">THU<br>02/26</span>
+            <div class="label"><b>Self observation</b>recording due</div>
+            <span class="countdown">2W</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Resource tiles -->
+    <div class="tiles">
+      <div class="tiles-h">SESSION RESOURCES</div>
+      <div class="tile-grid">
+
+        <a class="tile featured" onclick="showView('lesson-plan'); return false;" tabindex="0">
+          <div>
+            <span class="tile-num">01</span>
+            <div class="tile-cat">INTERACTIVE</div>
+            <div class="tile-name">Lesson plan</div>
+            <div class="tile-sub">Build your weekly LP step by step.</div>
+          </div>
+          <div class="tile-go"><span>START</span><span class="arr">→</span></div>
+        </a>
+
+        <a class="tile" onclick="showView('strategies', 'icebreakers'); return false;" tabindex="0">
+          <div>
+            <span class="tile-num">02</span>
+            <div class="tile-cat">25 CARDS</div>
+            <div class="tile-name">Icebreakers</div>
+            <div class="tile-sub">Lower anxiety, build community.</div>
+          </div>
+          <div class="tile-go"><span>OPEN</span><span class="arr">→</span></div>
+        </a>
+
+        <a class="tile" onclick="showView('strategies', 'engagement'); return false;" tabindex="0">
+          <div>
+            <span class="tile-num">03</span>
+            <div class="tile-cat">30 CARDS</div>
+            <div class="tile-name">Engagement</div>
+            <div class="tile-sub">Wait time, TPS, polling, checks.</div>
+          </div>
+          <div class="tile-go"><span>OPEN</span><span class="arr">→</span></div>
+        </a>
+
+        <a class="tile" onclick="showView('strategies', 'peer'); return false;" tabindex="0">
+          <div>
+            <span class="tile-num">04</span>
+            <div class="tile-cat">23 CARDS</div>
+            <div class="tile-name">Peer work</div>
+            <div class="tile-sub">Jigsaw, clusters, paired solving.</div>
+          </div>
+          <div class="tile-go"><span>OPEN</span><span class="arr">→</span></div>
+        </a>
+
+        <a class="tile" onclick="showView('strategies', 'redirection'); return false;" tabindex="0">
+          <div>
+            <span class="tile-num">05</span>
+            <div class="tile-cat">12 CARDS</div>
+            <div class="tile-name">Redirection</div>
+            <div class="tile-sub">When it drifts or stalls.</div>
+          </div>
+          <div class="tile-go"><span>OPEN</span><span class="arr">→</span></div>
+        </a>
+
+        <a class="tile" onclick="showView('strategies', 'exam'); return false;" tabindex="0">
+          <div>
+            <span class="tile-num">06</span>
+            <div class="tile-cat">25 CARDS</div>
+            <div class="tile-name">Exam review</div>
+            <div class="tile-sub">Jeopardy, 3:2:1, plus timing.</div>
+          </div>
+          <div class="tile-go"><span>OPEN</span><span class="arr">→</span></div>
+        </a>
+
+      </div>
+    </div>
+
+    <!-- Safety bar -->
+    <div class="safety-bar">
+      <div class="side-block">
+        <div class="side-h"><span>LATE-NIGHT SAFETY</span><span>SHARE W/ STUDENTS</span></div>
+        <div class="safety">
+          <div class="safety-h">
+            <div class="icon">☾</div>
+            <div class="title">After-dark resources</div>
+          </div>
+          <div class="safety-blurb">Drop into your closing slide if your session runs past dark.</div>
+          <div class="safety-rows">
+            <a class="safety-row" href="https://parking.utexas.edu/walk" target="_blank" rel="noopener">
+              <div>
+                <div class="name">SURE Walk</div>
+                <div class="meta">7P–2A · 512-232-9255</div>
+              </div>
+              <span class="arr">↗</span>
+            </a>
+            <a class="safety-row" href="https://parking.utexas.edu/night" target="_blank" rel="noopener">
+              <div>
+                <div class="name">UT Night Rides</div>
+                <div class="meta">11P–4A · free Lyft</div>
+              </div>
+              <span class="arr">↗</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer link strip -->
+    <div class="links-bar">
+      <span class="links-label">QUICK LINKS</span>
+      <a class="qlink" tabindex="0" style="cursor:pointer">Submit LP <span class="arr">↗</span></a>
+      <a class="qlink" href="https://workday.utexas.edu" target="_blank">Workday <span class="arr">↗</span></a>
+      <a class="qlink" tabindex="0" style="cursor:pointer">SEATS <span class="arr">↗</span></a>
+      <a class="qlink" tabindex="0" style="cursor:pointer">Rooms</a>
+      <a class="qlink" tabindex="0" style="cursor:pointer">Slide template</a>
+      <a class="qlink" tabindex="0" style="cursor:pointer">Responsibilities</a>
+      <a class="qlink" href="tel:5124712020">Facilities · 512-471-2020</a>
+    </div>
+
+  </div>
+
+  <!-- Bottom footer line -->
+  <div class="top-strip" style="margin-top: 14px; margin-bottom: 0; opacity: 0.35;">
+    <div>BIOLOGY_COHORT v0.1 // BUILT FOR SPRING 2026</div>
+    <div>BUILT @ SANGER LEARNING CENTER</div>
+  </div>
+
+</div>
+</div>
+
+<div id="view-lesson-plan" class="view">
+<div class="container">
+
+  <div class="top-strip">
+    <div><a onclick="showView('dashboard'); return false;" tabindex="0" style="cursor:pointer">← BIOLOGY_COHORT</a> // LESSON_PLAN_BUILDER.HTML</div>
+    <div class="autosave" id="autosave">DRAFT AUTOSAVED</div>
+  </div>
+
+  <!-- HERO -->
+  <div class="window">
+    <div class="win-bar">
+      <div class="win-dots"><span></span><span></span><span></span></div>
+      <div class="title">lesson_plan_builder.html</div>
+      <div class="right"><span class="circle"></span><span></span></div>
+    </div>
+    <div class="hero">
+      <div class="hero-eyebrow">
+        <span class="badge">INTERACTIVE</span>
+        <span>5 STEPS · ~15 MIN · AUTOSAVES AS YOU GO</span>
+      </div>
+      <h1 class="hero-title">Lesson<br>Plan</h1>
+      <p class="hero-sub">Build your weekly SI lesson plan step-by-step. Frame your session, design the main activity, plan your opener and closer, pre-write your troubleshooting moves, then review and submit.</p>
+    </div>
+
+    <!-- STEPS BAR -->
+    <div class="steps-bar">
+      <button class="step-pill active" data-step="A" onclick="goStep('A')"><span class="pill-num">A</span>Frame</button>
+      <button class="step-pill" data-step="B" onclick="goStep('B')"><span class="pill-num">B</span>Main</button>
+      <button class="step-pill" data-step="C" onclick="goStep('C')"><span class="pill-num">C</span>Open/Close</button>
+      <button class="step-pill" data-step="D" onclick="goStep('D')"><span class="pill-num">D</span>Snags</button>
+      <button class="step-pill" data-step="R" onclick="goStep('R')"><span class="pill-num">★</span>Review</button>
+    </div>
+
+    <!-- STEP A -->
+    <div class="step-window" data-step="A">
+      <div class="step-eyebrow">STEP A · 2 MIN</div>
+      <h2 class="step-title">Frame your session</h2>
+      <p class="step-desc">The basics. Get this right and the rest of the plan flows from it.</p>
+
+      <div class="field-row">
+        <div class="field">
+          <label>Your name</label>
+          <input type="text" id="lp-name" placeholder="e.g. Hayden LeBroc">
+        </div>
+        <div class="field">
+          <label>Your SI course</label>
+          <input type="text" id="lp-course" placeholder="e.g. BIO 311C">
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>Lesson title</label>
+          <input type="text" id="lp-title" placeholder="e.g. Cell membrane transport review">
+        </div>
+        <div class="field">
+          <label>Session duration</label>
+          <select id="lp-duration">
+            <option value="50">50 minutes</option>
+            <option value="60">60 minutes</option>
+            <option value="75">75 minutes</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>SI session week</label>
+          <input type="text" id="lp-week" placeholder="e.g. 05/18">
+        </div>
+        <div class="field">
+          <label>Course topic this week</label>
+          <input type="text" id="lp-topic" placeholder="e.g. diffusion &amp; osmosis">
+        </div>
+      </div>
+
+      <div class="field-helper">
+        FORMAT: <strong>"Students will be able to <em>[verb]</em> <em>[concept]</em> by <em>[method]</em>."</strong><br>
+        Reach for Bloom's verbs: analyze, compare, predict, explain, apply, evaluate.
+      </div>
+      <div class="field-row solo">
+        <div class="field">
+          <label>Learning objective</label>
+          <textarea id="lp-objective" placeholder="Students will be able to predict the direction of net water movement across a membrane by analyzing solute concentrations on each side."></textarea>
+        </div>
+      </div>
+
+      <div class="field-row solo">
+        <div class="field">
+          <label>Slides (optional)</label>
+          <div class="slides-wrap">
+            <label class="slides-upload">
+              <input type="file" id="lp-slides-file" accept=".pdf,.ppt,.pptx,.key,.odp" style="display:none">
+              <span id="lp-slides-label">Choose file…</span>
+            </label>
+            <span class="slides-or">OR</span>
+            <input type="text" id="lp-slides-url" placeholder="Paste Google Slides / Box / OneDrive link" class="slides-link-input">
+          </div>
+        </div>
+      </div>
+
+      <div class="step-nav">
+        <a class="nav-btn" onclick="showView('dashboard'); return false;" tabindex="0" style="cursor:pointer">← Back to hub</a>
+        <button class="nav-btn primary" onclick="goStep('B')">Next: Main activity →</button>
+      </div>
+    </div>
+
+    <!-- STEP B -->
+    <div class="step-window hidden" data-step="B">
+      <div class="step-eyebrow">STEP B · 6 MIN</div>
+      <h2 class="step-title">Design your main activity</h2>
+      <p class="step-desc">Break the heart of your session into 2–4 phases. For each phase, write what students will do, which facilitation technique you'll lean on, and your role.</p>
+
+      <div class="phases" id="phases-container"></div>
+
+      <button class="add-phase" id="add-phase-btn" onclick="addPhase()">+ Add another phase (up to 4)</button>
+
+      <div class="step-nav">
+        <button class="nav-btn" onclick="goStep('A')">← Back</button>
+        <button class="nav-btn primary" onclick="goStep('C')">Next: Opener &amp; closer →</button>
+      </div>
+    </div>
+
+    <!-- STEP C -->
+    <div class="step-window hidden" data-step="C">
+      <div class="step-eyebrow">STEP C · 3 MIN</div>
+      <h2 class="step-title">Opener &amp; closer</h2>
+      <p class="step-desc">Bookend your session. Opener should be low-stakes and non-academic — just get the room talking. Closer is your check for understanding before students leave.</p>
+
+      <div class="field-row solo">
+        <div class="field">
+          <label>Opener · ~5 min · low stakes</label>
+          <textarea id="lp-opener" placeholder="e.g. Two Truths and a Lie about today's topic. Each student writes 3 statements about cell transport; partners try to spot the lie. Builds curiosity and surfaces misconceptions."></textarea>
+        </div>
+      </div>
+
+      <div class="field-row solo">
+        <div class="field">
+          <label>Closer · ~5–10 min · check for understanding</label>
+          <textarea id="lp-closer" placeholder="e.g. Stop Light reflection — students rate each agenda topic Red/Yellow/Green and write one sentence about what's still muddy. Collect the exit slips."></textarea>
+        </div>
+      </div>
+
+      <div class="step-nav">
+        <button class="nav-btn" onclick="goStep('B')">← Back</button>
+        <button class="nav-btn primary" onclick="goStep('D')">Next: Troubleshooting →</button>
+      </div>
+    </div>
+
+    <!-- STEP D -->
+    <div class="step-window hidden" data-step="D">
+      <div class="step-eyebrow">STEP D · 2 MIN · OPTIONAL</div>
+      <h2 class="step-title">Educational pain points</h2>
+      <p class="step-desc">Think back to when you took this course. What concepts tripped you up? What do you anticipate might trip up your students this week? Jotting this down primes you for the moments where you'll need to slow down and facilitate carefully.</p>
+
+      <div class="field-row solo">
+        <div class="field">
+          <label>Pain points from your own experience with this course</label>
+          <textarea id="lp-painPoints" placeholder="e.g. I had a really hard time with the difference between osmosis and diffusion when I took 311C — I kept mixing up which one needed a membrane. I expect students will struggle with the same thing, especially on the multiple-choice questions where the wording is tricky." style="min-height: 160px;"></textarea>
+        </div>
+      </div>
+
+      <div class="step-nav">
+        <button class="nav-btn" onclick="goStep('C')">← Back</button>
+        <button class="nav-btn primary" onclick="goStep('R')">Next: Review →</button>
+      </div>
+    </div>
+
+    <!-- STEP R - REVIEW -->
+    <div class="step-window hidden" data-step="R">
+      <div class="step-eyebrow">FINAL STEP · ★ REVIEW</div>
+      <h2 class="step-title">Review &amp; submit</h2>
+      <p class="step-desc">Here's the full lesson plan rendered as a clean document. Copy it, print it, or send it to your coordinator.</p>
+
+      <div class="review-pane" id="review-pane"></div>
+
+    </div>
+
+    <!-- REVIEW ACTIONS -->
+    <div class="review-actions hidden" id="review-actions" style="display:none;">
+      <button class="action-btn" onclick="copyPlan()">Copy plan</button>
+      <button class="action-btn" onclick="window.print()">Print</button>
+      <button class="action-btn" onclick="emailPlan()">Email to me</button>
+      <button class="action-btn primary" onclick="openSubmit()">Submit to coordinator →</button>
+      <button class="action-btn" onclick="clearAll()" style="margin-left:auto;">Reset</button>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">SAVED</div>
+
+<!-- SUBMIT MODAL -->
+<div class="submit-modal" id="submit-modal">
+  <div class="submit-modal-inner">
+    <div class="win-bar">
+      <div class="win-dots"><span></span><span></span><span></span></div>
+      <div class="title">submission_received.txt</div>
+      <div class="right"><span class="circle"></span><span></span></div>
+    </div>
+    <div class="submit-modal-body">
+      <div class="submit-modal-icon">✓</div>
+      <div class="submit-modal-h">Plan ready to send</div>
+      <p class="submit-modal-p">Your lesson plan has been copied to your clipboard and prepped as an email. Paste it into the official LP submission form, or send it directly to your coordinator.</p>
+      <div class="submit-modal-actions">
+        <a class="action-btn primary" id="modal-email">Open in email</a>
+        <button class="action-btn" onclick="closeSubmit()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div id="view-strategies" class="view">
+<div class="container">
+
+  <div class="top-strip">
+    <div><a onclick="showView('dashboard'); return false;" tabindex="0" style="cursor:pointer">← BIOLOGY_COHORT</a> // <span id="loc">STRATEGY_CARDS.HTML</span></div>
+    <div id="count">— CARDS</div>
+  </div>
+
+  <!-- HERO -->
+  <div class="window">
+    <div class="win-bar">
+      <div class="win-dots"><span></span><span></span><span></span></div>
+      <div class="title" id="filename">strategies.html</div>
+      <div class="right"><span class="circle"></span><span></span></div>
+    </div>
+    <div class="hero">
+      <div class="hero-eyebrow">
+        <span class="badge" id="cat-badge">CATEGORY</span>
+        <span id="cat-meta">Compiled from UMKC, DePaul &amp; Sanger Learning Center</span>
+      </div>
+      <h1 class="hero-title" id="cat-title">Strategy<br>Cards</h1>
+      <p class="hero-sub" id="cat-sub">Pick a card, run with it. Each one is a tested activity you can drop into your session — opener, main, or closer.</p>
+      <div class="hero-meta">
+        <span>F = FACILITATION</span>
+        <span>CLT = COLLABORATIVE LEARNING</span>
+        <span>LS = LEARNING STRATEGY</span>
+      </div>
+    </div>
+    <div class="search-bar">
+      <input type="text" id="search" placeholder="Search by name or keyword…" autocomplete="off">
+      <div class="filter-pills" id="filter-pills"></div>
+    </div>
+  </div>
+
+  <div class="cat-tips" id="cat-tips" style="display:none;">
+    <div class="win-bar">
+      <div class="win-dots"><span></span><span></span><span></span></div>
+      <div class="title">pre_flight.txt</div>
+      <div class="right"><span class="circle"></span></div>
+    </div>
+    <div class="tips-body">
+      <div class="tips-head">
+        <span class="tips-eyebrow">REMINDER</span>
+        <h3>Before your exam review</h3>
+        <p>Three logistics to lock down before you run the activities below.</p>
+      </div>
+      <ol class="tips-list">
+        <li>
+          <span class="tips-num">01</span>
+          <div>
+            <h4>One week out — poll your students</h4>
+            <p>Send a quick Slido, Slack, or Canvas post asking who's coming. Helps you plan group size and reserve the right room.</p>
+          </div>
+        </li>
+        <li>
+          <span class="tips-num">02</span>
+          <div>
+            <h4>Submit your exam review room request</h4>
+            <p>Reserve early. Room size and layout dictate which collaboration formats are actually possible.</p>
+          </div>
+        </li>
+        <li>
+          <span class="tips-num">03</span>
+          <div>
+            <h4>Match the activity to the room</h4>
+            <p>Pairs work anywhere. Group activities need tables or movable chairs. Want students at the boards? Check that you have whiteboard space <em>and working markers</em> before the session starts.</p>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="card-grid" id="grid"></div>
+
+  <footer>BIOLOGY_COHORT // STRATEGIES // SPRING 2026</footer>
+
+</div>
+</div>
+
+<script>
+const STORAGE_KEY = 'si_lp_draft_v1';
+
+  // ====== STATE ======
+  let state = {
+    title: '', duration: '50', name: '', course: '', week: '', topic: '', objective: '',
+    slidesFile: '', slidesURL: '',
+    phases: [
+      { time: '', do: '', tech: '', role: '' },
+      { time: '', do: '', tech: '', role: '' }
+    ],
+    opener: '', closer: '',
+    painPoints: ''
+  };
+
+  // ====== INIT ======
+  function init() {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      try { state = Object.assign(state, JSON.parse(saved)); } catch (e) {}
+    }
+    renderPhases();
+    bindFields();
+    bindSlidesUpload();
+    hydrateFields();
+  }
+
+  function bindFields() {
+    const ids = ['title','duration','name','course','week','topic','objective','slidesURL','opener','closer','ts1','ts2','ts3','ts4','ts5','ts6'];
+    ids.forEach(id => {
+      const el = document.getElementById('lp-' + id) || document.getElementById('lp-' + id.toLowerCase().replace(/url$/,'-url'));
+      // The slidesURL input has id "lp-slides-url" — handle separately below
+    });
+    // Bind simple inputs whose id is just "lp-<key>"
+    ['title','duration','name','course','week','topic','objective','opener','closer','painPoints'].forEach(id => {
+      const el = document.getElementById('lp-' + id);
+      if (!el) return;
+      el.addEventListener('input', () => { state[id] = el.value; save(); });
+      el.addEventListener('change', () => { state[id] = el.value; save(); });
+    });
+    // Slides URL has a custom id
+    const slidesUrlEl = document.getElementById('lp-slides-url');
+    if (slidesUrlEl) {
+      slidesUrlEl.addEventListener('input', () => { state.slidesURL = slidesUrlEl.value; save(); });
+    }
+  }
+
+  function bindSlidesUpload() {
+    const fileEl = document.getElementById('lp-slides-file');
+    const labelEl = document.getElementById('lp-slides-label');
+    const wrap = labelEl ? labelEl.parentElement : null;
+    if (!fileEl || !labelEl) return;
+    fileEl.addEventListener('change', (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (file) {
+        state.slidesFile = file.name;
+        labelEl.textContent = file.name;
+        if (wrap) wrap.classList.add('has-file');
+      } else {
+        state.slidesFile = '';
+        labelEl.textContent = 'Choose file…';
+        if (wrap) wrap.classList.remove('has-file');
+      }
+      save();
+    });
+  }
+
+  function hydrateFields() {
+    Object.keys(state).forEach(k => {
+      if (k === 'phases' || k === 'slidesFile' || k === 'slidesURL') return;
+      const el = document.getElementById('lp-' + k);
+      if (el) el.value = state[k] || '';
+    });
+    // Slides URL
+    const slidesUrlEl = document.getElementById('lp-slides-url');
+    if (slidesUrlEl) slidesUrlEl.value = state.slidesURL || '';
+    // Slides file (filename only — file content not persisted across reloads)
+    const labelEl = document.getElementById('lp-slides-label');
+    const wrap = labelEl ? labelEl.parentElement : null;
+    if (labelEl && state.slidesFile) {
+      labelEl.textContent = state.slidesFile + ' (re-attach to email)';
+      if (wrap) wrap.classList.add('has-file');
+    }
+  }
+
+  function renderPhases() {
+    const container = document.getElementById('phases-container');
+    container.innerHTML = '';
+    state.phases.forEach((p, i) => {
+      const div = document.createElement('div');
+      div.className = 'phase';
+      div.innerHTML = `
+        <div class="phase-head">
+          <span class="phase-num">Phase ${i+1}</span>
+          ${state.phases.length > 2 ? `<button class="phase-remove" onclick="removePhase(${i})">Remove</button>` : ''}
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Time (min)</label>
+            <input type="text" placeholder="e.g. 10" value="${escapeHTML(p.time)}" oninput="updatePhase(${i}, 'time', this.value)">
+          </div>
+          <div class="field">
+            <label>Facilitation technique</label>
+            <select onchange="updatePhase(${i}, 'tech', this.value)">
+              <option value="">Select…</option>
+              <option ${p.tech==='Think-Pair-Share'?'selected':''}>Think-Pair-Share</option>
+              <option ${p.tech==='Jigsaw'?'selected':''}>Jigsaw</option>
+              <option ${p.tech==='Clusters'?'selected':''}>Clusters / small groups</option>
+              <option ${p.tech==='Paired Problem Solving'?'selected':''}>Paired Problem Solving</option>
+              <option ${p.tech==='Boardwork Model'?'selected':''}>Boardwork Model</option>
+              <option ${p.tech==='Concept Mapping'?'selected':''}>Concept Mapping</option>
+              <option ${p.tech==='Send a Problem'?'selected':''}>Send a Problem</option>
+              <option ${p.tech==='Pub Quiz / Jeopardy'?'selected':''}>Pub Quiz / Jeopardy</option>
+              <option ${p.tech==='Other'?'selected':''}>Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="field-row solo">
+          <div class="field">
+            <label>What students do</label>
+            <textarea placeholder="What's the prompt? What are they producing?" oninput="updatePhase(${i}, 'do', this.value)">${escapeHTML(p.do)}</textarea>
+          </div>
+        </div>
+        <div class="field-row solo">
+          <div class="field">
+            <label>Your role</label>
+            <textarea placeholder="Are you circulating? Recording on the board? Quiet?" oninput="updatePhase(${i}, 'role', this.value)">${escapeHTML(p.role)}</textarea>
+          </div>
+        </div>
+      `;
+      container.appendChild(div);
+    });
+    document.getElementById('add-phase-btn').disabled = state.phases.length >= 4;
+  }
+
+  function updatePhase(i, key, val) {
+    state.phases[i][key] = val;
+    save();
+  }
+
+  function addPhase() {
+    if (state.phases.length >= 4) return;
+    state.phases.push({ time: '', do: '', tech: '', role: '' });
+    renderPhases();
+    save();
+  }
+
+  function removePhase(i) {
+    if (state.phases.length <= 2) return;
+    state.phases.splice(i, 1);
+    renderPhases();
+    save();
+  }
+
+  function escapeHTML(s) {
+    if (!s) return '';
+    return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  // ====== STEP NAV ======
+  function goStep(step) {
+    document.querySelectorAll('.step-window').forEach(el => el.classList.add('hidden'));
+    const target = document.querySelector(`.step-window[data-step="${step}"]`);
+    if (target) target.classList.remove('hidden');
+
+    document.querySelectorAll('.step-pill').forEach(el => el.classList.remove('active'));
+    const pill = document.querySelector(`.step-pill[data-step="${step}"]`);
+    if (pill) pill.classList.add('active');
+
+    const reviewActions = document.getElementById('review-actions');
+    if (step === 'R') {
+      renderReview();
+      reviewActions.style.display = 'flex';
+    } else {
+      reviewActions.style.display = 'none';
+    }
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ====== AUTOSAVE ======
+  let saveTimer;
+  function save() {
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        const a = document.getElementById('autosave');
+        a.textContent = 'DRAFT SAVED · ' + new Date().toLocaleTimeString();
+      } catch (e) {}
+    }, 400);
+  }
+
+  // ====== STARTER INSERT ======
+  function insertStarter(fieldId, text) {
+    const el = document.getElementById(fieldId);
+    if (!el) return;
+    if (el.value && !el.value.endsWith(' ')) el.value += ' ';
+    el.value += text;
+    state[fieldId.replace('lp-','')] = el.value;
+    save();
+    el.focus();
+  }
+
+  // ====== REVIEW ======
+  function renderReview() {
+    const r = document.getElementById('review-pane');
+    const showOr = (v, fallback) => (v && v.trim()) ? escapeHTML(v) : `<span class="review-empty">${fallback}</span>`;
+
+    let phasesHTML = state.phases.map((p, i) => `
+      <div class="review-phase">
+        <div class="review-phase-head">
+          <span>Phase ${i+1}${p.tech ? ' · ' + escapeHTML(p.tech) : ''}</span>
+          <span class="review-phase-time">${p.time ? escapeHTML(p.time) + ' min' : '— min'}</span>
+        </div>
+        <div class="review-phase-body">
+          <p><b style="font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;opacity:.6;">Students:</b> ${showOr(p.do, '(not yet filled in)')}</p>
+          <p><b style="font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;opacity:.6;">You:</b> ${showOr(p.role, '(not yet filled in)')}</p>
+        </div>
+      </div>
+    `).join('');
+
+    let painPointsHTML = '';
+    if (state.painPoints && state.painPoints.trim()) {
+      painPointsHTML = '<div class="review-line">' + escapeHTML(state.painPoints).replace(/\n/g, '<br>') + '</div>';
+    } else {
+      painPointsHTML = '<div class="review-empty">No pain-point reflection written yet (optional).</div>';
+    }
+
+    let slidesHTML = '';
+    if (state.slidesFile || state.slidesURL) {
+      const parts = [];
+      if (state.slidesFile) parts.push('File: ' + escapeHTML(state.slidesFile));
+      if (state.slidesURL) parts.push('Link: <a href="' + escapeHTML(state.slidesURL) + '" target="_blank" rel="noopener">' + escapeHTML(state.slidesURL) + '</a>');
+      slidesHTML = '<div class="review-line" style="margin-top:6px;"><b>Slides</b> ' + parts.join(' &nbsp;·&nbsp; ') + '</div>';
+    }
+
+    r.innerHTML = `
+      <div class="review-block">
+        <div class="review-eyebrow">LESSON PLAN · ${new Date().toLocaleDateString('en-US', {month:'long', day:'numeric', year:'numeric'})}</div>
+        <div style="font-family:var(--display);font-weight:700;font-size:32px;line-height:1;letter-spacing:-0.02em;text-transform:uppercase;font-variation-settings:'wdth' 82;margin-bottom:14px;">
+          ${showOr(state.title, '(untitled)')}
+        </div>
+        <div class="review-line"><b>Leader</b> ${showOr(state.name, '—')}</div>
+        <div class="review-line"><b>SI course</b> ${showOr(state.course, '—')}</div>
+        <div class="review-line"><b>Session week</b> ${showOr(state.week, '—')}</div>
+        <div class="review-line"><b>Topic</b> ${showOr(state.topic, '—')}</div>
+        <div class="review-line"><b>Duration</b> ${escapeHTML(state.duration)} minutes</div>
+        <div class="review-line" style="margin-top:10px;"><b>Objective</b> ${showOr(state.objective, 'No learning objective set yet.')}</div>
+        ${slidesHTML}
+      </div>
+
+      <div class="review-block">
+        <div class="review-h">Opener</div>
+        <div class="review-line">${showOr(state.opener, 'No opener planned yet.')}</div>
+      </div>
+
+      <div class="review-block">
+        <div class="review-h">Main activity</div>
+        ${phasesHTML}
+      </div>
+
+      <div class="review-block">
+        <div class="review-h">Closer</div>
+        <div class="review-line">${showOr(state.closer, 'No closer planned yet.')}</div>
+      </div>
+
+      <div class="review-block">
+        <div class="review-h">Educational pain points you might encounter</div>
+        ${painPointsHTML}
+      </div>
+    `;
+  }
+
+  // ====== ACTIONS ======
+  function planAsText() {
+    const lines = [];
+    lines.push('LESSON PLAN — ' + (state.title || '(untitled)'));
+    lines.push('Date created: ' + new Date().toLocaleDateString());
+    lines.push('Leader: ' + (state.name || '—'));
+    lines.push('SI course: ' + (state.course || '—'));
+    lines.push('Session week: ' + (state.week || '—'));
+    lines.push('Topic: ' + (state.topic || '—'));
+    lines.push('Duration: ' + state.duration + ' minutes');
+    if (state.slidesFile || state.slidesURL) {
+      const parts = [];
+      if (state.slidesFile) parts.push('file: ' + state.slidesFile + ' (attach to email)');
+      if (state.slidesURL) parts.push('link: ' + state.slidesURL);
+      lines.push('Slides: ' + parts.join(' · '));
+    }
+    lines.push('');
+    lines.push('LEARNING OBJECTIVE');
+    lines.push(state.objective || '—');
+    lines.push('');
+    lines.push('OPENER');
+    lines.push(state.opener || '—');
+    lines.push('');
+    lines.push('MAIN ACTIVITY');
+    state.phases.forEach((p, i) => {
+      lines.push(`  Phase ${i+1} (${p.time || '—'} min) — ${p.tech || ''}`);
+      lines.push('    Students: ' + (p.do || '—'));
+      lines.push('    You: ' + (p.role || '—'));
+    });
+    lines.push('');
+    lines.push('CLOSER');
+    lines.push(state.closer || '—');
+    lines.push('');
+    lines.push('EDUCATIONAL PAIN POINTS YOU MIGHT ENCOUNTER');
+    lines.push(state.painPoints || '—');
+    return lines.join('\n');
+  }
+
+  function copyPlan() {
+    const text = planAsText();
+    navigator.clipboard.writeText(text).then(() => showToast('COPIED TO CLIPBOARD'));
+  }
+
+  function emailPlan() {
+    const subject = encodeURIComponent('Lesson Plan: ' + (state.title || 'untitled'));
+    const body = encodeURIComponent(planAsText());
+    window.location.href = `mailto:?subject=${subject}&body=${body}`;
+  }
+
+  function openSubmit() {
+    copyPlan();
+    const subject = encodeURIComponent('Lesson Plan: ' + (state.title || 'untitled'));
+    const body = encodeURIComponent(planAsText());
+    document.getElementById('modal-email').href = `mailto:?subject=${subject}&body=${body}`;
+    document.getElementById('submit-modal').classList.add('open');
+  }
+
+  function closeSubmit() {
+    document.getElementById('submit-modal').classList.remove('open');
+  }
+
+  function clearAll() {
+    if (!confirm('Reset the whole plan? This cannot be undone.')) return;
+    localStorage.removeItem(STORAGE_KEY);
+    location.reload();
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2000);
+  }
+
+  init();
+
+// ========== STRATEGY CARDS DATA ==========
+// Source: SI Strategy Cards compiled from International Center for Supplemental Instruction
+// at UMKC (2019) and DePaul University (2013), revised by Nisha Abraham, Stephanie Craven,
+// and Kate Molina-Gallo at the Sanger Learning Center, UT Austin, 2019.
+// Content adapted for dashboard format.
+
+const STRATEGIES = [
+  { n:1, t:"Bloom's Taxonomy", type:"F", sub:"Question design", cats:["engagement","exam"],
+    desc:"Use Bloom's pyramid (remember → understand → apply → analyze → evaluate → create) when writing learning outcomes and session questions. Mix lower- and higher-order.",
+    callout:"Higher-order questions push past memorization into real understanding." },
+  { n:2, t:"Checking for Understanding", type:"F", sub:"Check for understanding", cats:["engagement","redirection"],
+    desc:"Confirm students actually got it before moving on. Avoid closed yes/no checks.",
+    dont:["\"Do you understand?\"","\"Does this make sense?\""],
+    doIt:["Ask open Bloom 3+ questions","Have a student summarize","Volunteer writes key points on the board","Ask for an analogy or real-life example"] },
+  { n:3, t:"Redirecting Questions", type:"F", sub:"Redirection", cats:["redirection","engagement"],
+    desc:"Suppress the urge to answer directly. Redirect questions back to the individual, group, notes/textbook, online search, or previous lecture.",
+    phrases:["Who can help answer that?","Let's all look that up in the notes.","What do you think about that?","Tell us more…","How would you say that differently?","What do we need to know to solve this?"] },
+  { n:4, t:"Think / Wait Time", type:"F", sub:"Facilitation", cats:["engagement","redirection"],
+    desc:"Pause 3–5+ seconds after asking a question so students can process. Adjust for difficulty.",
+    callout:"Longer wait time → longer, more accurate, more complex responses, and more voluntary participation." },
+  { n:5, t:"Mobile Learning", type:"F", sub:"Tech", cats:["engagement"],
+    desc:"Free polling and quiz tools for real-time response: PollEverywhere, Slido (crowd-sourced questions), Socrative, Google Forms, Kahoot, Quizizz." },
+  { n:6, t:"First to Five", type:"F", sub:"Check for understanding", cats:["engagement"],
+    desc:"Quick anonymous comfort check.",
+    steps:["Students close eyes or put heads down.","They hold up 1–5 fingers: 5 = totally get it, 1 = still don't get it."] },
+  { n:7, t:"Snowball", type:"F", sub:"Check for understanding", cats:["engagement","exam"],
+    desc:"Anonymous question gathering — great for review.",
+    steps:["Students write a question or concept they don't understand.","Crumple and toss across the room.","Students take turns reading questions aloud.","Leader facilitates the group answering — redirect to other students."] },
+  { n:8, t:"Stop Light", type:"F", sub:"Closing", cats:["engagement"],
+    desc:"Closer for reflection on each agenda topic. RED = lost me. YELLOW = need clarification. GREEN = ready to move on.",
+    callout:"Pair with a real check for understanding — color alone isn't enough." },
+  { n:9, t:"Ask the Right Students", type:"F", sub:"Activity", cats:["engagement","redirection"],
+    desc:"Prevents one or two students from dominating.",
+    steps:["Each student writes their name on a folded slip.","Randomly draw a name to answer.","Put the name back so no one checks out."] },
+  { n:10, t:"Setting the Agenda", type:"F", sub:"Activity", cats:["exam"],
+    desc:"Great for exam reviews or planning. Needs three colors of Post-Its.",
+    steps:["Students get 3 different-colored Post-Its.","Each color: urgent task, big-picture issue, micro-detail question.","Stick them up, group into themes.","Vote with dots; most-dotted topics drive the session."] },
+  { n:11, t:"Syllabus Quiz", type:"F", sub:"Activity", cats:["engagement"],
+    desc:"Good closer for the first or second session.",
+    steps:["Write a short quiz on syllabus info (due dates, policies).","Let students check the syllabus and discuss afterward."] },
+  { n:12, t:"Assess the Session", type:"F", sub:"General tip", cats:["engagement"],
+    desc:"Periodically ask students how a session went: Were questions answered? Did they feel comfortable? Any suggestions?",
+    callout:"Use as a closer on paper or a Google form. Their feedback may improve your next session." },
+  { n:13, t:"Extended Review Sessions", type:"F", sub:"General tip", cats:["exam"],
+    desc:"Schedule reviews ≥2 days before the exam (reserve rooms early). Discuss expected question types. Small groups give more contact with material.",
+    callout:"Pair with Divide and Conquer, Tables, Around the World, or Jeopardy." },
+  { n:14, t:"SI Session Planning", type:"F", sub:"General tip", cats:["engagement"],
+    desc:"Five planning questions to ask yourself before each session:",
+    steps:["What's the most difficult content? (Important ≠ difficult.)","Which strategies fit those concepts? How long for each?","How many students do you expect? Backup if attendance changes?","What do you need to prep?","What should you remind them to study on their own?"] },
+  { n:15, t:"Three Before Me", type:"F", sub:"Redirection", cats:["redirection"],
+    desc:"Specific redirection move for logistical or repeated questions.",
+    steps:["When a student asks a question, have them ask three other students first.","If those answers work, acknowledge. If all three are off, group review."] },
+  { n:16, t:"Assigned Discussion Leader", type:"CLT", sub:"Roles", cats:["peer"],
+    desc:"Have one person present on a topic and lead the discussion. Rotate — shouldn't always be the same person. Works best when everyone has an expert role.",
+    callout:"Assigning clear roles helps with efficiency." },
+  { n:17, t:"Clusters", type:"CLT", sub:"Grouping", cats:["peer"],
+    desc:"A grouping strategy.",
+    steps:["Divide students into smaller groups. Assign roles (speaker, scribe).","Each cluster discusses the topic and reports back.","Give each group board space.","Each group reports to the large group."] },
+  { n:18, t:"Group Survey", type:"CLT", sub:"Collaborative", cats:["peer"],
+    desc:"Survey each member to surface every point of view. Works as follow-up to an informal quiz ('Why did you choose your answer?'). Can be done on paper or online.",
+    callout:"Works best with brief opinions/views. Track results." },
+  { n:19, t:"Jigsaw", type:"CLT", sub:"Activity", cats:["peer"],
+    desc:"Students become experts on one piece, then teach others.",
+    steps:["Divide into groups of 3–4. Each group gets a topic/step.","Each group becomes 'experts' on their piece.","Re-group so each new group has one expert from each topic.","Experts teach their topic to the new group."] },
+  { n:20, t:"Think-Pair-Share", type:"CLT", sub:"Activity", cats:["peer","engagement"],
+    desc:"Great for students who hesitate to speak in a large group. Builds confidence step by step.",
+    steps:["Pose a question. Students think alone for a set time.","Students pair (shoulder or face partners) and discuss.","Pairs share with the large group."] },
+  { n:21, t:"Turn to a Partner", type:"CLT", sub:"Collaborative", cats:["peer"],
+    desc:"Quick pair work for an assignment or discussion. Works best when students already have enough background to dive in without warm-up." },
+  { n:22, t:"Divide and Conquer", type:"CLT", sub:"Problem-solving", cats:["peer","exam"],
+    desc:"Tackle a difficult reading or lots of review material.",
+    steps:["Divide the material into meaningful sections.","Assign each student/group a section.","Each reads and writes a summary.","Each reads their summary aloud; group discusses."] },
+  { n:23, t:"Paired Problem Solving (Think Aloud)", type:"CLT", sub:"Problem-solving", cats:["peer"],
+    desc:"Verbalize the problem-solving process.",
+    steps:["Pair up. One is thinker/solver, one is listener.","Thinker vocalizes every step. Listener listens for points of confusion.","Pairs rejoin and share their process with the large group."] },
+  { n:24, t:"Peer Lessons", type:"CLT", sub:"Problem-solving", cats:["peer"],
+    desc:"Students teach the problem.",
+    steps:["Split into 4–5 groups. Give each a problem.","Each writes their solution on the board.","Each group explains their problem and thought process.","Leader adds or corrects as needed."] },
+  { n:25, t:"Brain Dump", type:"LS", sub:"Check for understanding", cats:["engagement"],
+    desc:"Great closer to sum up the session.",
+    steps:["Blank paper. Write everything you remember from today.","Set a time limit.","Collect to assess, let them keep for study, or have them compare with peers."] },
+  { n:26, t:"Clear Skies / Muddy Waters", type:"LS", sub:"Check for understanding", cats:["engagement"],
+    desc:"Opener or closer. Students write the clearest thing they learned and the muddiest. Use responses to set the agenda or plan a review." },
+  { n:27, t:"Informal Quiz", type:"LS", sub:"Check for understanding", cats:["engagement"],
+    desc:"Opener or closer.",
+    steps:["5–7 short-answer questions read aloud.","No talking; they can use notes.","Debrief by expanding short answers through discussion.","Allow any order; have them restate the question with their answer."] },
+  { n:28, t:"Learning Logs", type:"LS", sub:"Check for understanding", cats:["engagement"],
+    desc:"Metacognitive strategy. Ask students to respond to one or more: 3 sentences on what you learned, 3 questions, how it connects to another lesson, 3 questions that might be on a test, what confused you." },
+  { n:29, t:"One-Minute Paper", type:"LS", sub:"Check for understanding", cats:["engagement"],
+    desc:"Quick written reflection.",
+    steps:["Students write a sentence or paragraph on a prompt.","Own thoughts in own words, not polished writing.","Share with a partner or use as an 'exit ticket.'"] },
+  { n:30, t:"Pre- and Post-Quiz", type:"LS", sub:"Check for understanding", cats:["engagement"],
+    desc:"Anonymous quizzes before and after the session to measure gain.",
+    steps:["Pre-quiz: anonymous question on a critical concept.","Build the session around predicted struggle points.","Post-quiz: similar question.","Compare; group students by struggle area for follow-up."] },
+  { n:31, t:"Summarize the Lecture", type:"LS", sub:"Check for understanding", cats:["engagement"],
+    desc:"Great opener.",
+    steps:["Ask students to summarize the previous lecture (alone or in pairs).","Provide prompts if they get stuck.","Try without notes first; refer back if needed.","Construct notes using concept mapping or an incomplete outline."] },
+  { n:32, t:"Affinity Grouping", type:"LS", sub:"Organization", cats:["peer"],
+    desc:"Break down a topic. Needs Post-Its.",
+    steps:["Students generate ideas about a concept, one per Post-It.","Sort into categories on the board/wall.","Create a heading for each grouping.","Compare across groups."] },
+  { n:33, t:"Concept Mapping", type:"LS", sub:"Organization", cats:["engagement"],
+    desc:"See the big picture, not just details.",
+    steps:["Identify a central word/concept.","Branch out subtopics.","Add related topics; circle linked groups.","Groups compare their maps."] },
+  { n:34, t:"Hierarchies", type:"LS", sub:"Organization", cats:["engagement"],
+    desc:"Organize info into levels of inclusion. Top = most inclusive, bottom = most specific.",
+    callout:"Pair with a collaborative technique for student-to-student interaction." },
+  { n:35, t:"Incomplete Outline", type:"LS", sub:"Organization", cats:["engagement"],
+    desc:"Opener. Pre-write an outline with parts missing; groups fill them in from their notes. Helps students see organizational patterns." },
+  { n:36, t:"Tables", type:"LS", sub:"Organization", cats:["exam","engagement"],
+    desc:"See relationships between topics. Leader gives the framework and a few clues; students complete the rest. Great for compare/contrast." },
+  { n:37, t:"Timeline", type:"LS", sub:"Organization", cats:["engagement"],
+    desc:"Visualize time. Single timeline: events on a horizontal line. Double timeline: events from lecture below a general historical timeline for context." },
+  { n:38, t:"Tree Diagrams", type:"LS", sub:"Organization", cats:["engagement"],
+    desc:"Trunk = main topic, branches = related facts/factors/outcomes.",
+    callout:"Pair with a collaborative technique for student interaction." },
+  { n:39, t:"Venn Diagram", type:"LS", sub:"Organization", cats:["engagement"],
+    desc:"Compare similarities and differences across two or three concepts. Overlap = shared, outer = unique.",
+    callout:"Pair with a CLT for peer interaction." },
+  { n:40, t:"Vocabulary Scaffolding", type:"LS", sub:"Organization", cats:["exam"],
+    desc:"Opener for a midterm/final review.",
+    steps:["Pick 15–20 key vocab words that can sort into 3–4 categories.","Name each category; list on the board.","Distribute words; students sort.","Students justify their placements."] },
+  { n:41, t:"Word Cards", type:"LS", sub:"Organization", cats:["engagement"],
+    desc:"Note cards in four quadrants:",
+    steps:["Quad 1: word/process name","Quad 2: what it means / the steps","Quad 3: what it does NOT mean / common mistakes","Quad 4: illustration or real-life use"] },
+  { n:42, t:"First Line Only", type:"LS", sub:"Problem-solving", cats:["engagement"],
+    desc:"For problem-solving courses. Build confidence in starting.",
+    steps:["Present problems; students only do the first step.","Strict time limit.","Follow with a table or Boardwork Model to categorize how to solve."] },
+  { n:43, t:"Presenting Problems", type:"LS", sub:"Problem-solving", cats:["engagement","peer"],
+    desc:"Groups solve and explain.",
+    steps:["Identify gaps in understanding from the lecture topic.","Pick problems. Divide into clusters.","Each group writes their solution on the board.","Group explains process and methods.","Whole group concurs; unresolved go to TA/professor."] },
+  { n:44, t:"Problem-Solving Organizer", type:"LS", sub:"Problem-solving", cats:["engagement","peer"],
+    desc:"Metacognitive — focus on HOW, not just what.",
+    steps:["Pair students. Give each a problem.","Board sections: Problem · Given · Needed · Steps · Solution.","Pairs come up and present each section.","Point is reflecting on process, not solving."] },
+  { n:45, t:"Relay", type:"LS", sub:"Problem-solving", cats:["engagement","peer"],
+    desc:"Teams of 2–3. Each solves one step then hands off the marker. Race to finish first." },
+  { n:46, t:"Send a Problem", type:"LS", sub:"Problem-solving", cats:["engagement"],
+    desc:"Pass problems around.",
+    steps:["Generate a list of problems.","Students work individually or in pairs on a problem.","After a minute, pass problems to the right.","Continue until all are solved; review together."] },
+  { n:47, t:"Speed Dating", type:"LS", sub:"Problem-solving", cats:["peer"],
+    desc:"Quick rotating pairs.",
+    steps:["List of prompts.","Pair up. 3-minute rounds: share responses, 'date' gives feedback (use a rubric).","One partner stays; other rotates down the line."] },
+  { n:48, t:"Structured Problem Solving", type:"LS", sub:"Problem-solving", cats:["engagement","peer"],
+    desc:"Best for larger multi-step problems.",
+    steps:["Identify the steps. Split into groups.","Steps are given so groups can focus on solving.","Set a time limit; group must reach consensus.","Report solution and steps.","Add a second problem; students identify steps without help."] },
+  { n:49, t:"Super Tic-Tac-Toe", type:"LS", sub:"Problem-solving", cats:["exam","peer"],
+    desc:"Two-team game on a 3×4 grid with Post-It problems. Teams take turns; scribe rotates each turn. Other team can challenge errors and steal squares. 3 in a row = a point." },
+  { n:50, t:"3:2:1", type:"LS", sub:"Review/Recall", cats:["exam"],
+    desc:"Pre-exam favorite. Each student writes:",
+    steps:["3 topics they know well","2 topics they don't and need help with","1 possible exam question","Topics overlap — students 'teach' each other"] },
+  { n:51, t:"Around the World", type:"LS", sub:"Review/Recall", cats:["exam"],
+    desc:"Quick-answer review game.",
+    steps:["Pre-make questions with simple answers.","Sit in a circle. Two students stand and answer a question.","Winner shifts to next student; loser sits.","Winner travels 'around the world' beating each peer."] },
+  { n:52, t:"Current Events", type:"LS", sub:"Review/Recall", cats:["engagement","exam"],
+    desc:"Late-semester opener once rapport exists.",
+    steps:["Bring a relevant article (YouTube, TED, pop culture works too).","Students read and highlight interesting/confusing points.","Frame so students see course material in the wider world."] },
+  { n:53, t:"Jeopardy", type:"LS", sub:"Review/Recall", cats:["exam"],
+    desc:"Test-prep classic. Use jeopardylabs.com for templates.",
+    steps:["30–35 answers at different difficulty + category levels.","Small groups. No books or notes.","Different person answers each; team can discuss first.","Wrong = steal opportunity for other team."] },
+  { n:54, t:"Memory", type:"LS", sub:"Review/Recall", cats:["exam"],
+    desc:"Vocab matching game.",
+    steps:["Prepare 12–24 cards: half terms, half definitions.","Shuffle face down.","Turn over two at a time; remove matches.","Continue until all are paired."] },
+  { n:55, t:"Presentation Karaoke", type:"LS", sub:"Review/Recall", cats:["engagement"],
+    desc:"Good once students are comfortable speaking.",
+    steps:["List of topics in an envelope.","Each student pulls a topic.","5 minutes to prep a 1–2 minute presentation."] },
+  { n:56, t:"Pub Quiz", type:"LS", sub:"Review/Recall", cats:["exam"],
+    desc:"Two-team quiz competition.",
+    steps:["Split into two groups.","Each writes 6+ questions across Bloom levels 1–3.","Take turns asking the other team.","All students get a chance to answer.","Debrief with expansion and discussion."] },
+  { n:57, t:"Rainbow Brain Dump", type:"LS", sub:"Review/Recall", cats:["engagement","exam"],
+    desc:"Opener. Assign each student a different marker color.",
+    steps:["Put 4–5 main lecture topics on the board.","Students write what they remember about each — feeding off others' notes.","Start the session discussion from the board."] },
+  { n:58, t:"Summarize the Steps", type:"LS", sub:"Review/Recall", cats:["engagement","exam"],
+    desc:"After completing a problem, have students summarize the procedure they used. Reinforces process over answer." },
+  { n:59, t:"Taboo", type:"LS", sub:"Review/Recall", cats:["exam","engagement"],
+    desc:"Vocab game.",
+    steps:["Cards with a vocab term plus one related forbidden word.","Split into teams/pairs.","Explain the term without using the forbidden words.","After correct guess, add 2 more forbidden words for the next round."] },
+  { n:60, t:"Two Truths and a Lie", type:"LS", sub:"Review/Recall", cats:["exam"],
+    desc:"Opener or closer. Pairs well with multiple-choice exam prep.",
+    steps:["Leader writes 2 false and 1 true statement on a topic.","Read aloud; students identify the true one.","Discuss why the false ones are false and how to fix them."] },
+  { n:61, t:"Verbal Volleyball", type:"LS", sub:"Review/Recall", cats:["exam"],
+    desc:"Opener or closer with a tossable object.",
+    steps:["Circle or pairs.","Toss the ball while listing a concept from class.","Catcher lists another idea, then tosses to the next person.","No repeats. ~8–10 minutes."] },
+  { n:62, t:"Word Wall", type:"LS", sub:"Review/Recall", cats:["engagement","exam"],
+    desc:"Build a vocab list to refer back to.",
+    steps:["Blank Post-Its for each topic.","Students find vocab words and construct definitions.","Word on one Post-It, definition on another; word covers definition on the wall.","Check definitions for accuracy."] },
+  { n:63, t:"All the Answers", type:"LS", sub:"Study Technique", cats:["exam"],
+    desc:"Reverse-engineer questions from answers.",
+    steps:["Split into teams.","Each student writes 3 questions + answers (Bloom levels 1–3).","Write only the answers on Post-Its.","Teams swap Post-Its; work out the question that would match each."] },
+  { n:64, t:"Boardwork Model", type:"LS", sub:"Study Technique", cats:["engagement"],
+    desc:"Organize board work for problem-solving sessions. Four sections:",
+    steps:["Prerequisite knowledge","Mathematical/procedural steps","Narrative of the steps","Additional sample problems"] },
+  { n:65, t:"Break Aparts", type:"LS", sub:"Study Technique", cats:["engagement"],
+    desc:"For problem-based courses. Students break an equation into parts: what each variable means, the unit, common conversions. Example: KE = ½mv². Add unit-conversion practice." },
+  { n:66, t:"Challenge Yourself", type:"LS", sub:"Study Technique", cats:["exam"],
+    desc:"Train for exam time pressure.",
+    steps:["Put a problem on the board.","Estimate exam time for a similar problem.","Students solve individually in that window.","Regroup and compare answers."] },
+  { n:67, t:"Cornell Note-Taking", type:"LS", sub:"Study Technique", cats:["engagement"],
+    desc:"Three-zone note system: Cue Column (main ideas/key points), Note-Taking Area (lecture notes), Summaries (1–2 sentences of main points). The summary zone is the metacognitive payoff." },
+  { n:68, t:"Formula Hunt", type:"LS", sub:"Study Technique", cats:["engagement"],
+    desc:"Opener.",
+    steps:["Give students the names of formulas you'll use.","They search notes, textbook, online.","Assigned students write formulas on the board.","Verify formulas match the course/textbook."] },
+  { n:69, t:"Guess Who", type:"LS", sub:"Study Technique", cats:["exam"],
+    desc:"Opener or closer.",
+    steps:["Give students a list of key concepts/vocab.","Students write descriptions.","Pair up; each takes turns giving clues until partner guesses.","Switch partners and repeat."] },
+  { n:70, t:"Identify the Big Idea", type:"LS", sub:"Study Technique", cats:["engagement"],
+    desc:"Cut through information overload.",
+    steps:["Ask: 'If you take one thing from today, what would it be?'","Each student offers a different takeaway.","Leader connects them into one main idea."] },
+  { n:71, t:"K.W.L.", type:"LS", sub:"Study Technique", cats:["engagement"],
+    desc:"Know · Want to know · Learned. Opener or closer.",
+    steps:["Three columns: K, W, L.","Fill in K and W for a topic.","Toward the end, review and correct the K column.","Fill in L (and unresolved Ws become the next session)."] },
+  { n:72, t:"Lecture-Notes Review", type:"LS", sub:"Study Technique", cats:["engagement"],
+    desc:"Group note review.",
+    steps:["Small groups; take turns reading sections of notes.","Politely ask questions or add details others missed.","Time to add to notes between turns.","Discuss what note-taking strategies worked."] },
+  { n:73, t:"Make/Take Practice Quiz", type:"LS", sub:"Study Technique", cats:["exam","peer"],
+    desc:"Students make quizzes for each other.",
+    steps:["Two+ groups.","Each makes a practice quiz with separate answer key.","Swap quizzes; complete the other's.","Compare answers; discuss unclear questions."] },
+  { n:74, t:"Peer Feedback", type:"LS", sub:"Study Technique", cats:["peer"],
+    desc:"Structured review of each other's work.",
+    steps:["Pairs/threes exchange work in progress.","Provide clear parameters (a rubric helps).","Discuss each other's work — e.g. summarize the writer's argument back to them."] },
+  { n:75, t:"Predict Test Questions", type:"LS", sub:"Study Technique", cats:["exam"],
+    desc:"Think like the professor.",
+    steps:["Pairs or trios write a test question on a specific topic.","Post on board for discussion.","Discuss: Would the professor ask this? What's the answer? Bloom level? How would it be modified?"] },
+  { n:76, t:"Reading Groups", type:"LS", sub:"Study Technique", cats:["peer"],
+    desc:"Outline a chapter together.",
+    steps:["Groups of 2–4 outline using chapter headings.","Each takes a paragraph for main content.","Skeleton outline → clarify under each heading.","If stuck, turn headings into who/what/why questions.","Groups compare."] },
+  { n:77, t:"Reading Made Easy!", type:"LS", sub:"Study Technique", cats:["peer"],
+    desc:"Tackle a difficult assigned reading together.",
+    steps:["Students bring a reading.","Divide into meaningful sections; assign each.","Each reads and writes a summary.","Each reads summary aloud.","Discuss as a whole."] },
+  { n:78, t:"Role Playing", type:"LS", sub:"Study Technique", cats:["engagement"],
+    desc:"For history, economics, ethics in science, or even acting out scientific processes. Provide clear roles, written instructions/worksheets, and a clear learning objective. Be ready to step in and diffuse tension." },
+  { n:79, t:"Setting S.M.A.R.T. Goals", type:"LS", sub:"Study Technique", cats:["engagement"],
+    desc:"Help students plan the semester. Closer early in the semester or just after the first midterm.",
+    callout:"Specific · Measurable · Attainable · Relevant · Timely. Pair each with a concrete sentence stem." },
+  { n:80, t:"Textbook Review", type:"LS", sub:"Study Technique", cats:["engagement","peer"],
+    desc:"Metacognitive — how to get more from textbook reading.",
+    steps:["Pairs jot down current marking/note-taking habits.","Group discusses: How does this chapter fit the course? Goals? Why mark/note? What do you do with markings?","Pick a chapter; read a few pages applying suggestions."] },
+  { n:81, t:"Think Aloud", type:"LS", sub:"Study Technique", cats:["engagement"],
+    desc:"Show students YOUR thought process. Verbalize your thinking while reading or solving a problem so they can see how an expert constructs meaning." },
+  { n:82, t:"Visuals (Drawings/Doodles)", type:"LS", sub:"Study Technique", cats:["engagement","peer"],
+    desc:"Whole group or pairs create a visual of a key concept with minimal words.",
+    steps:["Draw a visual for the concept.","Either describe it to other groups OR have other groups decipher the drawings."] },
+  { n:83, t:"Vocabulary Development", type:"LS", sub:"Study Technique", cats:["engagement","peer"],
+    desc:"Chunking related terms beats drilling definitions.",
+    steps:["Students list key terms ranging in complexity.","Scramble. Pairs sort into meaningful categories.","Define or give examples of additional terms.","Pairs discuss categories with the whole group."] },
+  // ---------- TRUE ICEBREAKERS (non-academic, community-building) ----------
+  { n:84, t:"Emoji check-in", type:"IB", sub:"Quick poll", cats:["icebreakers"],
+    desc:"Students drop the emoji that captures how they're feeling about today's content, the upcoming exam, or just Monday. Use Slido, Mentimeter, Padlet, or just call out responses. No follow-up needed — just acknowledging the room.",
+    callout:"~2 min. Best for: stressful exam weeks, dense content days." },
+  { n:85, t:"One-word mood", type:"IB", sub:"Verbal share", cats:["icebreakers"],
+    desc:"Go around the room — each student says one word describing how they're arriving today. Rule: no judgment, no follow-up. Quick, low-stakes, makes the room feel like a room.",
+    callout:"~3 min for a group of 10. Variation: 'one word for how you feel about the upcoming exam.'" },
+  { n:86, t:"Would you rather", type:"IB", sub:"Quick poll", cats:["icebreakers"],
+    desc:"Pose 2–3 silly binary questions. Students vote with hands or move to a side of the room. 'Unlimited coffee or unlimited sleep?' 'Take the exam now or in 3 days?' Pure vibes, zero academic content.",
+    callout:"~3–5 min. Pair questions to the moment — pre-exam vs. start of unit." },
+  { n:87, t:"This or that", type:"IB", sub:"Movement", cats:["icebreakers"],
+    desc:"Binary preferences with physical movement. Reveals personality fast and gets bodies moving.",
+    steps:["Pre-pick 4–6 binary pairs (morning person/night owl, library/coffee shop, sweet/savory breakfast).","Set up two sides of the room.","Call out a pair; students cross to their preference.","Optional: one quick comment from each side per round."],
+    callout:"~3–5 min. In person it pops; for online, use a poll." },
+  { n:88, t:"Class Spotify playlist", type:"IB", sub:"Tech tool", cats:["icebreakers"],
+    desc:"Build a shared playlist all semester. Each session, students add one song that's getting them through the week — drop into a shared Spotify playlist or a Padlet wall.",
+    callout:"~3 min. Pay-off: by mid-semester you have a real artifact of the cohort." },
+  { n:89, t:"Rose, thorn, bud", type:"IB", sub:"Personal share", cats:["icebreakers"],
+    desc:"Each student shares a rose (something good this week), a thorn (something hard), and a bud (something they're looking forward to). Passing on any or all is fine — no pressure.",
+    callout:"~5–8 min for a small group. Skip if attendance is huge." },
+  { n:90, t:"Meme drop", type:"IB", sub:"Tech tool", cats:["icebreakers"],
+    desc:"Padlet wall: each student drops a meme that captures how they feel about the upcoming exam, this unit, or just this week. No words required — just the meme. Loosens the room fast.",
+    callout:"~3 min. Set up a Padlet once and reuse all semester." },
+  { n:91, t:"Two truths and a lie (personal)", type:"IB", sub:"Personal share", cats:["icebreakers"],
+    desc:"PERSONAL version — not about course content. Each student writes 2 true and 1 false statement about themselves. Group guesses.",
+    steps:["Students write their three statements on a notecard.","Take turns reading; group votes on which is the lie.","Person reveals which was false."],
+    callout:"~5–7 min. Best in the first 2–3 weeks of the semester." },
+  { n:92, t:"Stand up if…", type:"IB", sub:"Movement", cats:["icebreakers"],
+    desc:"Call out experiences; students stand if it applies to them. Reveals shared experiences fast.",
+    callout:"~3 min. Mix easy ones ('you had coffee today') with course-relevant ones ('you re-read your notes after class')." },
+  { n:93, t:"GIF check-in", type:"IB", sub:"Tech tool", cats:["icebreakers"],
+    desc:"Each student finds and shares a GIF that represents how their week is going. Drop into a chat, Padlet, or shared doc. Visual, low-stakes, tells you a lot in 30 seconds.",
+    callout:"~3–5 min. Have a fallback if phones aren't out — show options on the screen." },
+  { n:94, t:"Confidence thermometer", type:"IB", sub:"Quick poll", cats:["icebreakers"],
+    desc:"Anonymous poll: 'On 1–10, how confident are you about [topic] right now?' Show the bar chart. No follow-up discussion — just acknowledging that everyone's at different levels.",
+    callout:"~2 min. Use right before an exam review, then again AFTER and watch the bar shift." },
+  { n:95, t:"Roll-call with a twist", type:"IB", sub:"Verbal share", cats:["icebreakers"],
+    desc:"As you take attendance, each student answers a fun question: favorite snack, dream travel destination, song on repeat, weirdest food combo. Rotate the question weekly.",
+    callout:"~5 min for 10–12 students. Tracks attendance + builds community in one move." },
+  // ---------- REDIRECTION SCENARIOS (in-the-moment moves) ----------
+  { n:96, t:"When the room goes silent", type:"RD", sub:"Scenario", cats:["redirection"],
+    desc:"Long pause after your question — nobody's biting. Don't fill the silence yourself. Wait time is doing work even when it feels uncomfortable.",
+    steps:["Hold the pause — count to 7 in your head.","If still silent, rephrase the question more concretely.","Break it into a smaller component question.","Offer Think-Pair-Share so the pressure of answering alone comes off."],
+    callout:"Three times out of four, someone speaks before you reach 7. The leader who can hold silence builds the strongest discussions." },
+  { n:97, t:"When one student dominates", type:"RD", sub:"Scenario", cats:["redirection"],
+    desc:"One person answers every question. The group goes passive. The dominator usually doesn't realize they're doing it.",
+    phrases:["I want to hear from someone we haven't heard from yet.","Thanks — let's hold that and get other voices.","Let's all write our answers down first, then we'll share."],
+    callout:"If it's a pattern, have a 30-second conversation outside session. Frame it as: 'You're great at this — help me get others talking by holding back a beat.'" },
+  { n:98, t:"When you don't know the answer", type:"RD", sub:"Scenario", cats:["redirection"],
+    desc:"Honesty plus a plan is always better than bluffing. Students respect the leader who says 'I'm not sure.'",
+    phrases:["Great question — let's figure it out together.","I'm not sure — let me check with the professor and follow up next session.","What does the textbook say? Let's all look."],
+    callout:"Follow-up actually matters. Email students or post in Slack/Canvas before next session — that's where the trust gets built." },
+  { n:99, t:"When a tangent takes over", type:"RD", sub:"Scenario", cats:["redirection"],
+    desc:"Discussion veers way off the lesson. Could be a productive rabbit hole or a derailment — your call.",
+    steps:["Decide in your head: is this connected to the objective? If yes, follow for 2 min and tie back.","If no, park it: 'Great question — parking it for now, let's circle back at the end if there's time.'","Write it on the board so it's not lost.","Return to the agenda explicitly: 'OK — back to membrane transport.'"],
+    callout:"Parked items make great openers for the next session." },
+  { n:100, t:"When phones come out", type:"RD", sub:"Scenario", cats:["redirection"],
+    desc:"Phones out, energy gone. Avoid calling out individuals — change the format instead.",
+    steps:["Switch to a movement or pair activity within 60 seconds.","Use phones AS the activity: 'Open Slido — here's the link.'","Raise the stakes — assign names to write the next answer on the board.","Take a 90-second stretch break and start fresh."],
+    callout:"Repeated checkouts are a curriculum signal, not a discipline problem. The activity isn't matching their level or pace." },
+  { n:101, t:"When time's running short", type:"RD", sub:"Scenario", cats:["redirection"],
+    desc:"You're 30 minutes in with 20 left and three big topics still on the board. Half-doing all three is worse than skipping one.",
+    steps:["Skip the next activity entirely — don't half-do it.","Move directly to a closer plus check for understanding.","Promise the rest in a Slack/email follow-up — and actually send it.","Reframe out loud: 'We won't get to X today — here's what to look at on your own.'"],
+    callout:"Students remember the leader who closed cleanly more than the leader who covered everything badly." },
+  { n:102, t:"When a wrong answer needs correcting", type:"RD", sub:"Scenario", cats:["redirection"],
+    desc:"A student answers with confidence — and they're wrong. Direct correction can shut them down for the rest of the session.",
+    phrases:["Interesting — what made you think that?","Let's hold that and check it against the textbook.","I see how you got there. Anyone want to build on it or push back?"],
+    callout:"Goal: have OTHER students surface the correction. Preserves the answerer's dignity and reinforces the SI model." },
+  // ---------- EXAM REVIEW SESSION DESIGN ----------
+  { n:103, t:"Exam review timeline", type:"XR", sub:"Session design", cats:["exam"],
+    desc:"A 3-week exam review plan beats a single cram session. Match the activity difficulty to how far out you are.",
+    steps:["**2 weeks out:** vocabulary consolidation + chapter-level concept maps [33].","**1 week out:** practice problems under loose time pressure. Use Jeopardy [53] or Pub Quiz [56].","**3 days out:** focused review on student-identified weak spots. Run 3:2:1 [50] to surface them.","**Day before:** confidence builder — Around the World [51] or low-stakes flash review.","**Post-exam:** debrief within a week, before grades shift the conversation."],
+    callout:"Hard problems 3 days out build confidence. Hard problems the day before destroy it." },
+  { n:104, t:"Post-exam debrief", type:"XR", sub:"Session design", cats:["exam"],
+    desc:"First session after grades drop. Students show up emotional or skip entirely. The framing decides which.",
+    steps:["Open with a Confidence thermometer [94] — anonymous 1–10 on how the exam felt.","Don't review questions item-by-item — pull the rubric and review at concept level.","Identify 2–3 concepts the cohort missed most. Run mini-activities on those.","Close with what they'll do differently next time (3:2:1 framing)."],
+    callout:"Send a Slack/Canvas post the night before: 'We're not relitigating the exam — we're using it to plan for the next one.' Sets expectations and brings the skippers back." },
+  { n:105, t:"The right number of practice problems", type:"XR", sub:"Session design", cats:["exam"],
+    desc:"More problems isn't more learning. Three problems done deeply outperforms ten done shallow.",
+    steps:["Pick 3 problems at 3 different difficulty levels (intro / mid / hardest).","Use a different format for each: Boardwork Model [64], Paired Problem Solving [23], Challenge Yourself [66].","Leave 10 minutes for debrief — 'what surprised you?' / 'which would you struggle with on the exam?'"],
+    callout:"If students want more, post extras in Slack — but don't grind through them in session." },
+
+  // ---------- More icebreakers — ensure every filter has 5+ examples ----------
+  { n:106, t:"Mood weather report", type:"IB", sub:"Quick poll", cats:["icebreakers"],
+    desc:"Quick metaphor check. Students pick the weather that matches their internal state today: sunny / partly cloudy / thunderstorm / foggy. Vote in Slido, raise fingers, or just call it out.",
+    callout:"~2 min. Surprising how much it reveals — and easier to say than 'how are you actually doing.'" },
+  { n:107, t:"Pick your fighter", type:"IB", sub:"Quick poll", cats:["icebreakers"],
+    desc:"Choose your study spirit animal for the week: Owl (up all night) / Golden retriever (so enthusiastic, so tired) / Raccoon (chaotic but resourceful) / Hamster on a wheel (running, going nowhere). Pure vibes, instant connection.",
+    callout:"~2 min. Riff on the animals each week — favorite Bridgerton sibling, Pokémon starter, breakfast cereal, etc." },
+  { n:108, t:"Word-cloud vibe", type:"IB", sub:"Tech tool", cats:["icebreakers"],
+    desc:"PollEverywhere or Mentimeter word cloud: 'Drop one word for how this semester feels so far.' Words that get repeated grow bigger — gives you an instant visual of the room's mood.",
+    callout:"~3 min. Anonymous makes it honest. Don't try to 'fix' the cloud — just witness it and move on." },
+  { n:109, t:"Bitmoji weather", type:"IB", sub:"Tech tool", cats:["icebreakers"],
+    desc:"Shared Padlet or Google Slide: each student drops their Bitmoji (or just an avatar / sticker) plus a weather emoji that captures their week. Visual mood-board of the cohort.",
+    callout:"~3–5 min. Pre-load the slide template once and reuse all semester." },
+  { n:110, t:"Silent birthday line-up", type:"IB", sub:"Movement", cats:["icebreakers"],
+    desc:"Students arrange themselves in a line by birth month and day — without speaking. Forces non-verbal communication, surfaces personality, builds group awareness fast.",
+    steps:["Designate the start and end of the line (January 1 → December 31).","No words allowed — gestures, fingers, written numbers only.","Once they think they\'re lined up, call it and check by going down the line."],
+    callout:"~5 min. Variation: by hometown distance from Austin, by shoe size, by hours of sleep last night." },
+  { n:111, t:"Group up by…", type:"IB", sub:"Movement", cats:["icebreakers"],
+    desc:"Call out a category — students physically form groups based on it. 'Get in groups by favorite season.' 'By number of siblings.' 'By coffee order.' Breaks the room into working units while surfacing connection points.",
+    callout:"~3 min. Doubles as group formation for the actual session activity that follows." },
+  { n:112, t:"Walk the line", type:"IB", sub:"Movement", cats:["icebreakers"],
+    desc:"Imagine a line across the room from 'totally confident' to 'low-key panicking.' Students physically walk to where they are on a topic — the upcoming exam, the last lecture, the semester so far. Honest, visual, fast.",
+    callout:"~3 min. Don\'t make them explain where they stood — the position itself is the answer." },
+  { n:113, t:"Walk-up song", type:"IB", sub:"Personal share", cats:["icebreakers"],
+    desc:"'If you walked into class today to a hype song, what would it be?' Students name their song (and why, if they want). Optionally drop into the cohort\'s class playlist.",
+    callout:"~5 min. Great for early-semester sessions when students don\'t know each other yet." },
+  { n:114, t:"Pet show-and-tell", type:"IB", sub:"Personal share", cats:["icebreakers"],
+    desc:"Pull up your phone — share a picture of your pet (or a pet you wish you had, or the campus squirrel you\'ve named). Universal serotonin boost.",
+    callout:"~5 min. Save the photos to a class folder — you\'ll thank yourself during finals week." },
+  { n:115, t:"Spirit character", type:"IB", sub:"Personal share", cats:["icebreakers"],
+    desc:"'Which fictional character are you channeling this week?' Could be Hermione the night before finals, Phoebe Buffay the morning after, Pam from The Office at 3pm. Funny, revealing, low-stakes.",
+    callout:"~3 min. If they get stuck: which character is having the week you\'re having?" },
+  { n:116, t:"Hot take", type:"IB", sub:"Verbal share", cats:["icebreakers"],
+    desc:"Share one mildly controversial opinion you hold — about anything except politics. Pineapple on pizza, breakfast for dinner, no socks with sandals, cilantro is fine actually. Surfaces personality, builds a sense of play.",
+    callout:"~5 min. Set the 'no politics' rule up front and the room stays fun." },
+  { n:117, t:"Brag and brag", type:"IB", sub:"Verbal share", cats:["icebreakers"],
+    desc:"Share one tiny win from your week, no matter how small: made my bed three days in a row, found parking on Speedway, finally figured out the printer, got 7 hours of sleep. Reframes the week toward positive.",
+    callout:"~5 min. Counter-programming for stressful weeks. Small wins compound." },
+  { n:118, t:"Recommendation drop", type:"IB", sub:"Verbal share", cats:["icebreakers"],
+    desc:"Share one thing you\'d recommend this week: a movie, book, study tool, snack, podcast, coffee shop, app. Builds class culture and gives everyone one new thing to try.",
+    callout:"~5 min. Keep a running doc/Padlet of all recommendations from the semester — surprise gift for the last session." },
+];
+
+// ========== CATEGORY METADATA ==========
+const CATEGORIES = {
+  icebreakers: {
+    title: "Icebreakers",
+    badge: "ICEBREAKERS",
+    sub: "Quick, fun, non-academic activities to lower the anxiety threshold and build community. None of these touch course content — they\'re community-building moves you can run in 2–8 minutes.",
+    filename: "icebreakers.html",
+    subFilters: ["All","Quick poll","Tech tool","Movement","Personal share","Verbal share"]
+  },
+  engagement: {
+    title: "Engagement<br>strategies",
+    badge: "ENGAGEMENT",
+    sub: "Wait time, checking for understanding, Think-Pair-Share, polling, and other ways to keep students actually participating instead of nodding.",
+    filename: "engagement.html",
+    subFilters: ["All","Check for understanding","Activity","Tech","Facilitation"]
+  },
+  peer: {
+    title: "Peer<br>work",
+    badge: "PEER WORK",
+    sub: "Formats that get students teaching each other instead of waiting for you. Jigsaws, clusters, paired problem-solving, reading groups, peer feedback.",
+    filename: "peer_work.html",
+    subFilters: ["All","Group activities","Problem-solving","Study together"]
+  },
+  redirection: {
+    title: "Redirection<br>moves",
+    badge: "REDIRECTION",
+    sub: "When the room stalls, a student dominates, a tangent takes over, or you don\'t know the answer — these are your real-time moves. Five core SI techniques plus seven scenario cards.",
+    filename: "redirection.html",
+    subFilters: ["All","Core moves","Scenarios"]
+  },
+  exam: {
+    title: "Exam<br>review",
+    badge: "EXAM REVIEW",
+    sub: "Jeopardy, Around the World, Pub Quiz, 3:2:1 — plus session-design guidance for the 3 weeks before and the debrief after.",
+    filename: "exam_review.html",
+    subFilters: ["All","Session design","Review games","Study technique","Problem-solving"]
+  }
+};
+
+// ========== RENDER ==========
+function getCategory() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get('cat') || 'icebreakers';
+}
+
+let activeCat = getCategory();
+let activeSubFilter = 'All';
+let searchTerm = '';
+
+function setupHero() {
+  const meta = CATEGORIES[activeCat] || CATEGORIES.icebreakers;
+  document.getElementById('cat-title').innerHTML = meta.title;
+  document.getElementById('cat-badge').textContent = meta.badge;
+  document.getElementById('cat-sub').textContent = meta.sub;
+  document.getElementById('filename').textContent = meta.filename;
+  document.getElementById('loc').textContent = meta.filename.toUpperCase();
+  document.title = meta.badge + ' // Biology Cohort';
+
+  // Filter pills
+  const pills = document.getElementById('filter-pills');
+  pills.innerHTML = '';
+  meta.subFilters.forEach(f => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-pill' + (f === activeSubFilter ? ' active' : '');
+    btn.textContent = f;
+    btn.onclick = () => { activeSubFilter = f; setupHero(); renderCards(); };
+    pills.appendChild(btn);
+  });
+
+  // Show the pre-flight checklist only for Exam Review
+  const tipsEl = document.getElementById('cat-tips');
+  if (tipsEl) tipsEl.style.display = (activeCat === 'exam') ? 'block' : 'none';
+}
+
+function renderCards() {
+  const grid = document.getElementById('grid');
+  let cards = STRATEGIES.filter(s => s.cats.includes(activeCat));
+
+  if (activeSubFilter !== 'All') {
+    const FILTER_ALIASES = {
+      'check-ins': ['check for understanding', 'closing', 'question design', 'facilitation'],
+      'recall': ['review/recall', 'recall'],
+      'group activities': ['roles', 'grouping', 'collaborative', 'activity'],
+      'study together': ['organization', 'study technique'],
+      'core moves': ['redirection', 'facilitation', 'check for understanding', 'activity'],
+      'scenarios': ['scenario'],
+      'review games': ['review/recall']
+    };
+    const lf = activeSubFilter.toLowerCase();
+    const matchers = FILTER_ALIASES[lf] || [lf];
+    cards = cards.filter(s => s.sub && matchers.some(m => s.sub.toLowerCase().includes(m)));
+  }
+  if (searchTerm) {
+    const lt = searchTerm.toLowerCase();
+    cards = cards.filter(s =>
+      s.t.toLowerCase().includes(lt) ||
+      s.desc.toLowerCase().includes(lt) ||
+      (s.sub && s.sub.toLowerCase().includes(lt))
+    );
+  }
+
+  document.getElementById('count').textContent = cards.length + ' CARDS';
+
+  if (cards.length === 0) {
+    grid.innerHTML = '<div class="empty" style="grid-column: 1 / -1;"><div class="h">No cards match</div><div>Try clearing the search or picking a different filter.</div></div>';
+    return;
+  }
+
+  grid.innerHTML = cards.map(s => {
+    const num = String(s.n).padStart(2, '0');
+    let inner = `<div class="strat-tag${s.type==='F'?'':' pink-tag'}">${s.type} · ${escapeHTML(s.sub)}</div>`;
+    inner += `<div class="strat-title">${escapeHTML(s.t)}</div>`;
+    inner += `<div class="strat-desc">${escapeHTML(s.desc)}</div>`;
+    if (s.steps) {
+      inner += `<ol class="strat-steps">${s.steps.map(st => `<li>${escapeHTML(st)}</li>`).join('')}</ol>`;
+    }
+    if (s.dont) {
+      inner += `<div class="strat-do dont"><div class="strat-do-h">Don't</div><ul>${s.dont.map(x => `<li>${escapeHTML(x)}</li>`).join('')}</ul></div>`;
+    }
+    if (s.doIt) {
+      inner += `<div class="strat-do do"><div class="strat-do-h">Do</div><ul>${s.doIt.map(x => `<li>${escapeHTML(x)}</li>`).join('')}</ul></div>`;
+    }
+    if (s.phrases) {
+      inner += `<div class="strat-phrases"><div class="strat-phrases-h">Try saying</div>${s.phrases.map(p => `"${escapeHTML(p)}"`).join(' · ')}</div>`;
+    }
+    if (s.callout) {
+      inner += `<div class="strat-callout">${escapeHTML(s.callout)}</div>`;
+    }
+    return `
+      <div class="strat-card">
+        <div class="win-bar">
+          <div class="win-dots"><span></span><span></span><span></span></div>
+          <div class="num">card_${num}.txt</div>
+          <div class="right"><span class="circle"></span></div>
+        </div>
+        <div class="strat-body">${inner}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function escapeHTML(s) {
+  if (!s) return '';
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+document.getElementById('search').addEventListener('input', (e) => {
+  searchTerm = e.target.value;
+  renderCards();
+});
+
+setupHero();
+renderCards();
+
+
+  // ====== VIEW SWITCHING ======
+  function showView(name, param) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    const target = document.getElementById('view-' + name);
+    if (target) target.classList.add('active');
+
+    let hash = '#';
+    if (name === 'lesson-plan') hash = '#lesson-plan';
+    else if (name === 'strategies') {
+      hash = '#strategies/' + (param || 'icebreakers');
+      activeCat = param || 'icebreakers';
+      activeSubFilter = 'All';
+      searchTerm = '';
+      const si = document.getElementById('search');
+      if (si) si.value = '';
+      setupHero();
+      renderCards();
+    }
+    try { history.pushState({view: name, param: param}, '', hash); } catch(e) {}
+    window.scrollTo(0, 0);
+  }
+
+  function handleHashRoute() {
+    const hash = (window.location.hash || '').slice(1);
+    if (hash.startsWith('strategies/')) {
+      const cat = hash.split('/')[1];
+      activeCat = cat;
+      activeSubFilter = 'All';
+      searchTerm = '';
+      const si = document.getElementById('search');
+      if (si) si.value = '';
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.getElementById('view-strategies').classList.add('active');
+      setupHero();
+      renderCards();
+    } else if (hash === 'lesson-plan') {
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.getElementById('view-lesson-plan').classList.add('active');
+    } else {
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.getElementById('view-dashboard').classList.add('active');
+    }
+  }
+
+  window.addEventListener('popstate', handleHashRoute);
+  document.addEventListener('DOMContentLoaded', handleHashRoute);
+
+</script>
+
+</body>
+</html>

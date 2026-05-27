@@ -1,0 +1,3930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pixel Solar System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0612;
+    --panel-bg: rgba(10, 6, 18, 0.78);
+    --line: #6b4ba8;
+    --line-hot: #ff6ec7;
+    --line-cool: #6effe0;
+    --line-warm: #ffd96b;
+    --text: #c8b8f0;
+    --text-bright: #ffe8f5;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    height: 100%; width: 100%; overflow: hidden;
+    background: var(--bg); color: var(--text);
+    font-family: 'VT323', ui-monospace, monospace;
+    -webkit-font-smoothing: none; font-smooth: never;
+  }
+  #canvas {
+    display: block; position: fixed; inset: 0;
+    image-rendering: pixelated; image-rendering: crisp-edges;
+    cursor: crosshair;
+  }
+  .panel {
+    position: fixed; top: 14px; left: 14px;
+    background: var(--panel-bg); border: 2px solid var(--line);
+    padding: 10px 14px;
+    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    box-shadow: 0 0 0 1px var(--bg) inset, 4px 4px 0 var(--line-hot);
+    user-select: none; z-index: 10; max-width: 320px;
+    transition: padding 0.2s ease;
+  }
+  .panel-header {
+    display: flex; align-items: center;
+    justify-content: space-between; gap: 12px;
+  }
+  .panel h1 {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 11px; color: var(--text-bright);
+    letter-spacing: 0.08em;
+    text-shadow: 2px 2px 0 var(--line-hot);
+  }
+  .collapse-btn {
+    background: transparent; border: 1px solid var(--line);
+    color: var(--text); font-family: 'VT323', monospace;
+    font-size: 15px; line-height: 1;
+    width: 22px; height: 22px; padding: 0; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .collapse-btn:hover { background: var(--line); color: var(--bg); }
+  .panel-body {
+    margin-top: 10px; overflow: hidden; max-height: 600px;
+    transition: max-height 0.25s ease, opacity 0.2s ease, margin-top 0.2s ease;
+  }
+  .panel.collapsed .panel-body {
+    max-height: 0; margin-top: 0; opacity: 0; pointer-events: none;
+  }
+  .panel .sub {
+    font-size: 13px; color: var(--line);
+    letter-spacing: 0.18em; text-transform: uppercase;
+    margin-bottom: 10px;
+    border-bottom: 1px dashed var(--line); padding-bottom: 8px;
+  }
+  .panel .blurb {
+    font-size: 15px; line-height: 1.25;
+    color: var(--text); margin-bottom: 12px;
+  }
+  .panel .blurb b { color: var(--line-warm); }
+  .panel .blurb em { color: var(--line-cool); font-style: normal; }
+  .row { display: flex; gap: 6px; align-items: center; font-size: 15px; }
+  .row + .row { margin-top: 8px; }
+  .row > .lbl {
+    color: var(--line-cool); font-size: 12px;
+    letter-spacing: 0.15em; text-transform: uppercase; min-width: 50px;
+  }
+  button.tap {
+    background: transparent; border: 2px solid var(--line);
+    color: var(--text); font-family: 'VT323', monospace;
+    font-size: 14px; line-height: 1;
+    padding: 5px 9px 4px; cursor: pointer;
+    text-transform: uppercase; letter-spacing: 0.1em;
+  }
+  button.tap:hover { background: var(--line); color: var(--bg); }
+  button.tap:active { transform: translate(1px, 1px); }
+  button.tap.active {
+    background: var(--line-hot); color: var(--bg);
+    border-color: var(--line-hot);
+  }
+
+  .label {
+    position: fixed; pointer-events: none;
+    background: var(--line-hot); color: var(--bg);
+    font-family: 'Press Start 2P', monospace;
+    padding: 5px 7px 4px; letter-spacing: 0.08em;
+    transform: translate(-50%, -100%);
+    opacity: 0; transition: opacity 0.12s ease;
+    white-space: nowrap; z-index: 5;
+    box-shadow: 3px 3px 0 var(--bg); text-align: center;
+  }
+  .label .name { font-size: 10px; display: block; }
+  .label .type {
+    font-family: 'VT323', monospace; font-size: 12px;
+    color: var(--bg); opacity: 0.8; margin-top: 2px;
+    letter-spacing: 0.15em; display: block;
+  }
+  .label .rates {
+    font-family: 'VT323', monospace; font-size: 13px;
+    color: var(--bg); margin-top: 3px;
+    letter-spacing: 0.06em; display: block; font-weight: bold;
+  }
+  .label .tap-hint {
+    font-family: 'VT323', monospace; font-size: 11px;
+    color: var(--bg); opacity: 0.7; margin-top: 4px;
+    letter-spacing: 0.18em; display: block;
+    border-top: 1px dashed var(--bg); padding-top: 3px;
+  }
+  .label.visible { opacity: 1; }
+
+  .corner-tl, .corner-tr, .corner-bl, .corner-br {
+    position: fixed; width: 14px; height: 14px;
+    border: 2px solid var(--line-hot);
+    pointer-events: none; z-index: 4;
+  }
+  .corner-tl { top: 8px; left: 8px; border-right: 0; border-bottom: 0; }
+  .corner-tr { top: 8px; right: 8px; border-left: 0; border-bottom: 0; }
+  .corner-bl { bottom: 8px; left: 8px; border-right: 0; border-top: 0; }
+  .corner-br { bottom: 8px; right: 8px; border-left: 0; border-top: 0; }
+
+  /* Planet navigation bar */
+  .planet-bar {
+    position: fixed;
+    left: 50%; bottom: 14px;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex; gap: 6px;
+    background: var(--panel-bg);
+    border: 2px solid var(--line);
+    padding: 7px 8px;
+    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    box-shadow: 4px 4px 0 var(--line-cool);
+    max-width: calc(100vw - 28px);
+    overflow-x: auto; overflow-y: hidden;
+    scrollbar-width: none; user-select: none;
+    transition: opacity 0.3s ease;
+  }
+  .planet-bar::-webkit-scrollbar { display: none; }
+  .planet-bar.traveling { opacity: 0.4; pointer-events: none; }
+  .pb-item {
+    background: transparent;
+    border: 2px solid var(--line);
+    color: var(--text);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px; letter-spacing: 0.1em;
+    padding: 8px 9px 7px;
+    cursor: pointer;
+    text-transform: uppercase;
+    white-space: nowrap; flex-shrink: 0;
+    position: relative;
+    transition: transform 0.06s ease;
+  }
+  .pb-item:hover { background: var(--line); color: var(--bg); }
+  .pb-item:active { transform: translate(1px, 1px); }
+  .pb-item.current {
+    background: var(--line-hot); color: var(--bg);
+    border-color: var(--line-hot);
+    box-shadow: 0 0 0 2px var(--bg) inset, 0 0 8px var(--line-hot);
+  }
+  .pb-item.unbuilt {
+    color: var(--line); border-style: dashed; opacity: 0.85;
+  }
+  .pb-item.unbuilt:hover {
+    background: transparent; color: var(--line-warm);
+    border-color: var(--line-warm);
+  }
+  .pb-item .au {
+    display: block;
+    font-family: 'VT323', monospace;
+    font-size: 11px; letter-spacing: 0.06em;
+    margin-top: 3px; opacity: 0.7; text-transform: none;
+  }
+
+  .toast {
+    position: fixed;
+    left: 50%; bottom: 90px;
+    transform: translate(-50%, 20px);
+    background: var(--line-warm); color: var(--bg);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 11px; letter-spacing: 0.1em;
+    padding: 12px 16px 11px;
+    box-shadow: 4px 4px 0 var(--bg);
+    z-index: 50; opacity: 0;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    pointer-events: none; white-space: nowrap;
+  }
+  .toast.visible { opacity: 1; transform: translate(-50%, 0); }
+
+  /* Travel transit card */
+  .transit-card {
+    position: fixed;
+    left: 50%; top: 50%;
+    transform: translate(-50%, -50%) translateY(100px);
+    z-index: 25;
+    background: var(--panel-bg);
+    border: 2px solid var(--line-cool);
+    padding: 18px 24px 16px;
+    box-shadow: 5px 5px 0 var(--line-hot);
+    text-align: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s ease;
+    min-width: 280px;
+    max-width: calc(100vw - 40px);
+  }
+  .transit-card.visible { opacity: 1; }
+  .transit-card .tr-route {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px; color: var(--text-bright);
+    letter-spacing: 0.1em;
+    text-shadow: 2px 2px 0 var(--line-hot);
+    margin-bottom: 14px;
+  }
+  .transit-card .tr-arrow { color: var(--line-cool); margin: 0 6px; }
+  .transit-card .tr-label {
+    font-family: 'VT323', monospace;
+    font-size: 13px; color: var(--line);
+    letter-spacing: 0.2em; text-transform: uppercase;
+    margin-bottom: 6px;
+    border-top: 1px dashed var(--line); padding-top: 10px;
+  }
+  .transit-card .tr-time {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 18px; color: var(--line-warm);
+    letter-spacing: 0.08em; margin-bottom: 6px;
+  }
+  .transit-card .tr-note {
+    font-size: 15px; color: var(--text);
+    letter-spacing: 0.04em; line-height: 1.2;
+  }
+
+  /* Character page */
+  .char-page {
+    position: fixed; inset: 0;
+    background: rgba(10, 6, 18, 0.94);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    z-index: 100; opacity: 0; pointer-events: none;
+    transition: opacity 0.25s ease; overflow-y: auto;
+  }
+  .char-page.visible { opacity: 1; pointer-events: auto; }
+  .char-page-inner {
+    min-height: 100%;
+    padding: 70px 30px 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 50px;
+  }
+  .char-content {
+    display: grid; grid-template-columns: auto 1fr;
+    gap: 44px; max-width: 880px; width: 100%; align-items: start;
+  }
+  .char-close {
+    position: fixed; top: 18px; right: 18px;
+    width: 38px; height: 38px;
+    border: 2px solid var(--line-hot);
+    background: var(--bg); color: var(--line-hot);
+    font-family: 'VT323', monospace;
+    font-size: 22px; line-height: 1;
+    cursor: pointer; z-index: 101;
+    box-shadow: 3px 3px 0 var(--line);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .char-close:hover { background: var(--line-hot); color: var(--bg); }
+  .char-close:active { transform: translate(1px, 1px); box-shadow: 2px 2px 0 var(--line); }
+  .char-left { display: flex; flex-direction: column; gap: 14px; align-items: center; }
+  .char-frame {
+    width: 280px; height: 280px;
+    background: var(--panel-bg); border: 2px solid var(--line);
+    box-shadow: 6px 6px 0 var(--line-hot);
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    background-image:
+      radial-gradient(ellipse at center, rgba(107, 75, 168, 0.15), transparent 60%),
+      repeating-linear-gradient(0deg, rgba(255, 110, 199, 0.04) 0 2px, transparent 2px 4px);
+  }
+  .char-frame::before, .char-frame::after {
+    content: ''; position: absolute;
+    width: 10px; height: 10px;
+    border: 2px solid var(--line-warm);
+  }
+  .char-frame::before { top: -2px; left: -2px; border-right: 0; border-bottom: 0; }
+  .char-frame::after { bottom: -2px; right: -2px; border-left: 0; border-top: 0; }
+  .char-frame canvas { image-rendering: pixelated; image-rendering: crisp-edges; }
+  .char-nameplate {
+    background: var(--line-hot); color: var(--bg);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 11px; padding: 8px 14px; letter-spacing: 0.12em;
+    box-shadow: 3px 3px 0 var(--bg);
+    text-align: center; width: 280px;
+  }
+  .char-right { color: var(--text); min-width: 0; }
+  .char-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 26px; color: var(--text-bright);
+    letter-spacing: 0.08em;
+    text-shadow: 3px 3px 0 var(--line-hot);
+    margin-bottom: 8px; word-break: break-word;
+  }
+  .char-subtitle {
+    font-size: 17px; color: var(--line-cool);
+    letter-spacing: 0.18em; text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .char-divider {
+    height: 2px;
+    background: repeating-linear-gradient(90deg, var(--line) 0 6px, transparent 6px 12px);
+    margin: 18px 0;
+  }
+  .char-section { margin-bottom: 26px; }
+  .char-section-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 11px; color: var(--line-warm);
+    letter-spacing: 0.15em; margin-bottom: 14px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .char-section-title::before { content: '▌'; color: var(--line-hot); }
+  .char-stats { display: grid; grid-template-columns: max-content 1fr; gap: 6px 18px; }
+  .char-stats dt {
+    color: var(--line); font-family: 'Press Start 2P', monospace;
+    font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase;
+    align-self: center; padding-top: 4px;
+  }
+  .char-stats dd { color: var(--text-bright); font-size: 18px; letter-spacing: 0.02em; }
+  .char-lore p { font-size: 18px; line-height: 1.35; color: var(--text); margin-bottom: 12px; }
+  .char-lore p:last-child { margin-bottom: 0; }
+  .char-lore p:first-child::first-letter {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 22px; color: var(--line-hot);
+    float: left; margin: 6px 8px 0 0; line-height: 1;
+  }
+  .char-link {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: transparent;
+    border: 2px solid var(--line-hot);
+    color: var(--line-hot);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px; letter-spacing: 0.12em;
+    padding: 12px 16px 11px;
+    text-decoration: none; cursor: pointer;
+    box-shadow: 4px 4px 0 var(--line);
+    transition: transform 0.06s ease, box-shadow 0.06s ease,
+                background 0.15s ease, color 0.15s ease;
+    text-transform: uppercase;
+  }
+  .char-link:hover { background: var(--line-hot); color: var(--bg); }
+  .char-link:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--line); }
+  .char-link .arrow { display: inline-block; transition: transform 0.15s ease; }
+  .char-link:hover .arrow { transform: translateX(3px); }
+  .char-link-sub {
+    display: block; font-family: 'VT323', monospace;
+    font-size: 14px; color: var(--line);
+    letter-spacing: 0.1em; margin-top: 10px; text-transform: none;
+  }
+  .char-link-sub code {
+    font-family: 'VT323', monospace; color: var(--line-cool); word-break: break-all;
+  }
+  .char-hint {
+    font-size: 12px; color: var(--line);
+    letter-spacing: 0.22em; text-transform: uppercase;
+    user-select: none;
+    text-align: center; line-height: 1.4;
+    border-top: 1px dashed var(--line);
+    padding: 20px 20px 0;
+    max-width: 600px;
+    width: 100%;
+  }
+  .char-hint span { color: var(--line-cool); }
+
+  @media (max-width: 700px) {
+    .char-content { grid-template-columns: 1fr; gap: 22px; }
+    .char-frame { width: 200px; height: 200px; }
+    .char-nameplate { width: 200px; font-size: 10px; }
+    .char-title { font-size: 19px; }
+    .char-subtitle { font-size: 14px; }
+    .char-stats dt { font-size: 8px; }
+    .char-stats dd { font-size: 16px; }
+    .char-lore p { font-size: 16px; }
+    .char-page-inner { padding: 60px 18px 40px; gap: 35px; }
+    .panel { max-width: calc(100vw - 28px); }
+    .char-link { font-size: 9px; padding: 11px 13px 10px; }
+    .pb-item { font-size: 8px; padding: 7px 7px 6px; }
+    .pb-item .au { font-size: 10px; }
+    .transit-card .tr-route { font-size: 10px; }
+    .transit-card .tr-time { font-size: 15px; }
+  }
+</style>
+</head>
+<body>
+<a href="index.html" aria-label="Back to portfolio" style="position:fixed; top:14px; left:14px; z-index:9999; display:inline-flex; align-items:center; font-family:'Inter',system-ui,-apple-system,sans-serif; font-size:11.5px; font-weight:600; letter-spacing:0.04em; color:#1A1A1A; text-decoration:none; background:rgba(255,252,245,0.94); padding:7px 12px; border-radius:4px; border:1px solid #C9C2B0; box-shadow:0 2px 10px rgba(0,0,0,0.18); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);">&larr; Portfolio</a>
+<canvas id="canvas"></canvas>
+<div class="corner-tl"></div>
+<div class="corner-bl"></div><div class="corner-br"></div>
+
+<div class="panel" id="panel">
+  <div class="panel-header">
+    <h1 id="panelTitle">✦ JUPITER</h1>
+    <button class="collapse-btn" id="collapseBtn" aria-label="Toggle panel">−</button>
+  </div>
+  <div class="panel-body">
+    <div class="sub" id="panelSub">&amp; the Galilean Moons</div>
+    <div class="blurb" id="panelBlurb"></div>
+    <div class="row">
+      <span class="lbl">Speed</span>
+      <button class="tap" data-speed="1">1×</button>
+      <button class="tap" data-speed="5">5×</button>
+      <button class="tap" data-speed="30">30×</button>
+    </div>
+    <div class="row" style="margin-top:8px;">
+      <span class="lbl">Paths</span>
+      <button class="tap" id="togglePaths">Hide</button>
+      <button class="tap" id="pause">⏸ Pause</button>
+    </div>
+  </div>
+</div>
+
+<div class="planet-bar" id="planetBar"></div>
+<div class="toast" id="toast"></div>
+
+<div class="transit-card" id="transitCard">
+  <div class="tr-route">
+    <span id="trFrom">FROM</span>
+    <span class="tr-arrow">→</span>
+    <span id="trTo">TO</span>
+  </div>
+  <div class="tr-label">Travel time</div>
+  <div class="tr-time" id="trTime"></div>
+  <div class="tr-note">with a modern rocket</div>
+</div>
+
+<div class="label" id="label">
+  <span class="name"></span>
+  <span class="type"></span>
+  <span class="rates"></span>
+  <span class="tap-hint">tap to open</span>
+</div>
+
+<div class="char-page" id="charPage" aria-hidden="true">
+  <button class="char-close" id="charClose" aria-label="Close">✕</button>
+  <div class="char-page-inner">
+    <div class="char-content">
+      <div class="char-left">
+        <div class="char-frame"><canvas id="charAvatar"></canvas></div>
+        <div class="char-nameplate" id="charNameplate"></div>
+      </div>
+      <div class="char-right">
+        <div class="char-title" id="charTitle"></div>
+        <div class="char-subtitle" id="charSubtitle"></div>
+        <div class="char-divider"></div>
+        <div class="char-section">
+          <div class="char-section-title">PROFILE</div>
+          <dl class="char-stats" id="charStats"></dl>
+        </div>
+        <div class="char-section">
+          <div class="char-section-title">NOTES</div>
+          <div class="char-lore" id="charLore"></div>
+        </div>
+        <div class="char-section">
+          <div class="char-section-title">LEARN MORE</div>
+          <a class="char-link" id="charNasaLink" href="#" target="_blank" rel="noopener noreferrer">
+            GO TO OFFICIAL NASA PAGE
+            <span class="arrow">→</span>
+          </a>
+          <span class="char-link-sub">opens <code id="charNasaUrl"></code> in a new tab</span>
+        </div>
+      </div>
+    </div>
+    <div class="char-hint">click outside &middot; press <span>ESC</span> &middot; or hit ✕ to return</div>
+  </div>
+</div>
+
+<script>
+/* ==========================================================
+   PIXEL SOLAR SYSTEM — Jupiter & Saturn, travel, planet bar
+   ========================================================== */
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+ctx.imageSmoothingEnabled = false;
+
+let DPR = Math.min(window.devicePixelRatio || 1, 2);
+function resize() {
+  DPR = Math.min(window.devicePixelRatio || 1, 2);
+  canvas.width = window.innerWidth * DPR;
+  canvas.height = window.innerHeight * DPR;
+  canvas.style.width = window.innerWidth + 'px';
+  canvas.style.height = window.innerHeight + 'px';
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  ctx.imageSmoothingEnabled = false;
+}
+resize();
+window.addEventListener('resize', () => {
+  resize(); generateStars(); paintNebula();
+  if (currentSystem.type === 'field') generateBackgroundPebbles();
+});
+const W = () => window.innerWidth;
+const H = () => window.innerHeight;
+
+const palette = {
+  bg: '#0a0612',
+  nebula: ['#1a0d3a', '#2d0f4d', '#0a0612'],
+  stars: ['#ffffff', '#c8b8f0', '#8a6fb8', '#ff6ec7', '#6effe0'],
+  shadow: '#6b4ba8', hot: '#ff6ec7', cool: '#6effe0', warm: '#ffd96b',
+};
+
+const DAYS_PER_SECOND = 0.3;
+const period = (days) => days / DAYS_PER_SECOND;
+
+/* SPRITES */
+const JUPITER_BANDS = `
+........MMMMMMMM........
+.....LLLLLLLLLLLLLL.....
+...LLLLLLLLLLLLLLLLLL...
+..MMMMMMMMMMMMMMMMMMMM..
+.DDDDDDDDDDDDDDDDDDDDDD.
+.MMMMMMMMMMMMMMMMMMMMMM.
+LLLLLLLLLLLLLLLLLLLLLLLL
+DDDDDDDDDDDDDDDDDDDDDDDD
+LLLLLLLLLLLLLLLLLLLLLLLL
+MMMMMMMMMMMMMMMMMMMMMMMM
+LLLLLLLLLLLLLLLLLLLLLLLL
+DDDDDDDDDDDDDDDDDDDDDDDD
+MMMMMMMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMMMMMM
+LLLLLLLLLLLLLLLLLLLLLLLL
+LLLLLLLLLLLLLLLLLLLLLLLL
+DDDDDDDDDDDDDDDDDDDDDDDD
+MMMMMMMMMMMMMMMMMMMMMMMM
+.LLLLLLLLLLLLLLLLLLLLLL.
+.MMMMMMMMMMMMMMMMMMMMMM.
+..MMMMMMMMMMMMMMMMMMMM..
+...MMMMMMMMMMMMMMMMMM...
+.....MMMMMMMMMMMMMM.....
+........MMMMMMMM........
+`;
+const IO_SPRITE = `
+.MMMMM.
+MMDMMDM
+MMMMMMM
+MDMMDMM
+MMMDMMM
+MDMMMMM
+.MMMMM.
+`;
+const EUROPA_SPRITE = `
+.MMMM.
+MMDMMM
+MDDMMM
+MMDMMM
+MMDDMD
+.MMMM.
+`;
+const GANYMEDE_SPRITE = `
+..MMMMM..
+.MMMDMMM.
+MMDMMMDMM
+MMMMMMMMM
+MDMMMMMMD
+MMMMDMMMM
+MMDMMMMDM
+.MMMMMMM.
+..MMMMM..
+`;
+const CALLISTO_SPRITE = `
+.MLMMM..
+MMLMMDM.
+MLMMMMML
+MMMLMMMM
+LMMMMLMM
+MMDMMMMM
+.MMLMMD.
+..MMMM..
+`;
+const SATURN_BANDS = `
+.....MMMMMMMM.....
+...LLLLLLLLLLLL...
+..LLLLLLLLLLLLLL..
+.MMMMMMMMMMMMMMMM.
+DDDDDDDDDDDDDDDDDD
+LLLLLLLLLLLLLLLLLL
+MMMMMMMMMMMMMMMMMM
+DDDDDDDDDDDDDDDDDD
+LLLLLLLLLLLLLLLLLL
+MMMMMMMMMMMMMMMMMM
+LLLLLLLLLLLLLLLLLL
+DDDDDDDDDDDDDDDDDD
+MMMMMMMMMMMMMMMMMM
+DDDDDDDDDDDDDDDDDD
+.MMMMMMMMMMMMMMMM.
+..LLLLLLLLLLLLLL..
+...LLLLLLLLLLLL...
+.....MMMMMMMM.....
+`;
+const MIMAS_SPRITE = `
+.MMMM.
+MMDMMM
+MDMMMM
+MMMMDM
+MMDMMM
+.MMMM.
+`;
+const ENCELADUS_SPRITE = `
+.MMMMM.
+MLMMLMM
+MMMLMMM
+MMMMMMM
+MLMMMMM
+MMMMLMM
+.MMMMM.
+`;
+const TETHYS_SPRITE = `
+.MMMMMM.
+MMLMMMMM
+MLMMMMLM
+MMMMDMMM
+MDMMMMMM
+MMMLMMMM
+MMMMMMLM
+.MMMMMM.
+`;
+const DIONE_SPRITE = `
+.MMMMMM.
+MMMLMMMM
+MLMMMMLM
+MMMMMMMM
+MMLMMMMM
+MMMMLMMM
+MLMMMMMM
+.MMMMMM.
+`;
+const RHEA_SPRITE = `
+..MMMMM..
+.MMMDMMM.
+MMDMMMDMM
+MDMMMMMMM
+MMMMDMMMM
+MMMMMMDMM
+MMDMMMMMM
+.MMMMMMM.
+..MMMMM..
+`;
+const TITAN_SPRITE = `
+...MMMM...
+..MMLMMM..
+.LMMMMMML.
+MMMMMMMMMM
+MLMMMMMMLM
+MMMMMMMMMM
+MLMMMMMMLM
+.MMMMMMMM.
+..MMMLMM..
+...MMMM...
+`;
+const IAPETUS_SPRITE = `
+.MMDDDD.
+MMMMDDDD
+MMMMMDDD
+MMMMMDDD
+MMMMMDDD
+MMMMMDDD
+MMMMDDDD
+.MMDDDD.
+`;
+
+/* ===== Mars and its moons ===== */
+const MARS_BANDS = `
+.......IIIIII.......
+.....IIIIIIIIII.....
+....MMIIIIIIIIMM....
+...MMMMMMMMMMMMMM...
+..MMMMMDMMMMMMMMMM..
+.MMMMMMMMMMMMMMMMMM.
+MMMMMMMMMDDDDMMMMMMM
+MMMMMDMMMMMMMMMMMMMM
+MMMMMMMMMMDDDMMMMMMM
+MMMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMDDMMMMMM
+MMDMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMM
+MMMMMMMMMDDMMMMMMMMM
+.MMMMMMMMMMMMMMMMMM.
+..MMMMMMMMMMMMMMMM..
+...MMMMMMMMMMMMMM...
+....MMIIIIIIIIMM....
+.....IIIIIIIIII.....
+.......IIIIII.......
+`;
+const PHOBOS_SPRITE = `
+.MMMM..
+MDMMMM.
+MMDMMMM
+MMMMMMM
+.MMMMD.
+..MMM..
+`;
+const DEIMOS_SPRITE = `
+.MMM.
+MMMMM
+MDMMM
+MMMMD
+.MMM.
+`;
+
+/* ===== The Sun (the star at center) ===== */
+const SUN_SPRITE = `
+........................
+.........IIIIII.........
+......IIIIIIIIIIII......
+.....IIIILLLLLLIIII.....
+....IIILLLLLLLLLLIII....
+...IIILLLLLLLLLLLLIII...
+..IIILLLLMMMMMMLLLLIII..
+..IILLLMMMMMMMMMMLLLII..
+..IILLLMMMMMMMMMMLLLII..
+.IILLLMMMMMMMMMMMMLLLII.
+.IILLLMMMMMMMMMMMMLLLII.
+.IILLLMMMMMMMMMMMMLLLII.
+.IILLLMMMMMMMMMMMMLLLII.
+.IILLLMMMMMMMMMMMMLLLII.
+.IILLLMMMMMMMMMMMMLLLII.
+..IILLLMMMMMMMMMMLLLII..
+..IILLLMMMMMMMMMMLLLII..
+..IIILLLLMMMMMMLLLLIII..
+...IIILLLLLLLLLLLLIII...
+....IIILLLLLLLLLLIII....
+.....IIIILLLLLLIIII.....
+......IIIIIIIIIIII......
+.........IIIIII.........
+........................
+`;
+
+/* ===== Mercury (no moons) ===== */
+const MERCURY_BANDS = `
+.......DDDDDD.......
+.....DDMMMMMMDD.....
+....DMMMMMMMMMMD....
+...DMMMMMMMMMMMMD...
+..DMMMMMMMMMMMMMMD..
+.DMMMMMMMMMMMMMMMMD.
+.DMMMMMMMMMMMMMMMMD.
+DMMMMMMMMMMMMMMMMMMD
+DMMMMMMMMMMMMMMMMMMD
+DMMMMMMMMMMMMMMMMMMD
+DMMMMMMMMMMMMMMMMMMD
+DMMMMMMMMMMMMMMMMMMD
+DMMMMMMMMMMMMMMMMMMD
+.DMMMMMMMMMMMMMMMMD.
+.DMMMMMMMMMMMMMMMMD.
+..DMMMMMMMMMMMMMMD..
+...DMMMMMMMMMMMMD...
+....DMMMMMMMMMMD....
+.....DDMMMMMMDD.....
+.......DDDDDD.......
+`;
+
+/* ===== Venus (no moons) ===== */
+const VENUS_BANDS = `
+.......DDDDDD.......
+.....DDMMMMMMDD.....
+....DMMMMMMMMMMD....
+...DMMMMMMMMMMMMD...
+..DMMMMMMMMMMMMMMD..
+.DMMMMMMMMMMMMMMMMD.
+.DMMMMMMMMMMMMMMMMD.
+DMMMMMMMMMMMMMMMMMMD
+DMMMMMMMMMMMMMMMMMMD
+DMMMMMMMMMMMMMMMMMMD
+DMMMMMMMMMMMMMMMMMMD
+DMMMMMMMMMMMMMMMMMMD
+DMMMMMMMMMMMMMMMMMMD
+.DMMMMMMMMMMMMMMMMD.
+.DMMMMMMMMMMMMMMMMD.
+..DMMMMMMMMMMMMMMD..
+...DMMMMMMMMMMMMD...
+....DMMMMMMMMMMD....
+.....DDMMMMMMDD.....
+.......DDDDDD.......
+`;
+
+/* ===== Earth and the Moon ===== */
+const EARTH_BANDS = `
+.......IIIIII.......
+.....DIIIIIIIID.....
+....DIMMMMMMMMID....
+...DMMMMMMMMMMMMD...
+..DMMMMMMMMMMMMMMD..
+.DMMMMMMMMMMMMMMMMD.
+.DMMMMMMMMMMMMMMMMD.
+DMMMMMMMMMMMMMMMMMMD
+DMMMMMMMMMMMMMMMMMMD
+DMMMMMMMMMMMMMMMMMMD
+DMMMMMMMMMMMMMMMMMMD
+DMMMMMMMMMMMMMMMMMMD
+DMMMMMMMMMMMMMMMMMMD
+.DMMMMMMMMMMMMMMMMD.
+.DMMMMMMMMMMMMMMMMD.
+..DMMMMMMMMMMMMMMD..
+...DMMMMMMMMMMMMD...
+....DIMMMMMMMMID....
+.....DIIIIIIIID.....
+.......IIIIII.......
+`;
+const MOON_SPRITE = `
+..MMMMMM..
+.MMDMMMMM.
+MDMMMMMDMM
+MMMMMDMMMM
+MDMMMMMMMM
+MMMMDMMMMM
+MMMDMMMDMM
+.MMMMMMMM.
+..MMMMMM..
+`;
+
+/* ===== Uranus and its 5 main moons ===== */
+const URANUS_BANDS = `
+.......MMMMMM.......
+.....MMMMMMMMMM.....
+....MMMMLLLLMMMM....
+...MMMMMMMMMMMMMM...
+..MMMMMMMMMMMMMMMM..
+.MMMMMMMMMMMMMMMMMM.
+MMMMMMMMMMMMMMMMMMMM
+MMMMMMMLLLLLLMMMMMMM
+MMMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMM
+MMMMMMMLLLLLLMMMMMMM
+MMMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMM
+.MMMMMMMMMMMMMMMMMM.
+..MMMMMMMMMMMMMMMM..
+...MMMMMMMMMMMMMM...
+....MMMMMMMMMMMM....
+.....MMMMMMMMMM.....
+.......MMMMMM.......
+`;
+const MIRANDA_SPRITE = `
+.MMMM..
+MMMMMD.
+MDMMMMM
+MMMDMMM
+.MMDMM.
+..MMM..
+`;
+const ARIEL_SPRITE = `
+.MMMMM.
+MMMMMMM
+MMLMMLM
+MMMMMMM
+MLMMMMM
+MMMMLMM
+.MMMMM.
+`;
+const UMBRIEL_SPRITE = `
+.MMMM..
+MMMMMM.
+MMDMMMM
+MMMMDMM
+MDMMMMM
+.MMMMM.
+..MMM..
+`;
+const TITANIA_SPRITE = `
+..MMMM...
+.MMMMMMM.
+MMMMDMMMM
+MDMMMMMMM
+MMMMMMMDM
+MMMDMMMMM
+.MMMMMMM.
+..MMMM...
+`;
+const OBERON_SPRITE = `
+..MMMM...
+.MMMMMMM.
+MMDMMMMMM
+MMMMMMDMM
+MMMMDMMMM
+MDMMMMMMM
+MMMMMMMDM
+.MMMMMMM.
+..MMMM...
+`;
+
+/* ===== Neptune and its 3 main moons ===== */
+const NEPTUNE_BANDS = `
+.......MMMMMM.......
+.....MMMMMMMMMM.....
+....MMMMLLLMMMMM....
+...MMMMMMMMMMMMMM...
+..MMMMMLLLLMMMMMMM..
+.MMMMMMMMMMMMMMMMMM.
+MMMMMMMMMMDMMMMMMMMM
+MMMMMMMMDDDDMMMMMMMM
+MMMMMMMLLLLLMMMMMMMM
+MMMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMM
+MMMMMLLLLMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMLLLMMMMM
+.MMMMMMMMMMMMMMMMMM.
+..MMMMMMMMMMMMMMMM..
+...MMMMMMMMMMMMMM...
+....MMMMMMMMMMMM....
+.....MMMMMMMMMM.....
+.......MMMMMM.......
+`;
+const TRITON_SPRITE = `
+..MMMMM..
+.MMMDMMM.
+MMDMMMDMM
+MMMMMMMMM
+MDMMMMMMM
+MMMMMDMMM
+MMDMMMMDM
+.MMMMMMM.
+..MMMMM..
+`;
+const PROTEUS_SPRITE = `
+.MMMM..
+MMMMMM.
+MDMMMMM
+MMMDMMM
+MMMMMD.
+.MMMMM.
+..MMM..
+`;
+const NEREID_SPRITE = `
+.MMM.
+MDMMM
+MMMMD
+MMDMM
+.MMM.
+`;
+
+/* ===== Pluto and the binary system ===== */
+const PLUTO_BANDS = `
+......IIII......
+....MMIIIIMM....
+...MMMMMMMMMM...
+..MMMMMMMMMMMM..
+.MMMDDMMMLLLMMM.
+MMMDDDMMMLLLLMMM
+MMDDDMMMMLLLLLMM
+MMDDDMMMMMLLLLMM
+MMMDDMMMMMLLLLMM
+MMMMMMMMMMMLLLMM
+MMMMMMMMMMMMMMMM
+.MMMMMMMMMMMMMM.
+..MMMMMMMMMMMM..
+...MMMMMMMMMM...
+....MMMMMMMM....
+......MMMM......
+`;
+const CHARON_SPRITE = `
+..MMMMMM..
+.MDDDDDDM.
+MMDDDDDDMM
+MMMDDDDMMM
+MMMMMMMMMM
+MMMMMMMMMM
+MDMMMMMDMM
+MMMMMMMMMM
+.MMMMMMMM.
+..MMMMMM..
+`;
+const NIX_SPRITE = `
+.MMM.
+MMMMM
+MDMMD
+.MMM.
+`;
+const HYDRA_SPRITE = `
+..MM.
+.MMMM
+MMMMD
+.MDM.
+`;
+
+/* ===== The Milky Way (our galaxy) ===== */
+const GALAXY_SPRITE = `
+.......IIIIII.......
+.....IIIIIIIIII.....
+....IMMMMMMMMMMI....
+...IMMMMMMMMMMMMI...
+..IMMLLLLLLLLLLMMI..
+.IMMLLBBBBBBBBLLMMI.
+.IMLLBBBBBBBBBBLLMI.
+IMLLBBBBBBBBBBBBLLMI
+IMLBBBBBBBBBBBBBBLMI
+IMLBBBBBBBBBBBBBBLMI
+IMLBBBBBBBBBBBBBBLMI
+IMLBBBBBBBBBBBBBBLMI
+IMLLBBBBBBBBBBBBLLMI
+.IMLLBBBBBBBBBBLLMI.
+.IMMLLBBBBBBBBLLMMI.
+..IMMLLLLLLLLLLMMI..
+...IMMMMMMMMMMMMI...
+....IMMMMMMMMMMI....
+.....IIIIIIIIII.....
+.......IIIIII.......
+`;
+
+/* ===== Asteroid belt — 5 named bodies ===== */
+const CERES_SPRITE = `
+...MMMMMM...
+..MMMMMMMM..
+.MMMLMMMMMM.
+MMMMLMMMMMMM
+MMMMMMMMMMMM
+MMMDMMMMMLMM
+MMMMMMMLMMMM
+MMMMMMLLMMMM
+.MMMMMMMMMM.
+..MMMMMMMM..
+...MMMMMM...
+`;
+const VESTA_SPRITE = `
+..MMMMMMMM.
+.MMMMMMMMM.
+MMMMMMMMMMM
+MMMLMMMMMMM
+MMMMMMMLMMM
+MMMDMMMMMMM
+MMMMMMMMMMM
+.DMMMMMMMD.
+..DDMMMMD..
+...DDDDD...
+`;
+const PALLAS_SPRITE = `
+.MMMMMMMM.
+MMMMMMMMMM
+MMMMLMMMMM
+MMMMMMMMMM
+MDMMMMMMLM
+MMMMMDMMMM
+.MMMMMMMM.
+..MMMMMM..
+...MMMM...
+`;
+const HYGIEA_SPRITE = `
+...MMMMM..
+.MMMMMMMM.
+MMMMLMMMMM
+MDMMMMMMMM
+MMMMMMMDMM
+.MMMMMMMM.
+..MMMMMM..
+...MMMM...
+`;
+const PSYCHE_SPRITE = `
+..MMMMMMM.
+.MLMMMMMMM
+MMMMMMLMMM
+MMLMMMMMMM
+.MMMMMLMM.
+..MMMMMM..
+`;
+
+const SHIP_SPRITE = `
+.......MMM.......
+......CCCCC......
+.....CCMMMCC.....
+....MMMMMMMMM....
+..MMMMMMMMMMMMM..
+.MLMLMLMLMLMLMLM.
+DDDDDDDDDDDDDDDDD
+.MMMMMMMMMMMMMMM.
+...BBBBBBBBBBB...
+...BBBBBBBBBBB...
+....BBBBBBBBB....
+.....BBBBBBB.....
+......BBBBB......
+.......BBB.......
+`;
+
+function parseSprite(str) {
+  const rows = str.split('\n').filter(l => l.length > 0);
+  return { rows, w: rows[0].length, h: rows.length };
+}
+const SHIP = parseSprite(SHIP_SPRITE);
+const SHIP_COLORS = {
+  M: '#4ec0d4',  // main hull — teal
+  C: '#a8f0ff',  // dome — light cyan
+  D: '#1a5870',  // dark shadow rim
+  L: '#ffe890',  // blinking light base color
+  B: '#ffe890',  // tractor beam
+};
+
+/* PLANETS — the full bottom-bar list */
+const PLANETS = [
+  { key: 'sun',          name: 'THE SUN',   au: 0.00,  built: true  },
+  { key: 'mercury',      name: 'MERCURY',   au: 0.39,  built: true  },
+  { key: 'venus',        name: 'VENUS',     au: 0.72,  built: true  },
+  { key: 'earth',        name: 'EARTH',     au: 1.00,  built: true  },
+  { key: 'mars',         name: 'MARS',      au: 1.52,  built: true  },
+  { key: 'asteroidBelt', name: 'ASTEROIDS', au: 2.70,  built: true  },
+  { key: 'jupiter',      name: 'JUPITER',   au: 5.20,  built: true  },
+  { key: 'saturn',       name: 'SATURN',    au: 9.58,  built: true  },
+  { key: 'uranus',       name: 'URANUS',    au: 19.20, built: true  },
+  { key: 'neptune',      name: 'NEPTUNE',   au: 30.05, built: true  },
+  { key: 'pluto',        name: 'PLUTO',     au: 39.50, built: true  },
+  { key: 'milkyway',     name: 'MILKY WAY', au: 0,     distLabel: '~100k ly', isGalaxy: true, built: true },
+];
+function planetByKey(key) { return PLANETS.find(p => p.key === key); }
+function travelTime(fromKey, toKey) {
+  const fromP = planetByKey(fromKey);
+  const toP = planetByKey(toKey);
+  // Galactic-scale destinations get a cosmic label
+  if (fromP.isGalaxy || toP.isGalaxy) {
+    return '~26,000 light-years';
+  }
+  const a = fromP.au;
+  const b = toP.au;
+  const years = Math.abs(b - a) * 1.1;
+  if (years < 1) {
+    const months = Math.max(1, Math.round(years * 12));
+    return `~${months} ${months === 1 ? 'month' : 'months'}`;
+  }
+  if (years < 10) return `~${years.toFixed(1)} years`;
+  return `~${Math.round(years)} years`;
+}
+
+/* SYSTEMS */
+const SYSTEMS = {
+  jupiter: {
+    name: 'Jupiter',
+    moonGroup: 'the Galilean Moons',
+    blurbHtml: 'Jupiter <em>spins faster than any planet</em> &mdash; one day in under <b>10 hours</b>. Watch the <b>Great Red Spot</b> drift across its face as <b>Io</b>, <b>Europa</b>, <b>Ganymede</b>, and <b>Callisto</b> trace their <em>4:2:1</em> resonant dance.',
+    bodies: [
+      {
+        name: 'Jupiter', type: 'Gas Giant · 5.20 AU',
+        rates: 'Day 9h 56m · Year 11.86 yr',
+        sprite: parseSprite(JUPITER_BANDS),
+        colors: { M: '#e8a85a', L: '#ffe09a', D: '#5a2810', A: '#ff4520', R: '#a01008' },
+        scale: 6, isPrimary: true, draw: 'jupiter',
+        rotationPeriod: period(0.4135),
+        bobAmp: 3, bobSpeed: 0.012, bobPhase: 0,
+        nasaUrl: 'https://science.nasa.gov/jupiter/',
+        details: [
+          ['Type', 'Gas Giant'], ['Diameter', '139,820 km'],
+          ['Mass', '1.9 × 10²⁷ kg'], ['Distance from Sun', '5.20 AU'],
+          ['Day length', '9h 55m 30s'], ['Year length', '11.86 Earth years'],
+          ['Moons', '95 confirmed'], ['Composition', 'Hydrogen, Helium'],
+          ['Discovered', 'Known since antiquity'],
+        ],
+        lore: [
+          'The largest planet in the Solar System — more massive than all other planets combined, twice over.',
+          'The Great Red Spot is a hurricane-like storm wider than Earth, raging continuously for at least 350 years.',
+          "Jupiter's gravity has shaped the entire solar system, shepherding asteroids and deflecting comets that might otherwise threaten Earth.",
+          'A failed star — with about 80× more mass, Jupiter could have ignited fusion and become a second sun.',
+        ],
+      },
+      {
+        name: 'Io', type: 'Galilean Moon · I', rates: 'Tidally locked · Orbit 1.77 d',
+        sprite: parseSprite(IO_SPRITE),
+        colors: { M: '#ffd838', L: '#fff89c', D: '#d04020' },
+        scale: 4, orbit: { baseR: 130, period: period(1.769), phase: 0.0 },
+        nasaUrl: 'https://science.nasa.gov/jupiter/jupiter-moons/io/',
+        details: [
+          ['Type', 'Galilean Moon · I'], ['Diameter', '3,643 km'],
+          ['Distance from Jupiter', '421,700 km'], ['Orbit', '1.77 days'],
+          ['Rotation', 'Tidally locked'], ['Surface', 'Sulfur & SO₂ ice'],
+          ['Active volcanoes', '400+'], ['Discovered', '8 Jan 1610 — Galileo'],
+        ],
+        lore: [
+          'The most volcanically active body in the Solar System. Lava lakes hundreds of kilometers across paint its surface in yellows and reds.',
+          "Tidal forces from Jupiter and the other moons knead Io's interior, generating enough heat to keep its 400+ volcanoes erupting continuously.",
+          "Loki Patera, Io's largest volcanic feature, produces more heat than all of Earth's volcanoes combined.",
+          "Io's surface is the youngest in the solar system — constant eruptions resurface it within roughly a million years.",
+        ],
+      },
+      {
+        name: 'Europa', type: 'Galilean Moon · II', rates: 'Tidally locked · Orbit 3.55 d',
+        sprite: parseSprite(EUROPA_SPRITE),
+        colors: { M: '#f0e8d0', L: '#ffffff', D: '#e04830' },
+        scale: 4, orbit: { baseR: 180, period: period(3.551), phase: 1.7 },
+        nasaUrl: 'https://science.nasa.gov/jupiter/jupiter-moons/europa/',
+        details: [
+          ['Type', 'Galilean Moon · II'], ['Diameter', '3,122 km'],
+          ['Distance from Jupiter', '671,034 km'], ['Orbit', '3.55 days'],
+          ['Rotation', 'Tidally locked'], ['Surface', 'Water ice'],
+          ['Subsurface', 'Liquid salt ocean'], ['Discovered', '8 Jan 1610 — Galileo'],
+        ],
+        lore: [
+          "Hidden beneath a 15–25 km thick ice shell lies an ocean of liquid salt water — possibly twice the volume of all Earth's oceans combined.",
+          'The reddish-brown lines crossing the ice, called "linea," are cracks where briny water has welled up from the ocean below.',
+          "Considered the top candidate for life beyond Earth. NASA's Europa Clipper launched in October 2024 to investigate.",
+          "Europa's surface is geologically young — fewer than 200 impact craters across the entire moon.",
+        ],
+      },
+      {
+        name: 'Ganymede', type: 'Galilean Moon · III', rates: 'Tidally locked · Orbit 7.15 d',
+        sprite: parseSprite(GANYMEDE_SPRITE),
+        colors: { M: '#b89878', L: '#e8c898', D: '#3a2410' },
+        scale: 4, orbit: { baseR: 240, period: period(7.155), phase: 3.0 },
+        nasaUrl: 'https://science.nasa.gov/jupiter/jupiter-moons/ganymede/',
+        details: [
+          ['Type', 'Galilean Moon · III'], ['Diameter', '5,268 km'],
+          ['Distance from Jupiter', '1,070,400 km'], ['Orbit', '7.15 days'],
+          ['Rotation', 'Tidally locked'], ['Notable', 'Largest moon in Solar System'],
+          ['Magnetic field', 'Yes — unique among moons'], ['Discovered', '8 Jan 1610 — Galileo'],
+        ],
+        lore: [
+          "The largest moon in the Solar System — bigger than Mercury, only slightly smaller than Mars. If it orbited the Sun, we'd call it a planet.",
+          "Ganymede is the only moon known to generate its own magnetic field, suggesting a molten iron core like Earth's.",
+          "Like Europa, Ganymede hides a salty subsurface ocean — possibly with more water than all of Earth's oceans.",
+          "ESA's JUICE spacecraft, launched in 2023, will enter orbit around Ganymede in 2034 — the first time any spacecraft will orbit a moon other than our own.",
+        ],
+      },
+      {
+        name: 'Callisto', type: 'Galilean Moon · IV', rates: 'Tidally locked · Orbit 16.69 d',
+        sprite: parseSprite(CALLISTO_SPRITE),
+        colors: { M: '#4a2818', L: '#ffe0a0', D: '#1a0a04' },
+        scale: 4, orbit: { baseR: 320, period: period(16.689), phase: 4.6 },
+        nasaUrl: 'https://science.nasa.gov/jupiter/jupiter-moons/callisto/',
+        details: [
+          ['Type', 'Galilean Moon · IV'], ['Diameter', '4,821 km'],
+          ['Distance from Jupiter', '1,882,700 km'], ['Orbit', '16.69 days'],
+          ['Rotation', 'Tidally locked'], ['Surface', 'Ice, rock, organic matter'],
+          ['Surface age', '~4 billion years'], ['Discovered', '8 Jan 1610 — Galileo'],
+        ],
+        lore: [
+          'The most heavily cratered object in the Solar System — its ancient surface preserves 4 billion years of impact history virtually unchanged.',
+          "Unlike its inner siblings, Callisto orbits outside Jupiter's most intense radiation belt, making it the safest Galilean moon for future human exploration.",
+          'NASA studies have identified Callisto as a possible base for crewed missions to the Jovian system.',
+          "Despite the heavy cratering, Callisto likely hides a subsurface ocean — bringing the count of Jupiter's ocean worlds to three.",
+        ],
+      },
+    ],
+  },
+
+  saturn: {
+    name: 'Saturn',
+    moonGroup: 'the Saturnian System',
+    blurbHtml: "Saturn's iconic rings span <b>175,000 km</b> wide but are <em>only 10 meters thick</em>. Seven major moons wheel around this ringed wonder, including <b>Titan</b> (with lakes of liquid methane), <b>Enceladus</b> (icy plumes of water), and two-toned <b>Iapetus</b>.",
+    bodies: [
+      {
+        name: 'Saturn', type: 'Gas Giant · 9.58 AU',
+        rates: 'Day 10h 33m · Year 29.4 yr',
+        sprite: parseSprite(SATURN_BANDS),
+        colors: { M: '#d4b88a', L: '#f4dcb0', D: '#a08858' },
+        scale: 5, isPrimary: true, draw: 'saturn',
+        rotationPeriod: period(0.444),
+        bobAmp: 3, bobSpeed: 0.010, bobPhase: 0,
+        nasaUrl: 'https://science.nasa.gov/saturn/',
+        details: [
+          ['Type', 'Gas Giant'], ['Diameter', '116,460 km'],
+          ['Mass', '5.68 × 10²⁶ kg'], ['Distance from Sun', '9.58 AU'],
+          ['Day length', '10h 33m'], ['Year length', '29.4 Earth years'],
+          ['Moons', '274+ confirmed'], ['Ring span', '~175,000 km wide'],
+          ['Density', '0.687 g/cm³ — floats in water'],
+        ],
+        lore: [
+          'The second-largest planet — and the only one less dense than water. If you could find a bathtub big enough, Saturn would float.',
+          'The rings are made of trillions of pieces of water ice, from dust grains to chunks the size of houses. Despite their enormous span, they are no thicker than a 3-story building.',
+          "A hexagonal storm swirls around Saturn's north pole — a six-sided jet stream wider than Earth, with sides 14,500 km long. No other planet has anything like it.",
+          "Saturn radiates 2.5 times more energy than it receives from the Sun, slowly contracting and generating heat from gravitational compression.",
+        ],
+      },
+      {
+        name: 'Mimas', type: 'Saturnian Moon · I', rates: 'Tidally locked · Orbit 0.94 d',
+        sprite: parseSprite(MIMAS_SPRITE),
+        colors: { M: '#c8c8d0', L: '#f0f0f8', D: '#5a5a68' },
+        scale: 4, orbit: { baseR: 135, period: period(0.942), phase: 0.0 },
+        nasaUrl: 'https://science.nasa.gov/saturn/moons/mimas/',
+        details: [
+          ['Type', 'Inner Moon'], ['Diameter', '396 km'],
+          ['Distance from Saturn', '185,520 km'], ['Orbit', '0.94 days'],
+          ['Rotation', 'Tidally locked'], ['Notable', 'Herschel crater — the "Death Star" eye'],
+          ['Discovered', '17 Sep 1789 — Herschel'],
+        ],
+        lore: [
+          'Famous for its giant Herschel crater, which spans nearly a third of the moon\'s diameter and gives Mimas an uncanny resemblance to the Death Star.',
+          'The impact that formed Herschel was so massive it nearly shattered Mimas — fracture lines on the opposite side of the moon mark where the shockwave converged.',
+          "Despite looking quietly frozen, gravitational data suggests Mimas may hide a global ocean beneath 20–30 km of ice — a hidden water world in the Saturn system.",
+        ],
+      },
+      {
+        name: 'Enceladus', type: 'Saturnian Moon · II', rates: 'Tidally locked · Orbit 1.37 d',
+        sprite: parseSprite(ENCELADUS_SPRITE),
+        colors: { M: '#f8f8ff', L: '#ffffff', D: '#d0d0e0' },
+        scale: 4, orbit: { baseR: 175, period: period(1.370), phase: 1.2 },
+        nasaUrl: 'https://science.nasa.gov/saturn/moons/enceladus/',
+        details: [
+          ['Type', 'Inner Moon · Ice World'], ['Diameter', '504 km'],
+          ['Distance from Saturn', '237,948 km'], ['Orbit', '1.37 days'],
+          ['Rotation', 'Tidally locked'], ['Surface', 'Fresh water ice'],
+          ['Notable', 'Plumes from subsurface ocean'], ['Discovered', '28 Aug 1789 — Herschel'],
+        ],
+        lore: [
+          "The most reflective body in the Solar System — its surface ice is so fresh and pure that Enceladus appears almost blindingly white.",
+          'Cassini spacecraft discovered enormous geysers erupting from cracks called "tiger stripes" near the south pole, spraying water vapor and ice grains hundreds of kilometers into space.',
+          "Those plumes come from a global subsurface ocean of liquid salt water that contains the chemical building blocks for life — making Enceladus a prime target in the search for extraterrestrial biology.",
+        ],
+      },
+      {
+        name: 'Tethys', type: 'Saturnian Moon · III', rates: 'Tidally locked · Orbit 1.89 d',
+        sprite: parseSprite(TETHYS_SPRITE),
+        colors: { M: '#d4d4dc', L: '#f0f0f8', D: '#8a7868' },
+        scale: 4, orbit: { baseR: 215, period: period(1.888), phase: 2.5 },
+        nasaUrl: 'https://science.nasa.gov/saturn/moons/tethys/',
+        details: [
+          ['Type', 'Mid Moon · Ice World'], ['Diameter', '1,062 km'],
+          ['Distance from Saturn', '294,619 km'], ['Orbit', '1.89 days'],
+          ['Rotation', 'Tidally locked'], ['Notable', 'Ithaca Chasma — 2,000 km canyon'],
+          ['Composition', '~94% water ice'], ['Discovered', '21 Mar 1684 — Cassini'],
+        ],
+        lore: [
+          "Almost pure water ice — Tethys has the lowest density of any major moon, suggesting it's barely more than a frozen snowball.",
+          "Ithaca Chasma is one of the largest canyons in the Solar System — a fracture stretching 2,000 km across the moon, roughly three-quarters of its circumference.",
+          "The giant Odysseus crater dominates one hemisphere, 450 km wide — larger than the moon's radius. The impact would have shattered any normal body.",
+        ],
+      },
+      {
+        name: 'Dione', type: 'Saturnian Moon · IV', rates: 'Tidally locked · Orbit 2.74 d',
+        sprite: parseSprite(DIONE_SPRITE),
+        colors: { M: '#c8c0b8', L: '#f0e8d8', D: '#6a5848' },
+        scale: 4, orbit: { baseR: 255, period: period(2.737), phase: 4.0 },
+        nasaUrl: 'https://science.nasa.gov/saturn/moons/dione/',
+        details: [
+          ['Type', 'Mid Moon · Ice World'], ['Diameter', '1,123 km'],
+          ['Distance from Saturn', '377,396 km'], ['Orbit', '2.74 days'],
+          ['Rotation', 'Tidally locked'], ['Notable', 'Wispy bright ice cliffs'],
+          ['Discovered', '21 Mar 1684 — Cassini'],
+        ],
+        lore: [
+          "Bright 'wispy' streaks across Dione's trailing hemisphere are actually networks of towering ice cliffs — fault scarps hundreds of meters tall, exposed by tectonic activity.",
+          "Cassini detected a thin oxygen atmosphere around Dione, the result of charged particles from Saturn breaking water ice on the surface into hydrogen and oxygen.",
+          "Like several Saturnian moons, Dione may harbor a subsurface ocean of liquid water beneath its icy crust, making it another potential ocean world.",
+        ],
+      },
+      {
+        name: 'Rhea', type: 'Saturnian Moon · V', rates: 'Tidally locked · Orbit 4.52 d',
+        sprite: parseSprite(RHEA_SPRITE),
+        colors: { M: '#b0a898', L: '#d8d0c0', D: '#3a2818' },
+        scale: 4, orbit: { baseR: 295, period: period(4.518), phase: 5.5 },
+        nasaUrl: 'https://science.nasa.gov/saturn/moons/rhea/',
+        details: [
+          ['Type', 'Mid Moon · Ice World'], ['Diameter', '1,527 km'],
+          ['Distance from Saturn', '527,108 km'], ['Orbit', '4.52 days'],
+          ['Rotation', 'Tidally locked'], ['Notable', 'Possible faint rings'],
+          ['Discovered', '23 Dec 1672 — Cassini'],
+        ],
+        lore: [
+          "Saturn's second-largest moon, and the second-largest with no atmosphere thick enough to count. Rhea is almost entirely water ice with a small rocky core.",
+          "Rhea may be the only moon in the Solar System with its own ring system — a tenuous debris disk hinted at by Cassini measurements but never directly imaged.",
+          "Its ancient, heavily cratered surface preserves a record of bombardment from 4 billion years ago, when the early Solar System was a much more violent place.",
+        ],
+      },
+      {
+        name: 'Titan', type: 'Saturnian Moon · VI', rates: 'Tidally locked · Orbit 15.95 d',
+        sprite: parseSprite(TITAN_SPRITE),
+        colors: { M: '#d8a858', L: '#f4c878', D: '#885828' },
+        scale: 4, orbit: { baseR: 360, period: period(15.945), phase: 0.6 },
+        nasaUrl: 'https://science.nasa.gov/saturn/moons/titan/',
+        details: [
+          ['Type', 'Major Moon · Has Atmosphere'], ['Diameter', '5,150 km'],
+          ['Distance from Saturn', '1,221,830 km'], ['Orbit', '15.95 days'],
+          ['Rotation', 'Tidally locked'], ['Atmosphere', 'Nitrogen + methane'],
+          ['Surface', 'Liquid methane lakes & seas'], ['Discovered', '25 Mar 1655 — Huygens'],
+        ],
+        lore: [
+          "The only moon with a substantial atmosphere — thicker than Earth's, made mostly of nitrogen with a hazy orange smog of methane and hydrocarbons.",
+          "Titan is the only body besides Earth known to have stable bodies of liquid on its surface. Methane and ethane rain from the sky, carve river valleys, and pool into vast seas larger than the Great Lakes.",
+          "Bigger than the planet Mercury. In 2005 the Huygens probe became the first spacecraft to land on a body in the outer Solar System, parachuting through Titan's clouds.",
+          "NASA's Dragonfly mission, launching in 2028, will fly a nuclear-powered helicopter across Titan's surface to investigate its prebiotic chemistry.",
+        ],
+      },
+      {
+        name: 'Iapetus', type: 'Saturnian Moon · VIII', rates: 'Tidally locked · Orbit 79.3 d',
+        sprite: parseSprite(IAPETUS_SPRITE),
+        colors: { M: '#e8e0d0', L: '#ffffff', D: '#1a1008' },
+        scale: 4, orbit: { baseR: 420, period: period(79.32), phase: 3.7 },
+        nasaUrl: 'https://science.nasa.gov/saturn/moons/iapetus/',
+        details: [
+          ['Type', 'Outer Moon'], ['Diameter', '1,469 km'],
+          ['Distance from Saturn', '3,560,820 km'], ['Orbit', '79.3 days'],
+          ['Rotation', 'Tidally locked'], ['Notable', 'Two-toned: half black, half white'],
+          ['Equatorial ridge', '20 km tall walnut seam'], ['Discovered', '25 Oct 1671 — Cassini'],
+        ],
+        lore: [
+          "The strangest moon in the Saturn system. One hemisphere is bright water ice; the other is coated in material as dark as coal — a contrast first noted by Cassini in 1671.",
+          "The dark material is dust swept up from outer moons that Iapetus plows through during its tilted orbit. Once the leading face darkens, it absorbs sunlight, ice sublimates away, and the contrast intensifies.",
+          "A bizarre equatorial ridge runs three-quarters of the way around Iapetus, in places 20 km tall — making the moon look like a walnut. No one knows exactly how it formed.",
+        ],
+      },
+    ],
+  },
+
+  uranus: {
+    name: 'Uranus',
+    moonGroup: 'the Major Moons',
+    tiltedOrbit: true,
+    blurbHtml: "<b>The planet that rolls.</b> Uranus is tilted <em>98° on its side</em> — so its moons orbit nearly perpendicular to the rest of the Solar System. Watch them trace <em>vertical paths</em> around this pale ice giant. Five major moons all named for <b>Shakespeare characters</b>: <b>Miranda</b>, <b>Ariel</b>, <b>Umbriel</b>, <b>Titania</b>, and <b>Oberon</b>.",
+    bodies: [
+      {
+        name: 'Uranus', type: 'Ice Giant · 19.20 AU',
+        rates: 'Day 17h 14m · Year 84 yr',
+        sprite: parseSprite(URANUS_BANDS),
+        colors: { M: '#88d4d8', L: '#b0e8ec', D: '#4a8a8e' },
+        scale: 4, isPrimary: true,
+        rotationPeriod: period(0.718),
+        bobAmp: 3, bobSpeed: 0.010, bobPhase: 0,
+        nasaUrl: 'https://science.nasa.gov/uranus/',
+        details: [
+          ['Type', 'Ice Giant'],
+          ['Diameter', '50,724 km'],
+          ['Mass', '8.68 × 10²⁵ kg'],
+          ['Distance from Sun', '19.20 AU'],
+          ['Day length', '17h 14m (retrograde)'],
+          ['Year length', '84 Earth years'],
+          ['Moons', '28 confirmed'],
+          ['Axial tilt', '98° — rotates on its side'],
+          ['Atmosphere', 'H₂, He, methane'],
+        ],
+        lore: [
+          "The ice giant that rolls. Uranus is tilted 98° on its side, meaning it rotates almost perpendicular to its orbit. Each pole gets 42 years of continuous sunlight followed by 42 years of darkness.",
+          "That sideways tilt likely came from a colossal impact early in the Solar System's history. Whatever struck Uranus was massive enough to knock the entire planet over without destroying it.",
+          "The pale blue-green color comes from methane in the atmosphere, which absorbs red light and reflects blue back to space. Below the visible cloud tops lies a slushy interior of water, ammonia, and methane ice.",
+          "Only one spacecraft has ever visited — Voyager 2 flew past in 1986. Everything else we know about Uranus has been observed from over a billion miles away.",
+        ],
+      },
+      {
+        name: 'Miranda', type: 'Uranian Moon · V',
+        rates: 'Tidally locked · Orbit 1.41 d',
+        sprite: parseSprite(MIRANDA_SPRITE),
+        colors: { M: '#a8a098', L: '#d0c8c0', D: '#3a3228' },
+        scale: 4,
+        orbit: { baseR: 110, period: period(1.413), phase: 0.0 },
+        nasaUrl: 'https://science.nasa.gov/uranus/moons/miranda/',
+        details: [
+          ['Type', 'Inner Major Moon'],
+          ['Diameter', '472 km'],
+          ['Distance from Uranus', '129,900 km'],
+          ['Orbit', '1.41 days'],
+          ['Rotation', 'Tidally locked'],
+          ['Notable', 'Verona Rupes — 20 km tall cliff'],
+          ['Discovered', '16 Feb 1948 — Kuiper'],
+        ],
+        lore: [
+          "The most geologically bizarre moon in the Solar System. Miranda looks like it was shattered and reassembled — a patchwork of grooved, cratered, and cliff-cut terrain that doesn't quite fit together.",
+          "Home to Verona Rupes, the tallest known cliff in the Solar System at 20 km — over twice the height of Mount Everest. A jump from the top would last about 12 minutes in Miranda's weak gravity.",
+          "One leading theory: Miranda was once shattered by an impact, and the pieces re-coalesced under gravity into the weird patchwork we see today.",
+        ],
+      },
+      {
+        name: 'Ariel', type: 'Uranian Moon · I',
+        rates: 'Tidally locked · Orbit 2.52 d',
+        sprite: parseSprite(ARIEL_SPRITE),
+        colors: { M: '#c8c0b8', L: '#e8e0d8', D: '#5a5048' },
+        scale: 4,
+        orbit: { baseR: 155, period: period(2.520), phase: 1.3 },
+        nasaUrl: 'https://science.nasa.gov/uranus/moons/ariel/',
+        details: [
+          ['Type', 'Major Moon'],
+          ['Diameter', '1,158 km'],
+          ['Distance from Uranus', '190,900 km'],
+          ['Orbit', '2.52 days'],
+          ['Rotation', 'Tidally locked'],
+          ['Notable', 'Brightest Uranian moon'],
+          ['Discovered', '24 Oct 1851 — Lassell'],
+        ],
+        lore: [
+          "The brightest of Uranus's moons — its surface reflects more sunlight than any of its siblings, suggesting it's still being geologically resurfaced.",
+          "Crisscrossed by enormous fault valleys and grooves, hinting at a turbulent geological past. Some valleys are wider and deeper than Earth's Grand Canyon.",
+          "Likely harbored a subsurface ocean billions of years ago, and may still have one today — making Ariel another candidate ocean world in the outer Solar System.",
+        ],
+      },
+      {
+        name: 'Umbriel', type: 'Uranian Moon · II',
+        rates: 'Tidally locked · Orbit 4.14 d',
+        sprite: parseSprite(UMBRIEL_SPRITE),
+        colors: { M: '#5a5048', L: '#7a7068', D: '#1a1208' },
+        scale: 4,
+        orbit: { baseR: 210, period: period(4.144), phase: 2.6 },
+        nasaUrl: 'https://science.nasa.gov/uranus/moons/umbriel/',
+        details: [
+          ['Type', 'Major Moon'],
+          ['Diameter', '1,170 km'],
+          ['Distance from Uranus', '266,000 km'],
+          ['Orbit', '4.14 days'],
+          ['Rotation', 'Tidally locked'],
+          ['Notable', 'Darkest Uranian moon'],
+          ['Discovered', '24 Oct 1851 — Lassell'],
+        ],
+        lore: [
+          "The darkest of the major Uranian moons — Umbriel reflects only about half the light that Ariel does, despite being a similar size. Whatever coats its surface is still mysterious.",
+          "Heavily cratered with an ancient, unresurfaced face that records billions of years of impacts in remarkable detail.",
+          "The bright Wunda crater is a peculiar exception — a ring of light material on an otherwise dark world. Nobody knows what made it bright.",
+        ],
+      },
+      {
+        name: 'Titania', type: 'Uranian Moon · III',
+        rates: 'Tidally locked · Orbit 8.71 d',
+        sprite: parseSprite(TITANIA_SPRITE),
+        colors: { M: '#b0a098', L: '#d8c8c0', D: '#4a3a28' },
+        scale: 4,
+        orbit: { baseR: 280, period: period(8.706), phase: 4.0 },
+        nasaUrl: 'https://science.nasa.gov/uranus/moons/titania/',
+        details: [
+          ['Type', 'Major Moon'],
+          ['Diameter', '1,578 km'],
+          ['Distance from Uranus', '436,300 km'],
+          ['Orbit', '8.71 days'],
+          ['Rotation', 'Tidally locked'],
+          ['Notable', 'Largest Uranian moon'],
+          ['Discovered', '11 Jan 1787 — Herschel'],
+        ],
+        lore: [
+          "The largest of Uranus's moons, and the eighth-largest moon in the Solar System. Discovered by William Herschel — the same astronomer who discovered Uranus itself.",
+          "Cut by enormous canyon systems called chasmata, the longest of which stretches over 1,500 km — suggesting Titania's surface cracked open in its distant past, possibly as a subsurface ocean froze and expanded.",
+          "May still contain a layer of liquid water deep beneath its icy crust, though confirming this would require a dedicated mission to the Uranian system.",
+        ],
+      },
+      {
+        name: 'Oberon', type: 'Uranian Moon · IV',
+        rates: 'Tidally locked · Orbit 13.46 d',
+        sprite: parseSprite(OBERON_SPRITE),
+        colors: { M: '#a89890', L: '#d0bbb0', D: '#3a2818' },
+        scale: 4,
+        orbit: { baseR: 360, period: period(13.463), phase: 5.4 },
+        nasaUrl: 'https://science.nasa.gov/uranus/moons/oberon/',
+        details: [
+          ['Type', 'Outer Major Moon'],
+          ['Diameter', '1,523 km'],
+          ['Distance from Uranus', '583,500 km'],
+          ['Orbit', '13.46 days'],
+          ['Rotation', 'Tidally locked'],
+          ['Notable', 'Outermost major moon'],
+          ['Discovered', '11 Jan 1787 — Herschel'],
+        ],
+        lore: [
+          "The outermost of the major Uranian moons — a heavily-cratered ice world with hints of reddish-brown material lining the floors of its impact craters.",
+          "Discovered alongside Titania by William Herschel, just six years after he discovered Uranus itself. Named after the king of the fairies from Shakespeare's \"A Midsummer Night's Dream.\"",
+          "A mysterious 6 km-tall mountain rises near Oberon's south pole — possibly the central peak of an ancient impact crater that's since been weathered down by billions of years of micrometeorite bombardment.",
+        ],
+      },
+    ],
+  },
+
+  neptune: {
+    name: 'Neptune',
+    moonGroup: 'the Major Moons',
+    blurbHtml: "The <b>windiest planet</b> in the Solar System — supersonic gales tear through Neptune's atmosphere at over <em>2,000 km/h</em>. Watch <b>Triton</b> orbit <em>backwards</em> (the only large moon that does), while <b>Proteus</b> sweeps close-in and <b>Nereid</b> traces a long, lonely path far beyond.",
+    bodies: [
+      {
+        name: 'Neptune', type: 'Ice Giant · 30.05 AU',
+        rates: 'Day 16h 6m · Year 165 yr',
+        sprite: parseSprite(NEPTUNE_BANDS),
+        colors: { M: '#2a4ec8', L: '#6080e0', D: '#1a2858' },
+        scale: 4, isPrimary: true,
+        rotationPeriod: period(0.671),
+        bobAmp: 3, bobSpeed: 0.010, bobPhase: 0,
+        nasaUrl: 'https://science.nasa.gov/neptune/',
+        details: [
+          ['Type', 'Ice Giant'],
+          ['Diameter', '49,244 km'],
+          ['Mass', '1.02 × 10²⁶ kg'],
+          ['Distance from Sun', '30.05 AU'],
+          ['Day length', '16h 6m'],
+          ['Year length', '165 Earth years'],
+          ['Moons', '14 confirmed'],
+          ['Wind speed', 'Up to 2,100 km/h'],
+          ['Atmosphere', 'H₂, He, methane'],
+        ],
+        lore: [
+          "The farthest planet from the Sun — and the windiest. Supersonic winds tear through Neptune's atmosphere at over 2,000 km/h, faster than the jet streams of any other world.",
+          "Discovered by mathematics, not by accident: in 1846 astronomers calculated where it should be based on perturbations in Uranus's orbit, then aimed a telescope and found it. Neptune is the only planet discovered by prediction.",
+          "The deep blue color comes from methane absorbing red light — but Neptune is more vibrantly blue than Uranus, and we still don't fully know why. Something else in its atmosphere is enhancing the color.",
+          "Only one spacecraft has ever visited — Voyager 2 in 1989. In the 30+ years since, no other mission has gone, leaving Neptune the most under-explored planet in our solar system.",
+        ],
+      },
+      {
+        name: 'Proteus', type: 'Neptunian Moon · VIII',
+        rates: 'Tidally locked · Orbit 1.12 d',
+        sprite: parseSprite(PROTEUS_SPRITE),
+        colors: { M: '#4a4238', L: '#6a6258', D: '#1a1208' },
+        scale: 4,
+        orbit: { baseR: 100, period: period(1.122), phase: 0.0 },
+        nasaUrl: 'https://science.nasa.gov/neptune/neptune-moons/proteus/',
+        details: [
+          ['Type', 'Inner Moon'],
+          ['Diameter', '420 km'],
+          ['Distance from Neptune', '117,647 km'],
+          ['Orbit', '1.12 days'],
+          ['Rotation', 'Tidally locked'],
+          ['Notable', 'Second-largest Neptunian moon'],
+          ['Surface', 'One of darkest in Solar System'],
+          ['Discovered', '1989 — Voyager 2'],
+        ],
+        lore: [
+          "The second-largest moon of Neptune — yet not discovered until 1989, when Voyager 2 spotted it during its flyby. Despite its size, Proteus is so dark and so close to bright Neptune that no Earth-based telescope had ever seen it.",
+          "One of the darkest objects in the Solar System, reflecting only about 6% of the sunlight that hits it. Whatever coats its surface is darker than coal.",
+          "Proteus sits right at the size limit for irregular-shaped moons — any larger and gravity would pull it into a sphere. As it stands, it's a lumpy, faceted block of dark ice and rock.",
+        ],
+      },
+      {
+        name: 'Triton', type: 'Neptunian Moon · I',
+        rates: 'Retrograde · Orbit 5.88 d',
+        sprite: parseSprite(TRITON_SPRITE),
+        colors: { M: '#d8a898', L: '#f0c8b8', D: '#5a3828' },
+        scale: 4,
+        orbit: { baseR: 200, period: period(5.877), phase: 1.5, direction: -1 },
+        nasaUrl: 'https://science.nasa.gov/neptune/neptune-moons/triton/',
+        details: [
+          ['Type', 'Major Moon · Captured KBO'],
+          ['Diameter', '2,707 km'],
+          ['Distance from Neptune', '354,759 km'],
+          ['Orbit', '5.88 days — RETROGRADE'],
+          ['Rotation', 'Tidally locked'],
+          ['Atmosphere', 'Thin nitrogen'],
+          ['Notable', 'Only large retrograde moon'],
+          ['Discovered', '10 Oct 1846 — Lassell'],
+        ],
+        lore: [
+          "The seventh-largest moon in the Solar System — and the only large moon that orbits its planet backwards. That retrograde orbit is the smoking gun: Triton wasn't born with Neptune. It's a captured Kuiper Belt object that drifted in long ago and got snared.",
+          "The backwards orbit is also Triton's doom. Tidal forces are slowly pulling it inward. In roughly 3.6 billion years, Triton will either crash into Neptune or be torn apart into a ring system.",
+          "Active geysers spew nitrogen and dust 8 km into Triton's thin atmosphere — making it one of only a handful of geologically active worlds in the Solar System, alongside Earth, Io, Enceladus, and Europa.",
+          "Discovered just 17 days after Neptune itself, by William Lassell using a telescope he built in his own backyard.",
+        ],
+      },
+      {
+        name: 'Nereid', type: 'Neptunian Moon · II',
+        rates: 'Eccentric · Orbit 360 d',
+        sprite: parseSprite(NEREID_SPRITE),
+        colors: { M: '#8a7868', L: '#a89888', D: '#3a2818' },
+        scale: 4,
+        orbit: { baseR: 360, period: period(360.13), phase: 3.5 },
+        nasaUrl: 'https://science.nasa.gov/neptune/neptune-moons/nereid/',
+        details: [
+          ['Type', 'Outer Moon'],
+          ['Diameter', '~340 km'],
+          ['Distance from Neptune', '5,513,400 km'],
+          ['Orbit', '360 days — highly eccentric'],
+          ['Notable', 'Most eccentric orbit of any major moon'],
+          ['Discovered', '1 May 1949 — Kuiper'],
+        ],
+        lore: [
+          "The most eccentric orbit of any major moon in the Solar System. Nereid swings from 1.4 million km out to 9.7 million km from Neptune over its 360-day orbit — an enormous range no other large moon comes close to.",
+          "That wild orbit is another clue that Neptune's moon system was scrambled when Triton was captured. Nereid may have been kicked into its current path by Triton's gravitational arrival.",
+          "Despite its size, Nereid is poorly understood — Voyager 2 only glimpsed it from a distance, and no spacecraft has visited since.",
+        ],
+      },
+    ],
+  },
+
+  pluto: {
+    name: 'Pluto',
+    moonGroup: 'the Binary System',
+    binarySystem: true,
+    blurbHtml: "Not a planet with a moon, but a <em>true binary</em> — <b>Pluto</b> and <b>Charon</b> orbit a common center of mass in <em>empty space between them</em>. Both bodies pirouette around that barycenter, mutually tidally locked. <b>Nix</b> and <b>Hydra</b> swing in the outer system, discovered by Hubble in 2005.",
+    bodies: [
+      {
+        name: 'Pluto', type: 'Dwarf Planet · 39.5 AU',
+        rates: 'Day 6.39 d · Year 248 yr',
+        sprite: parseSprite(PLUTO_BANDS),
+        colors: { M: '#a06848', L: '#d8b890', D: '#3a1810', I: '#ebebf2' },
+        scale: 4, isPrimary: true,
+        rotationPeriod: period(6.387),
+        bobAmp: 0, bobSpeed: 0, bobPhase: 0,
+        orbit: { baseR: 14, period: period(6.387), phase: 0 },
+        nasaUrl: 'https://science.nasa.gov/dwarf-planets/pluto/',
+        details: [
+          ['Type', 'Dwarf Planet'],
+          ['Diameter', '2,377 km'],
+          ['Mass', '1.31 × 10²² kg'],
+          ['Distance from Sun', '39.5 AU (average)'],
+          ['Day length', '6.39 Earth days'],
+          ['Year length', '248 Earth years'],
+          ['Moons', '5 known'],
+          ['Reclassified', '2006 — dwarf planet'],
+          ['Notable', 'Tombaugh Regio (heart-shaped plain)'],
+        ],
+        lore: [
+          "Discovered in 1930 by Clyde Tombaugh, Pluto was the ninth planet for 76 years — until 2006, when astronomers redefined what counts as a planet and reclassified it as a dwarf planet.",
+          "A world of ices: nitrogen, methane, and carbon monoxide freeze across the surface, creating a glacier-covered landscape. The famous heart-shaped Tombaugh Regio is a vast plain of frozen nitrogen, kept slowly churning by warmer ice rising from below.",
+          "Geologically active despite being four billion miles from the Sun — a discovery that shocked planetary scientists when NASA's New Horizons made its flyby in July 2015.",
+          "Pluto and Charon are tidally locked to EACH OTHER, both showing the same face to their partner at all times. Together they orbit a common point in empty space between them — making this less a planet with a moon, more a binary dwarf-planet system.",
+        ],
+      },
+      {
+        name: 'Charon', type: 'Binary Partner Moon',
+        rates: 'Tidally locked · Orbit 6.39 d',
+        sprite: parseSprite(CHARON_SPRITE),
+        colors: { M: '#b8b0a8', L: '#d8d0c8', D: '#5a3828' },
+        scale: 4,
+        orbit: { baseR: 115, period: period(6.387), phase: Math.PI },
+        nasaUrl: 'https://science.nasa.gov/dwarf-planets/pluto/moons/charon/',
+        details: [
+          ['Type', 'Binary Partner Moon'],
+          ['Diameter', '1,212 km (½ Pluto)'],
+          ['Distance from Pluto', '19,640 km'],
+          ['Orbit', '6.39 days (= Pluto day)'],
+          ['Rotation', 'Mutually tidally locked'],
+          ['Notable', 'Mordor Macula (dark polar cap)'],
+          ['Discovered', '22 Jun 1978 — Christy'],
+        ],
+        lore: [
+          "Charon is so large relative to Pluto — about half its diameter, an eighth its mass — that the two are considered a binary dwarf planet system. They orbit a common center of mass that sits in empty space between them, neither truly orbiting the other.",
+          "The reddish-brown north polar region, nicknamed Mordor Macula, is a stain of tholins — complex organic compounds that drifted up from Pluto's atmosphere and got trapped at Charon's pole, slowly darkened by sunlight over billions of years.",
+          "Mutually tidally locked with Pluto — both always show the same face to each other. Standing on one, the other would appear motionless in the sky, eternally hovering in the same spot.",
+          "Discovered in 1978 by James Christy, who noticed a strange bulge on photographic plates of Pluto. That \"bulge\" turned out to be another world.",
+        ],
+      },
+      {
+        name: 'Nix', type: 'Pluto Moon · II',
+        rates: 'Chaotic tumble · Orbit 24.85 d',
+        sprite: parseSprite(NIX_SPRITE),
+        colors: { M: '#c8c0b0', L: '#e0d8c8', D: '#5a4838' },
+        scale: 4,
+        orbit: { baseR: 220, period: period(24.854), phase: 1.5 },
+        nasaUrl: 'https://science.nasa.gov/dwarf-planets/pluto/moons/nix/',
+        details: [
+          ['Type', 'Small Outer Moon'],
+          ['Diameter', '~50 km'],
+          ['Distance from barycenter', '48,694 km'],
+          ['Orbit', '24.85 days'],
+          ['Rotation', 'Chaotic tumble'],
+          ['Discovered', '2005 — Hubble Space Telescope'],
+        ],
+        lore: [
+          "A tiny irregular moon, only discovered in 2005 with the Hubble Space Telescope alongside its sibling Hydra.",
+          "Tumbles chaotically rather than rotating smoothly — its irregular shape combined with the gravitational tug-of-war between Pluto and Charon prevents it from settling into a stable spin.",
+          "Named after the Greek goddess of darkness and night — fitting for a world this distant from the Sun.",
+        ],
+      },
+      {
+        name: 'Hydra', type: 'Pluto Moon · III',
+        rates: 'Chaotic tumble · Orbit 38.2 d',
+        sprite: parseSprite(HYDRA_SPRITE),
+        colors: { M: '#a8a098', L: '#c8c0b8', D: '#3a2818' },
+        scale: 4,
+        orbit: { baseR: 290, period: period(38.2), phase: 4.2 },
+        nasaUrl: 'https://science.nasa.gov/dwarf-planets/pluto/moons/hydra/',
+        details: [
+          ['Type', 'Small Outer Moon'],
+          ['Diameter', '~51 km'],
+          ['Distance from barycenter', '64,738 km'],
+          ['Orbit', '38.2 days'],
+          ['Rotation', 'Chaotic tumble'],
+          ['Discovered', '2005 — Hubble Space Telescope'],
+        ],
+        lore: [
+          "The outermost of Pluto's known moons, and slightly larger than Nix.",
+          "Discovered the same year as Nix using Hubble images. The discoveries hinted that Pluto's neighborhood was busier than astronomers had assumed — New Horizons later confirmed it with even more detail.",
+          "Like Nix, Hydra tumbles chaotically rather than rotating smoothly. Its surface is unusually bright, possibly coated in fresh water ice.",
+        ],
+      },
+    ],
+  },
+
+  sun: {
+    name: 'The Sun',
+    subTitle: '★ G-type Yellow Dwarf ★',
+    isStar: true,
+    blurbHtml: "The <em>heart</em> of the system. A <b>G-type yellow dwarf star</b> containing 99.86% of all the mass in the solar system, fusing 600 million tons of hydrogen into helium every second. The surface (photosphere) churns at 5,500°C, while solar flares erupt along twisted magnetic field lines and dark sunspots crawl across the visible face on an 11-year cycle.",
+    bodies: [
+      {
+        name: 'The Sun', type: 'Star · G-type Main Sequence',
+        rates: 'Rotation 25 d (equator) · Age 4.6 Gyr',
+        sprite: parseSprite(SUN_SPRITE),
+        colors: { M: '#ff8020', L: '#ffc858', I: '#fff0c8' },
+        scale: 6, isPrimary: true,
+        rotationPeriod: period(25),
+        bobAmp: 0, bobSpeed: 0, bobPhase: 0,
+        nasaUrl: 'https://science.nasa.gov/sun/',
+        sunspots: [
+          { lat: 0.35, lon: 0.5,  size: 1.1 },
+          { lat: -0.45, lon: 2.1, size: 0.8 },
+          { lat: 0.15, lon: 3.6,  size: 1.3 },
+          { lat: -0.2, lon: 5.2,  size: 0.7 },
+        ],
+        flares: [
+          { baseAngle: -0.75, endAngle: -0.35, height: 70, ampH: 25, speed: 0.0009, phase: 0    },
+          { baseAngle:  0.55, endAngle:  0.95, height: 55, ampH: 22, speed: 0.0013, phase: 1.5  },
+          { baseAngle:  2.20, endAngle:  2.55, height: 85, ampH: 30, speed: 0.0007, phase: 0.8  },
+          { baseAngle:  3.55, endAngle:  3.95, height: 45, ampH: 18, speed: 0.0011, phase: 2.3  },
+          { baseAngle:  4.65, endAngle:  5.05, height: 65, ampH: 25, speed: 0.0008, phase: 4.0  },
+          { baseAngle:  5.75, endAngle:  6.00, height: 35, ampH: 15, speed: 0.0014, phase: 5.2  },
+        ],
+        details: [
+          ['Type', 'G-type Main Sequence (Yellow Dwarf)'],
+          ['Diameter', '1,392,700 km (109 × Earth)'],
+          ['Mass', '1.989 × 10³⁰ kg (333,000 × Earth)'],
+          ['Surface temperature', '5,500 °C'],
+          ['Core temperature', '15,000,000 °C'],
+          ['Composition', '73% Hydrogen · 25% Helium · 2% other'],
+          ['Equatorial rotation', '~25 Earth days'],
+          ['Polar rotation', '~35 Earth days (differential)'],
+          ['Age', '~4.6 billion years'],
+          ['Mass of solar system', '99.86% lives in the Sun'],
+        ],
+        lore: [
+          "A yellow dwarf star, about 4.6 billion years old, currently halfway through a 10-billion-year main-sequence life. After that — red giant, then white dwarf, then slowly cooling cinder.",
+          "99.86% of ALL the mass in the solar system lives inside the Sun. Every planet, moon, asteroid, and comet combined — including Jupiter — makes up the remaining 0.14%. The Sun isn't just the center; it IS the solar system.",
+          "The core runs on nuclear fusion at 15 million degrees Celsius, converting 600 million tons of hydrogen into helium every single second. A photon born in the core takes about 100,000 years to bubble its way to the surface — but only 8 minutes to travel from the surface to your eyes.",
+          "The Sun rotates differentially — it's plasma, not a solid, so the equator spins every 25 days while the poles take about 35. Those twisted rotation rates wind up the Sun's magnetic field into loops and tangles that power sunspots and solar flares.",
+          "Solar flares are eruptions of plasma along magnetic field lines, sometimes releasing energy equivalent to billions of nuclear bombs in minutes. The largest can fling charged particles toward Earth, lighting up auroras and occasionally knocking out power grids.",
+          "Sunspots look dark only because they're cooler (around 3,500°C, vs 5,500°C for the rest of the photosphere). They follow an 11-year cycle of activity, peaking and quieting as the Sun's magnetic field flips over and over.",
+          "In about 5 billion years, the Sun will exhaust its hydrogen fuel, swell into a red giant large enough to engulf Mercury, Venus, and probably Earth. After that, it'll shed its outer layers as a glowing nebula and collapse into a white dwarf — slowly cooling for trillions of years.",
+        ],
+      },
+    ],
+  },
+
+  mercury: {
+    name: 'Mercury',
+    blurbHtml: "The <em>smallest</em> and <em>innermost</em> planet, racing around the Sun in just <b>88 Earth days</b>. A scarred grey world covered in preserved impact craters — including the massive <b>Caloris Basin</b>. With no atmosphere to retain heat, the surface swings from <b>430°C</b> in sunlight to <b>−180°C</b> in shadow. <b>No moons</b>.",
+    bodies: [
+      {
+        name: 'Mercury', type: 'Terrestrial Planet · 0.39 AU',
+        rates: 'Day 59 d · Year 88 d',
+        sprite: parseSprite(MERCURY_BANDS),
+        colors: { M: '#8a8078', L: '#b0a89c', D: '#4a4038' },
+        scale: 4, isPrimary: true, draw: 'mercury',
+        rotationPeriod: period(20),
+        bobAmp: 2, bobSpeed: 0.013, bobPhase: 0,
+        nasaUrl: 'https://science.nasa.gov/mercury/',
+        details: [
+          ['Type', 'Terrestrial Planet (smallest)'],
+          ['Diameter', '4,879 km'],
+          ['Mass', '3.30 × 10²³ kg'],
+          ['Distance from Sun', '0.39 AU'],
+          ['Day length', '59 Earth days (sidereal)'],
+          ['Solar day', '176 Earth days'],
+          ['Year length', '88 Earth days'],
+          ['Surface temperature', '−180 °C to 430 °C'],
+          ['Atmosphere', 'Trace exosphere (effectively none)'],
+          ['Moons', '0 — solo planet'],
+          ['Notable', 'Caloris Basin · iron core 60% of mass'],
+        ],
+        lore: [
+          "The smallest and innermost planet, racing around the Sun in just 88 Earth days. Named after the Roman messenger god — fitting for the fastest planet.",
+          "Mercury's surface looks much like the Moon's — heavily cratered, grey, and battered. Without an atmosphere to weather them away, impact craters from billions of years ago remain perfectly preserved, etched into the surface like a permanent geological record.",
+          "The Caloris Basin is one of the largest impact craters in the solar system — about 1,550 km across, formed by an asteroid impact roughly 4 billion years ago. The shockwave was so violent it created chaotic broken terrain on the EXACT opposite side of the planet.",
+          "Mercury swings between extremes: 430°C in direct sunlight, plunging to −180°C in shadow. That's the largest day-night temperature range of any planet, because there's no atmosphere to redistribute heat.",
+          "A 3:2 spin-orbit resonance: Mercury rotates three times for every two orbits. The result is bizarre — a solar day (sunrise to sunrise) takes 176 Earth days, while a year is only 88. Two full years pass between sunrises on Mercury.",
+          "Surprisingly, Mercury has WATER ICE. In permanently shadowed craters at its poles where sunlight never reaches, ice has accumulated and remained frozen — confirmed by NASA's MESSENGER spacecraft in 2012.",
+          "60% of Mercury's mass is its iron core — the largest core-to-size ratio of any planet. The leading theory: an ancient giant impact stripped away most of the rocky mantle, leaving the dense metallic heart behind.",
+        ],
+      },
+    ],
+  },
+
+  venus: {
+    name: 'Venus',
+    blurbHtml: "Earth's <em>shrouded twin</em> gone catastrophically wrong. A thick CO₂ atmosphere with <b>sulfuric acid clouds</b> traps heat in a runaway greenhouse, baking the surface to <b>465°C</b> — hotter than Mercury despite being farther from the Sun. Venus rotates <em>backwards</em> and so slowly that a day lasts longer than a year. <b>No moons</b>.",
+    bodies: [
+      {
+        name: 'Venus', type: 'Terrestrial Planet · 0.72 AU',
+        rates: 'Day 243 d (retrograde) · Year 225 d',
+        sprite: parseSprite(VENUS_BANDS),
+        colors: { M: '#c9a45a', L: '#e8d18a', D: '#7a5828' },
+        scale: 4, isPrimary: true, draw: 'venus',
+        rotationPeriod: period(4),
+        bobAmp: 2, bobSpeed: 0.012, bobPhase: 0,
+        nasaUrl: 'https://science.nasa.gov/venus/',
+        details: [
+          ['Type', 'Terrestrial Planet'],
+          ['Diameter', '12,104 km'],
+          ['Mass', '4.87 × 10²⁴ kg'],
+          ['Distance from Sun', '0.72 AU'],
+          ['Day length', '243 Earth days (retrograde)'],
+          ['Year length', '225 Earth days'],
+          ['Surface temperature', '465 °C'],
+          ['Surface pressure', '92 × Earth\u2019s'],
+          ['Atmosphere', '96% CO₂ · sulfuric acid clouds'],
+          ['Moons', '0 — solo planet'],
+        ],
+        lore: [
+          "The hottest world in the Solar System — even hotter than Mercury, despite being almost twice as far from the Sun. Venus's thick atmosphere of carbon dioxide traps heat in a runaway greenhouse effect, baking the surface to 465°C, hot enough to melt lead.",
+          "A day on Venus is LONGER than its year. The planet rotates backwards and so slowly that one full rotation takes 243 Earth days, while a complete orbit takes only 225. You'd watch the Sun rise in the west, set in the east, and see only two sunrises in a Venusian year.",
+          "Atmospheric pressure at the surface is 92 times Earth's — equivalent to being a kilometer deep in our ocean. The Soviet Venera landers that reached the surface in the 1970s and 80s were crushed and cooked within hours, but managed to send back the only photos of the ground ever taken.",
+          "Beneath the sulfuric acid clouds lies a volcanic landscape — tens of thousands of volcanoes, vast lava plains, and mountains taller than anything on Earth. Recent re-analysis of old Magellan data hints some volcanoes may still be active.",
+          "Often called Earth's twin in size and composition. But Venus is what happens when a habitable world goes wrong — it may have had oceans billions of years ago, until a runaway greenhouse stripped them away forever.",
+        ],
+      },
+    ],
+  },
+
+  earth: {
+    name: 'Earth',
+    moonGroup: 'the Moon',
+    blurbHtml: "<b>Home.</b> The only known world with life — vast <em>liquid oceans</em>, a breathable atmosphere, and a protective magnetic field. Watch <b>the Moon</b> drift overhead: large enough relative to Earth that we're closer to a double planet than a planet with a satellite.",
+    bodies: [
+      {
+        name: 'Earth', type: 'Terrestrial Planet · 1.00 AU',
+        rates: 'Day 24h · Year 365.25 d',
+        sprite: parseSprite(EARTH_BANDS),
+        colors: { M: '#1e6fa8', L: '#3e8048', D: '#0e4878', I: '#e8eef8' },
+        scale: 4, isPrimary: true, draw: 'earth',
+        rotationPeriod: period(1.0),
+        bobAmp: 3, bobSpeed: 0.012, bobPhase: 0,
+        nasaUrl: 'https://science.nasa.gov/earth/',
+        details: [
+          ['Type', 'Terrestrial Planet'],
+          ['Diameter', '12,742 km'],
+          ['Mass', '5.97 × 10²⁴ kg'],
+          ['Distance from Sun', '1.00 AU'],
+          ['Day length', '24h (23h 56m sidereal)'],
+          ['Year length', '365.25 days'],
+          ['Moons', '1 — The Moon'],
+          ['Surface', '71% water'],
+          ['Atmosphere', '78% N₂, 21% O₂'],
+          ['Notable', 'The only known living world'],
+        ],
+        lore: [
+          "Our home — the only known world to harbor life, with 8+ billion humans and millions of other species sharing a thin shell of habitable space wrapped around a rocky core.",
+          "Earth's surface is 71% water, with oceans averaging 3.7 km deep. We're the only planet in the solar system with stable liquid water on the surface — the precondition for life as we understand it.",
+          "A magnetic field generated by the churning iron core shields life from solar radiation, while the atmosphere — 78% nitrogen, 21% oxygen — keeps the planet warm and breathable.",
+          "The only world in the solar system where you could step outside without a spacesuit. Everywhere else demands extensive protection just to last a few seconds.",
+        ],
+      },
+      {
+        name: 'The Moon', type: 'Natural Satellite',
+        rates: 'Tidally locked · Orbit 27.3 d',
+        sprite: parseSprite(MOON_SPRITE),
+        colors: { M: '#c8c4c0', L: '#e8e4e0', D: '#5a544c' },
+        scale: 4,
+        orbit: { baseR: 220, period: period(27.3), phase: 0.0 },
+        nasaUrl: 'https://science.nasa.gov/moon/',
+        details: [
+          ['Type', 'Natural Satellite'],
+          ['Diameter', '3,475 km'],
+          ['Distance from Earth', '384,400 km'],
+          ['Orbit', '27.3 days'],
+          ['Rotation', 'Tidally locked'],
+          ['Surface', 'Regolith dust, basalt maria'],
+          ['Notable', "Earth's only natural satellite"],
+          ['Visited by humans', '12 astronauts, 1969–1972'],
+        ],
+        lore: [
+          "Earth's only natural satellite — and surprisingly large relative to its parent planet. The Earth-Moon system is more like a double planet than most planet-moon pairings.",
+          "Likely formed about 4.5 billion years ago when a Mars-sized body called Theia collided with the young Earth. The debris coalesced into the Moon over millions of years.",
+          "Tidally locked to Earth — always showing the same face. The 'far side' remained unseen by humans until 1959, when a Soviet spacecraft first photographed it.",
+          "The Moon is slowly drifting away from Earth at about 3.8 cm per year, gradually lengthening Earth's day in the process.",
+          "The only celestial body besides Earth where humans have set foot. Twelve astronauts walked the surface between 1969 and 1972. NASA's Artemis program aims to return us there.",
+        ],
+      },
+    ],
+  },
+
+  mars: {
+    name: 'Mars',
+    moonGroup: 'Phobos & Deimos',
+    blurbHtml: "Mars — the <b>red planet</b>, half the size of Earth and the <em>most-explored world</em> beyond our own. Frozen CO₂ and water ice cap both poles, while two tiny captured asteroids tumble overhead: <b>Phobos</b> (doomed to crash) and <b>Deimos</b> (slowly escaping).",
+    bodies: [
+      {
+        name: 'Mars', type: 'Terrestrial Planet · 1.52 AU',
+        rates: 'Day 24h 37m · Year 1.88 yr',
+        sprite: parseSprite(MARS_BANDS),
+        colors: { M: '#c86830', L: '#e88848', D: '#6e2410', I: '#ebebf2' },
+        scale: 4, isPrimary: true,
+        rotationPeriod: period(1.026),
+        bobAmp: 3, bobSpeed: 0.011, bobPhase: 0,
+        nasaUrl: 'https://science.nasa.gov/mars/',
+        details: [
+          ['Type', 'Terrestrial Planet'],
+          ['Diameter', '6,779 km'],
+          ['Mass', '6.42 × 10²³ kg'],
+          ['Distance from Sun', '1.52 AU'],
+          ['Day length', '24h 37m'],
+          ['Year length', '1.88 Earth years'],
+          ['Moons', '2 — Phobos & Deimos'],
+          ['Surface', 'Iron oxide (rust)'],
+          ['Polar caps', 'CO₂ + water ice'],
+        ],
+        lore: [
+          "The Red Planet — its reddish hue comes from iron oxide (rust) coating the surface, making Mars visible to the naked eye from Earth even without a telescope.",
+          "Home to Olympus Mons, the largest volcano in the Solar System — three times taller than Mount Everest, with a base roughly the size of Arizona.",
+          "Polar ice caps grow and shrink with the seasons, made of frozen CO₂ layered over water ice. If all that water melted, it could blanket Mars in a shallow ocean.",
+          "The most-explored world beyond Earth. Active rovers and orbiters continue mapping the surface, while NASA's Mars Sample Return mission aims to bring Martian rocks home in the 2030s.",
+        ],
+      },
+      {
+        name: 'Phobos', type: 'Martian Moon · I',
+        rates: 'Tidally locked · Orbit 7h 39m',
+        sprite: parseSprite(PHOBOS_SPRITE),
+        colors: { M: '#5a4a3a', L: '#7a6a58', D: '#1a0a04' },
+        scale: 4,
+        orbit: { baseR: 85, period: period(0.319), phase: 0.0 },
+        nasaUrl: 'https://science.nasa.gov/mars/moons/phobos/',
+        details: [
+          ['Type', 'Inner Moon'],
+          ['Diameter', '22.4 km'],
+          ['Distance from Mars', '9,377 km'],
+          ['Orbit', '7h 39m'],
+          ['Rotation', 'Tidally locked'],
+          ['Notable', 'Stickney crater — 9 km wide'],
+          ['Fate', 'Will crash in ~50 million years'],
+          ['Discovered', '18 Aug 1877 — Asaph Hall'],
+        ],
+        lore: [
+          "The larger and closer of Mars' two tiny moons — and probably doomed. Phobos orbits so close to Mars that tidal forces are slowly pulling it inward. In about 50 million years it will either crash into Mars or be torn apart into a debris ring.",
+          "Orbits faster than Mars rotates — so from the Martian surface, Phobos rises in the west and sets in the east, twice every Martian day.",
+          "The Stickney crater is so large relative to Phobos that the impact nearly shattered the moon. Strange grooves radiating from the crater may be cracks left by that ancient collision.",
+          "Likely a captured asteroid, judging by its irregular shape and chemistry — though some scientists argue it formed alongside Mars from local debris.",
+        ],
+      },
+      {
+        name: 'Deimos', type: 'Martian Moon · II',
+        rates: 'Tidally locked · Orbit 30h 18m',
+        sprite: parseSprite(DEIMOS_SPRITE),
+        colors: { M: '#8a7858', L: '#b09878', D: '#3a2818' },
+        scale: 4,
+        orbit: { baseR: 145, period: period(1.262), phase: 2.5 },
+        nasaUrl: 'https://science.nasa.gov/mars/moons/deimos/',
+        details: [
+          ['Type', 'Outer Moon'],
+          ['Diameter', '12.4 km'],
+          ['Distance from Mars', '23,460 km'],
+          ['Orbit', '30h 18m'],
+          ['Rotation', 'Tidally locked'],
+          ['Surface', 'Smooth, dust-covered'],
+          ['Fate', 'Slowly escaping Mars'],
+          ['Discovered', '12 Aug 1877 — Asaph Hall'],
+        ],
+        lore: [
+          "The smaller and farther of Mars' two moons — so small that from the surface of Mars, Deimos looks like just a bright star, barely larger than Venus appears from Earth.",
+          "Where Phobos is doomed to fall, Deimos is slowly spiraling outward. In billions of years it will escape Mars' gravity entirely and become a tiny asteroid orbiting the Sun.",
+          "Its surface is unusually smooth for such a small body, coated in a thick layer of regolith dust that has filled in most craters over time.",
+          "Both Phobos and Deimos may be siblings to bodies in the asteroid belt — making Mars' moon system a peek at what nearby asteroids look like up close.",
+        ],
+      },
+    ],
+  },
+
+  asteroidBelt: {
+    name: 'Asteroid Belt',
+    moonGroup: 'Major Bodies',
+    type: 'field',
+    blurbHtml: "You're <em>inside the Main Belt</em> — a vast field of rocky debris between <b>Mars</b> and <b>Jupiter</b>, leftover building blocks that never coalesced into a planet. Of <b>1+ million</b> known objects, five named bodies dominate: <b>Ceres</b>, <b>Vesta</b>, <b>Pallas</b>, <b>Hygiea</b>, and <b>Psyche</b>.",
+    bodies: [
+      {
+        name: 'Ceres', type: 'Dwarf Planet · 2.77 AU',
+        rates: 'Day 9h 4m · Year 4.6 yr',
+        sprite: parseSprite(CERES_SPRITE),
+        colors: { M: '#9a8c70', L: '#fff8e0', D: '#3a3220' },
+        scale: 4,
+        flow: { startX: 0.55, baseY: 0.50, speed: 0.20, bobAmp: 4, bobSpeed: 0.5, bobPhase: 0 },
+        nasaUrl: 'https://science.nasa.gov/dwarf-planets/ceres/',
+        details: [
+          ['Type', 'Dwarf Planet'],
+          ['Diameter', '940 km'],
+          ['Distance from Sun', '2.77 AU'],
+          ['Day length', '9h 4m'],
+          ['Year length', '4.6 Earth years'],
+          ['Discovered', '1 Jan 1801 — Piazzi'],
+          ['Notable', 'Largest body in the belt'],
+          ['Composition', 'Rock & water ice'],
+          ['Visited by', 'NASA Dawn (2015–2018)'],
+        ],
+        lore: [
+          "The largest object in the asteroid belt — and the only dwarf planet in the inner Solar System. Ceres alone contains about a third of the entire belt's mass.",
+          "When discovered in 1801, Ceres was classified as a planet for fifty years before being demoted to asteroid. In 2006 it was re-promoted to dwarf planet — on the same day Pluto was reclassified.",
+          "The bright spots in Occator crater puzzled scientists for years until NASA's Dawn mission confirmed they're salt deposits — evidence of briny water that recently welled up from a subsurface ocean.",
+          "Beneath its dusty surface, Ceres likely hides more fresh water than all of Earth's lakes and rivers combined.",
+        ],
+      },
+      {
+        name: 'Vesta', type: 'Asteroid · 2.36 AU',
+        rates: 'Day 5h 20m · Year 3.6 yr',
+        sprite: parseSprite(VESTA_SPRITE),
+        colors: { M: '#a89878', L: '#e8d4a0', D: '#4a3a20' },
+        scale: 4,
+        flow: { startX: 0.85, baseY: 0.30, speed: 0.20, bobAmp: 6, bobSpeed: 0.6, bobPhase: 1.5 },
+        nasaUrl: 'https://science.nasa.gov/asteroids-comets-meteors/asteroids/vesta/',
+        details: [
+          ['Type', 'Asteroid'],
+          ['Diameter', '525 km'],
+          ['Distance from Sun', '2.36 AU'],
+          ['Day length', '5h 20m'],
+          ['Year length', '3.6 Earth years'],
+          ['Discovered', '29 Mar 1807 — Olbers'],
+          ['Notable', 'Rheasilvia — 500 km impact crater'],
+          ['Visited by', 'NASA Dawn (2011–2012)'],
+        ],
+        lore: [
+          "The second-largest body in the asteroid belt, and the brightest — Vesta is the only asteroid occasionally visible to the naked eye from Earth.",
+          "A massive ancient impact carved out the Rheasilvia crater near Vesta's south pole, blasting off so much material it ejected fragments that we still find as meteorites on Earth today.",
+          "About 1 in 20 meteorites that strike Earth originated from Vesta — making it the most-sampled body in space outside of the Moon and Mars.",
+        ],
+      },
+      {
+        name: 'Pallas', type: 'Asteroid · 2.77 AU',
+        rates: 'Day 7h 49m · Year 4.6 yr',
+        sprite: parseSprite(PALLAS_SPRITE),
+        colors: { M: '#8888a0', L: '#c8c8d8', D: '#3a3a48' },
+        scale: 4,
+        flow: { startX: 0.15, baseY: 0.32, speed: 0.20, bobAmp: 5, bobSpeed: 0.4, bobPhase: 3.0 },
+        nasaUrl: 'https://science.nasa.gov/solar-system/asteroids/2-pallas/',
+        details: [
+          ['Type', 'Asteroid'],
+          ['Diameter', '512 km'],
+          ['Distance from Sun', '2.77 AU'],
+          ['Day length', '7h 49m'],
+          ['Year length', '4.6 Earth years'],
+          ['Discovered', '28 Mar 1802 — Olbers'],
+          ['Notable', '34° tilted orbit'],
+          ['Composition', 'Carbon-rich rock'],
+        ],
+        lore: [
+          "The third-largest asteroid, but the most oddly-orbiting major body in the belt — Pallas tilts 34° out of the plane where every planet and most asteroids travel.",
+          "That steeply tilted orbit means Pallas dives through the rest of the belt at a sharp angle, taking it on a wild path no other large body shares.",
+          "Its heavily cratered surface tells a violent history. Recent observations reveal Pallas has been pummeled far more than its siblings Ceres and Vesta — earning it the nickname 'the cratered ball'.",
+        ],
+      },
+      {
+        name: 'Hygiea', type: 'Asteroid · 3.14 AU',
+        rates: 'Day 13h 50m · Year 5.6 yr',
+        sprite: parseSprite(HYGIEA_SPRITE),
+        colors: { M: '#5a5048', L: '#8a7e70', D: '#1a1208' },
+        scale: 4,
+        flow: { startX: 0.30, baseY: 0.68, speed: 0.20, bobAmp: 5, bobSpeed: 0.5, bobPhase: 4.5 },
+        nasaUrl: 'https://science.nasa.gov/solar-system/asteroids/10-hygiea/',
+        details: [
+          ['Type', 'Asteroid (Possibly Dwarf Planet)'],
+          ['Diameter', '434 km'],
+          ['Distance from Sun', '3.14 AU'],
+          ['Day length', '13h 50m'],
+          ['Year length', '5.6 Earth years'],
+          ['Discovered', '12 Apr 1849 — De Gasparis'],
+          ['Notable', 'Surprisingly spherical'],
+          ['Composition', 'Carbonaceous, very dark'],
+        ],
+        lore: [
+          "The fourth-largest body in the asteroid belt — and a recent surprise. In 2019, observations revealed Hygiea is far more spherical than expected, possibly qualifying it as a dwarf planet.",
+          "If reclassified, Hygiea would become the smallest known dwarf planet in our Solar System — smaller than Ceres, but still round enough to make the cut.",
+          "Hygiea is dark, coated in carbon-rich material that reflects almost no sunlight. It's the parent body of a huge family of similar dark asteroids spread across the outer belt.",
+        ],
+      },
+      {
+        name: 'Psyche', type: 'Asteroid · 2.92 AU',
+        rates: 'Day 4h 12m · Year 5.0 yr',
+        sprite: parseSprite(PSYCHE_SPRITE),
+        colors: { M: '#807a78', L: '#e0d8c0', D: '#2a2520' },
+        scale: 4,
+        flow: { startX: 0.75, baseY: 0.70, speed: 0.20, bobAmp: 6, bobSpeed: 0.7, bobPhase: 6.0 },
+        nasaUrl: 'https://science.nasa.gov/mission/psyche/',
+        details: [
+          ['Type', 'M-Type (Metallic) Asteroid'],
+          ['Diameter', '226 km'],
+          ['Distance from Sun', '2.92 AU'],
+          ['Day length', '4h 12m'],
+          ['Year length', '5.0 Earth years'],
+          ['Discovered', '17 Mar 1852 — De Gasparis'],
+          ['Composition', 'Iron, nickel, possibly gold'],
+          ['Mission', 'NASA Psyche — arrives 2029'],
+        ],
+        lore: [
+          "Unlike most asteroids — which are rocky or icy — Psyche is mostly metal. It may be the exposed core of a shattered protoplanet whose outer layers were blasted away in the early Solar System's chaos.",
+          "If you could mine Psyche's iron, nickel, gold, and platinum, you'd have wealth estimated in the quintillions of dollars — though hauling it home is another story.",
+          "NASA's Psyche spacecraft launched in October 2023 and will arrive at the asteroid in August 2029, beginning humanity's first up-close study of a metal world.",
+        ],
+      },
+    ],
+  },
+
+  milkyway: {
+    name: 'The Milky Way',
+    subTitle: 'Our Home Galaxy ★ Barred Spiral',
+    isGalaxy: true,
+    blurbHtml: "Our home <em>barred spiral galaxy</em>. About <b>100,000 light-years</b> across, holding <b>200–400 billion stars</b> and a supermassive black hole (Sagittarius A★) at the center. Our solar system sits on the <b>Orion Arm</b>, about <b>26,000 light-years</b> from the galactic core — roughly halfway out. <em>The pink arrow marks our address.</em>",
+    bodies: [
+      {
+        name: 'The Milky Way Galaxy', type: 'Barred Spiral Galaxy (SBbc)',
+        rates: '~100,000 ly · 200–400 billion stars',
+        sprite: parseSprite(GALAXY_SPRITE),
+        colors: { B: '#fff0c8', L: '#ffb050', M: '#d870ff', I: '#5040a0' },
+        scale: 4, isPrimary: true,
+        isGalaxy: true,
+        rotationPeriod: period(225000000),
+        bobAmp: 0, bobSpeed: 0, bobPhase: 0,
+        hitRadius: 110,
+        nasaUrl: 'https://science.nasa.gov/universe/galaxies/milky-way/',
+        details: [
+          ['Type', 'Barred Spiral Galaxy (SBbc)'],
+          ['Diameter', '~100,000 light-years'],
+          ['Mass', '~1.5 trillion solar masses'],
+          ['Stars', '200–400 billion'],
+          ['Age', '~13.6 billion years'],
+          ['Galactic year', '~225 million Earth years'],
+          ['Our location', 'Orion Arm · 26,000 ly from center'],
+          ['Spiral arms', '4 major + Orion Spur (ours)'],
+          ['Central black hole', 'Sagittarius A★ · 4M solar masses'],
+          ['Satellite galaxies', '~50+ (including the Magellanic Clouds)'],
+          ['Future', 'Will merge with Andromeda in ~4.5 Gyr'],
+        ],
+        lore: [
+          "Our home — a barred spiral galaxy about 100,000 light-years across, containing somewhere between 200 and 400 billion stars. We live near the edge of it, not the center.",
+          "The Milky Way isn't a perfect pinwheel. It's a BARRED spiral — there's a thick bar of stars cutting across the central bulge, and the spiral arms wind outward from the ends of that bar. We only learned how prominent the bar was in the early 2000s.",
+          "Our solar system sits on the Orion Arm (also called the Orion Spur), a minor arm between two of the major arms — Sagittarius (closer to center) and Perseus (further out). We're about 26,000 light-years from the galactic core.",
+          "The whole galaxy is rotating, and we're rotating with it — the Sun is moving at about 220 km/s around the galactic center. Even at that speed, it takes ~225 million years to complete one orbit. That's one \"galactic year.\" Since the solar system formed, we've done about 20 laps.",
+          "At the very center sits Sagittarius A★ — a supermassive black hole with the mass of about 4 million Suns. The 2020 Nobel Prize in Physics was awarded for proving its existence by tracking the orbits of stars around an invisible object.",
+          "The Milky Way has neighbors. The Large and Small Magellanic Clouds orbit us as satellite galaxies, visible to the naked eye from the southern hemisphere.",
+          "In about 4.5 billion years, the Milky Way will collide with the Andromeda Galaxy — currently 2.5 million light-years away and racing toward us at 110 km/s. The merger will take about a billion years and produce a giant elliptical galaxy sometimes called \"Milkomeda.\"",
+        ],
+      },
+    ],
+  },
+};
+
+let currentSystemKey = 'jupiter';
+let currentSystem = SYSTEMS[currentSystemKey];
+
+let stars = [];
+function generateStars() {
+  stars = [];
+  const layers = [
+    { count: Math.floor((W() * H()) / 5500), size: 1, speed: 0.04 },
+    { count: Math.floor((W() * H()) / 11000), size: 2, speed: 0.12 },
+    { count: Math.floor((W() * H()) / 22000), size: 3, speed: 0.25 },
+  ];
+  for (const layer of layers) {
+    for (let i = 0; i < layer.count; i++) {
+      stars.push({
+        x: Math.random() * W(), y: Math.random() * H(),
+        size: layer.size, speed: layer.speed,
+        twinkle: Math.random() * Math.PI * 2,
+        tspeed: 0.01 + Math.random() * 0.03,
+        colorIdx: Math.floor(Math.random() * palette.stars.length),
+      });
+    }
+  }
+}
+generateStars();
+
+let nebulaCanvas = document.createElement('canvas');
+function paintNebula() {
+  nebulaCanvas.width = W(); nebulaCanvas.height = H();
+  const nctx = nebulaCanvas.getContext('2d');
+  nctx.fillStyle = palette.bg;
+  nctx.fillRect(0, 0, W(), H());
+  for (let i = 0; i < 5; i++) {
+    const cx = Math.random() * W();
+    const cy = Math.random() * H();
+    const r = 150 + Math.random() * 280;
+    const g = nctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+    const c = palette.nebula[i % palette.nebula.length];
+    g.addColorStop(0, c + 'cc');
+    g.addColorStop(0.5, c + '44');
+    g.addColorStop(1, c + '00');
+    nctx.fillStyle = g;
+    nctx.beginPath(); nctx.arc(cx, cy, r, 0, Math.PI * 2); nctx.fill();
+  }
+}
+paintNebula();
+
+let shootingStar = null;
+function maybeSpawnShooter() {
+  if (shootingStar || Math.random() > 0.004) return;
+  const fromLeft = Math.random() > 0.5;
+  shootingStar = {
+    x: fromLeft ? -50 : W() + 50,
+    y: Math.random() * H() * 0.6,
+    vx: (fromLeft ? 1 : -1) * (6 + Math.random() * 4),
+    vy: 2 + Math.random() * 3,
+    trail: [],
+  };
+}
+
+/* Background asteroid debris — flows right-to-left with size-based parallax */
+const PEBBLE_COLORS = ['#6a5a48', '#8a7868', '#4a3a28', '#7a6a58', '#5a4838', '#3a2a18', '#9a8870'];
+let backgroundPebbles = [];
+function generateBackgroundPebbles() {
+  backgroundPebbles = [];
+  const count = Math.floor((W() * H()) / 6500);
+  for (let i = 0; i < count; i++) {
+    let size, speed;
+    const r = Math.random();
+    if (r < 0.65) {
+      // Tiny zippy specks — closest layer
+      size = 1 + Math.floor(Math.random() * 2);
+      speed = 1.0 + Math.random() * 0.8;
+    } else if (r < 0.92) {
+      // Medium chunks — middle layer
+      size = 3 + Math.floor(Math.random() * 2);
+      speed = 0.5 + Math.random() * 0.4;
+    } else {
+      // Occasional larger boulders — farther layer
+      size = 5 + Math.floor(Math.random() * 3);
+      speed = 0.3 + Math.random() * 0.2;
+    }
+    backgroundPebbles.push({
+      x: Math.random() * W(),
+      y: Math.random() * H(),
+      speed,
+      size,
+      color: PEBBLE_COLORS[Math.floor(Math.random() * PEBBLE_COLORS.length)],
+    });
+  }
+}
+
+/* STATE / INPUT */
+let mouseX = -9999, mouseY = -9999;
+let userPaused = false;
+let pagePaused = false;
+const isPaused = () => userPaused || pagePaused;
+let timeScale = 1;
+let showPaths = true;
+let simTime = 0;
+
+let inTransit = false;
+let transitFromKey = null;
+let transitToKey = null;
+let transitElapsed = 0;
+const TRANSIT_DURATION = 3.5;
+let shipDir = 1;
+
+function findHit(x, y) {
+  if (inTransit) return null;
+  const bodies = currentSystem.bodies;
+
+  // Field type (asteroid belt) — no primary, no depth sorting
+  if (currentSystem.type === 'field') {
+    for (const b of bodies) {
+      if (b._x === undefined) continue;
+      const r = (b.sprite.w * b.scale) / 2 + 6;
+      const dx = x - b._x, dy = y - b._y;
+      if (dx * dx + dy * dy < r * r) return b;
+    }
+    return null;
+  }
+
+  // Galaxy (Milky Way) — single body, use custom hitRadius for the bulge area
+  if (currentSystem.isGalaxy) {
+    const b = currentSystem.bodies[0];
+    if (b._x === undefined) return null;
+    const r = b.hitRadius || 90;
+    const dx = x - b._x, dy = y - b._y;
+    if (dx * dx + dy * dy < r * r) return b;
+    return null;
+  }
+
+  // Star (Sun) — single body, larger hit radius for corona
+  if (currentSystem.isStar) {
+    const b = currentSystem.bodies[0];
+    if (b._x === undefined) return null;
+    const r = (b.sprite.w * b.scale) / 2 + 20;
+    const dx = x - b._x, dy = y - b._y;
+    if (dx * dx + dy * dy < r * r) return b;
+    return null;
+  }
+
+  const test = (b) => {
+    if (b._x === undefined) return false;
+    const r = (b.sprite.w * b.scale) / 2 + 6;
+    const dx = x - b._x, dy = y - b._y;
+    return dx * dx + dy * dy < r * r;
+  };
+
+  // Binary system (Pluto-Charon) — all bodies depth-sort equally, no primary
+  if (currentSystem.binarySystem) {
+    const front = [], back = [];
+    for (const b of bodies) {
+      const d = b._depth ?? 0;
+      if (d > 0) front.push(b); else back.push(b);
+    }
+    for (const b of front) if (test(b)) return b;
+    for (const b of back) if (test(b)) return b;
+    return null;
+  }
+
+  const front = [], back = [];
+  for (const b of bodies) {
+    if (b.isPrimary) continue;
+    const d = b._depth ?? 0;
+    if (d > 0) front.push(b); else back.push(b);
+  }
+  const primary = bodies.find(b => b.isPrimary);
+  for (const b of front) if (test(b)) return b;
+  if (primary && test(primary)) return primary;
+  for (const b of back) if (test(b)) return b;
+  return null;
+}
+
+canvas.addEventListener('mousemove', (e) => {
+  mouseX = e.clientX; mouseY = e.clientY; updateHover();
+});
+canvas.addEventListener('mouseleave', () => {
+  mouseX = -9999; mouseY = -9999; updateHover();
+});
+canvas.addEventListener('click', (e) => {
+  const hit = findHit(e.clientX, e.clientY);
+  if (hit) openCharPage(hit);
+});
+
+function updateHover() {
+  const hit = findHit(mouseX, mouseY);
+  const labelEl = document.getElementById('label');
+  if (hit && !inTransit) {
+    if (hit.isGalaxy) {
+      // Minimal cursor-following label so we don't block the galaxy view
+      labelEl.querySelector('.name').textContent = '✦ TAP TO EXPLORE ✦';
+      labelEl.querySelector('.type').textContent = '';
+      labelEl.querySelector('.rates').textContent = '';
+      labelEl.style.left = mouseX + 'px';
+      labelEl.style.top = (mouseY - 18) + 'px';
+    } else {
+      labelEl.querySelector('.name').textContent = hit.name.toUpperCase();
+      labelEl.querySelector('.type').textContent = hit.type;
+      labelEl.querySelector('.rates').textContent = hit.rates;
+      labelEl.style.left = hit._x + 'px';
+      labelEl.style.top = (hit._y - (hit.sprite.h * hit.scale) / 2 - 8) + 'px';
+    }
+    labelEl.classList.add('visible');
+    canvas.style.cursor = 'pointer';
+  } else {
+    labelEl.classList.remove('visible');
+    canvas.style.cursor = 'crosshair';
+  }
+}
+
+document.querySelectorAll('[data-speed]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-speed]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    timeScale = Number(btn.dataset.speed);
+  });
+});
+document.querySelector('[data-speed="1"]').classList.add('active');
+
+const pauseBtn = document.getElementById('pause');
+pauseBtn.addEventListener('click', () => {
+  userPaused = !userPaused;
+  pauseBtn.textContent = userPaused ? '▶ Play' : '⏸ Pause';
+  pauseBtn.classList.toggle('active', userPaused);
+});
+const togglePathsBtn = document.getElementById('togglePaths');
+togglePathsBtn.classList.add('active');
+togglePathsBtn.addEventListener('click', () => {
+  showPaths = !showPaths;
+  togglePathsBtn.textContent = showPaths ? 'Hide' : 'Show';
+  togglePathsBtn.classList.toggle('active', showPaths);
+});
+
+const panel = document.getElementById('panel');
+const collapseBtn = document.getElementById('collapseBtn');
+function setCollapsed(collapsed) {
+  panel.classList.toggle('collapsed', collapsed);
+  collapseBtn.textContent = collapsed ? '+' : '−';
+}
+collapseBtn.addEventListener('click', () => {
+  setCollapsed(!panel.classList.contains('collapsed'));
+});
+if (window.innerWidth < 700) setCollapsed(true);
+
+/* PLANET BAR + TRAVEL */
+function buildPlanetBar() {
+  const bar = document.getElementById('planetBar');
+  bar.innerHTML = '';
+  for (const p of PLANETS) {
+    const btn = document.createElement('button');
+    btn.className = 'pb-item';
+    if (!p.built) btn.classList.add('unbuilt');
+    if (p.key === currentSystemKey) btn.classList.add('current');
+    const dist = p.distLabel || `${p.au} AU`;
+    btn.innerHTML = `${p.name}<span class="au">${dist}</span>`;
+    btn.addEventListener('click', () => onPlanetClick(p));
+    bar.appendChild(btn);
+  }
+}
+function updatePlanetBarActive() {
+  const buttons = document.querySelectorAll('.pb-item');
+  buttons.forEach((btn, i) => {
+    btn.classList.toggle('current', PLANETS[i].key === currentSystemKey);
+  });
+}
+function onPlanetClick(planet) {
+  if (planet.key === currentSystemKey) return;
+  if (inTransit) return;
+  if (!planet.built) { showToast(`${planet.name} — coming soon!`); return; }
+  startTravel(planet.key);
+}
+let toastTimer = null;
+function showToast(text) {
+  const toast = document.getElementById('toast');
+  toast.textContent = text;
+  toast.classList.add('visible');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('visible'), 1800);
+}
+function startTravel(toKey) {
+  if (pageBody) closeCharPage();
+  inTransit = true;
+  transitFromKey = currentSystemKey;
+  transitToKey = toKey;
+  transitElapsed = 0;
+  const fromAU = planetByKey(transitFromKey).au;
+  const toAU = planetByKey(toKey).au;
+  shipDir = (toAU > fromAU) ? 1 : -1;
+
+  document.getElementById('trFrom').textContent = planetByKey(transitFromKey).name;
+  document.getElementById('trTo').textContent = planetByKey(toKey).name;
+  document.getElementById('trTime').textContent = travelTime(transitFromKey, toKey);
+  document.getElementById('transitCard').classList.add('visible');
+  document.getElementById('planetBar').classList.add('traveling');
+
+  document.getElementById('label').classList.remove('visible');
+  mouseX = -9999; mouseY = -9999;
+}
+function finishTravel() {
+  currentSystemKey = transitToKey;
+  currentSystem = SYSTEMS[currentSystemKey];
+  inTransit = false;
+  document.getElementById('transitCard').classList.remove('visible');
+  document.getElementById('planetBar').classList.remove('traveling');
+  if (currentSystem.type === 'field') {
+    generateBackgroundPebbles();
+  } else {
+    backgroundPebbles = [];
+  }
+  applySystemDom();
+  updatePlanetBarActive();
+}
+function applySystemDom() {
+  document.getElementById('panelTitle').textContent = '✦ ' + currentSystem.name.toUpperCase();
+  let subText;
+  if (currentSystem.subTitle) {
+    subText = currentSystem.subTitle;
+  } else if (currentSystem.moonGroup) {
+    subText = '& ' + currentSystem.moonGroup;
+  } else {
+    subText = '— No Moons —';
+  }
+  document.getElementById('panelSub').textContent = subText;
+  document.getElementById('panelBlurb').innerHTML = currentSystem.blurbHtml;
+}
+buildPlanetBar();
+applySystemDom();
+
+/* CHARACTER PAGE */
+const charPage = document.getElementById('charPage');
+const charClose = document.getElementById('charClose');
+const charAvatar = document.getElementById('charAvatar');
+const charAvatarCtx = charAvatar.getContext('2d');
+charAvatarCtx.imageSmoothingEnabled = false;
+
+let pageBody = null;
+let charAvatarRot = 0;
+let charAvatarBob = 0;
+
+function openCharPage(body) {
+  pageBody = body;
+  charAvatarRot = 0;
+  charAvatarBob = 0;
+
+  document.getElementById('charNameplate').textContent = '◆ ' + body.name.toUpperCase();
+  document.getElementById('charTitle').textContent = body.name.toUpperCase();
+  document.getElementById('charSubtitle').textContent = body.type;
+
+  const statsEl = document.getElementById('charStats');
+  statsEl.innerHTML = '';
+  for (const [k, v] of body.details) {
+    const dt = document.createElement('dt'); dt.textContent = k;
+    const dd = document.createElement('dd'); dd.textContent = v;
+    statsEl.appendChild(dt); statsEl.appendChild(dd);
+  }
+  const loreEl = document.getElementById('charLore');
+  loreEl.innerHTML = '';
+  for (const p of body.lore) {
+    const pe = document.createElement('p'); pe.textContent = p;
+    loreEl.appendChild(pe);
+  }
+  const linkEl = document.getElementById('charNasaLink');
+  const urlEl = document.getElementById('charNasaUrl');
+  linkEl.href = body.nasaUrl;
+  urlEl.textContent = body.nasaUrl.replace(/^https?:\/\//, '');
+
+  const isMobile = window.innerWidth <= 700;
+  const targetSize = isMobile ? 180 : 256;
+  let scale, canvasW, canvasH;
+  if (body.draw === 'saturn') {
+    // Saturn's rings extend to 2.18× body radius — canvas must fit them
+    scale = Math.max(4, Math.floor(targetSize / (2.18 * body.sprite.w)));
+    canvasW = targetSize;
+    canvasH = targetSize;
+  } else {
+    scale = Math.floor(targetSize / body.sprite.w);
+    canvasW = body.sprite.w * scale;
+    canvasH = body.sprite.h * scale;
+  }
+  charAvatar.width = canvasW * DPR;
+  charAvatar.height = canvasH * DPR;
+  charAvatar.style.width = canvasW + 'px';
+  charAvatar.style.height = canvasH + 'px';
+  charAvatarCtx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  charAvatarCtx.imageSmoothingEnabled = false;
+  body._avatarScale = scale;
+  body._avatarCanvasW = canvasW;
+  body._avatarCanvasH = canvasH;
+
+  charPage.classList.add('visible');
+  charPage.scrollTop = 0;
+  pagePaused = true;
+  document.getElementById('label').classList.remove('visible');
+  mouseX = -9999; mouseY = -9999;
+}
+function closeCharPage() {
+  if (!pageBody) return;
+  charPage.classList.remove('visible');
+  pageBody = null;
+  if (!inTransit) pagePaused = false;
+}
+charClose.addEventListener('click', closeCharPage);
+charPage.addEventListener('click', (e) => {
+  if (e.target === charPage || e.target.classList.contains('char-page-inner')) {
+    closeCharPage();
+  }
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && pageBody) closeCharPage();
+});
+
+function drawCharAvatar() {
+  if (!pageBody) return;
+  const body = pageBody;
+  const s = body.sprite;
+  const scale = body._avatarScale;
+  const canvasW = body._avatarCanvasW || s.w * scale;
+  const canvasH = body._avatarCanvasH || s.h * scale;
+  const bodyW = s.w * scale;
+  const bodyH = s.h * scale;
+  const offsetX = Math.floor((canvasW - bodyW) / 2);
+  const offsetY = Math.floor((canvasH - bodyH) / 2);
+  charAvatarCtx.clearRect(0, 0, charAvatar.width, charAvatar.height);
+  const bobOffset = Math.round(Math.sin(charAvatarBob) * scale * 0.5);
+
+  // Saturn: BACK half of rings first — they belong behind the body
+  if (body.draw === 'saturn') {
+    drawAvatarRings(body, scale, bobOffset, false);
+  }
+
+  for (let r = 0; r < s.h; r++) {
+    const row = s.rows[r];
+    for (let c = 0; c < s.w; c++) {
+      const ch = row[c];
+      if (ch === '.') continue;
+      const col = body.colors[ch];
+      if (!col) continue;
+      charAvatarCtx.fillStyle = col;
+      charAvatarCtx.fillRect(c * scale + offsetX, r * scale + offsetY + bobOffset, scale, scale);
+    }
+  }
+
+  if (body.draw === 'jupiter') {
+    drawAvatarGRS(body, charAvatarRot, bobOffset, offsetX, offsetY);
+  }
+  if (body.draw === 'earth') {
+    drawAvatarSurfaceFeatures(body, EARTH_LAND, body.colors.L, charAvatarRot, bobOffset, offsetX, offsetY);
+  }
+  if (body.draw === 'mercury') {
+    drawAvatarSurfaceFeatures(body, MERCURY_FEATURES, body.colors.D, charAvatarRot, bobOffset, offsetX, offsetY);
+  }
+  if (body.draw === 'venus') {
+    drawAvatarSurfaceFeatures(body, VENUS_CLOUDS, body.colors.D, charAvatarRot, bobOffset, offsetX, offsetY);
+  }
+  if (body.draw === 'saturn') {
+    // FRONT half of rings on top of the body
+    drawAvatarRings(body, scale, bobOffset, true);
+  }
+}
+
+function drawAvatarSurfaceFeatures(body, features, defaultColor, rotation, bobOffset, offsetX, offsetY) {
+  const s = body.sprite, scale = body._avatarScale, R = s.w / 2;
+  const cx = R, cy = R;
+  for (const f of features) {
+    const isObj = !Array.isArray(f);
+    const lat = isObj ? f.lat : f[0];
+    const lon = (isObj ? f.lon : f[1]) + rotation;
+    const colorKey = isObj ? f.color : null;
+    const color = (colorKey === 'L') ? body.colors.L
+                : (colorKey === 'D') ? body.colors.D
+                : (colorKey || defaultColor);
+    const cosLat = Math.cos(lat), sinLat = Math.sin(lat);
+    const cosLon = Math.cos(lon), sinLon = Math.sin(lon);
+    const depth = cosLat * cosLon;
+    if (depth < 0.12) continue;
+    const col = Math.floor(cx + sinLon * cosLat * R * 0.92);
+    const row = Math.floor(cy - sinLat * R * 0.92);
+    if (col < 0 || col >= s.w || row < 0 || row >= s.h) continue;
+    const pdx = col + 0.5 - cx, pdy = row + 0.5 - cy;
+    if (pdx * pdx + pdy * pdy > R * R) continue;
+    charAvatarCtx.fillStyle = color;
+    charAvatarCtx.fillRect(col * scale + offsetX, row * scale + offsetY + bobOffset, scale, scale);
+  }
+}
+
+function drawAvatarGRS(body, lon, bobOffset, offsetX = 0, offsetY = 0) {
+  const s = body.sprite;
+  const scale = body._avatarScale;
+  const R = s.w / 2;
+  const cx = R, cy = R;
+  const cosLon = Math.cos(lon);
+  if (cosLon < 0.05) return;
+  const spotCol = cx + Math.sin(lon) * R * 0.82;
+  const spotRow = 13.5;
+  const widthFore = 3.4 * cosLon;
+  const heightFore = 1.7;
+  for (let dy = -2; dy <= 2; dy++) {
+    for (let dx = -4; dx <= 4; dx++) {
+      const ex = dx / widthFore;
+      const ey = dy / heightFore;
+      const distSq = ex * ex + ey * ey;
+      if (distSq > 1.0) continue;
+      const col = Math.round(spotCol + dx);
+      const row = spotRow + dy;
+      if (col < 0 || col >= s.w || row < 0 || row >= s.h) continue;
+      const pdx = col + 0.5 - cx;
+      const pdy = row + 0.5 - cy;
+      if (pdx * pdx + pdy * pdy > R * R) continue;
+      const color = (distSq < 0.4) ? body.colors.R : body.colors.A;
+      charAvatarCtx.fillStyle = color;
+      charAvatarCtx.fillRect(col * scale + offsetX, row * scale + offsetY + bobOffset, scale, scale);
+    }
+  }
+}
+
+function drawAvatarRings(body, scale, bobOffset, frontHalf) {
+  const s = body.sprite;
+  const canvasW = body._avatarCanvasW || s.w * scale;
+  const canvasH = body._avatarCanvasH || s.h * scale;
+  const cx = canvasW / 2;
+  const cy = canvasH / 2 + bobOffset;
+  const R = (s.w / 2) * scale;
+  const ringZones = [
+    [1.18, 1.42, '#5a4828'],
+    [1.45, 1.75, '#e8c890'],
+    [1.79, 1.83, '#1a0810'],
+    [1.86, 2.18, '#b8986a'],
+  ];
+  drawAvatarRingHalf(cx, cy, R, ringZones, frontHalf, scale);
+}
+function drawAvatarRingHalf(cx, cy, R, ringZones, frontHalf, scale) {
+  const tilt = 0.32;
+  for (const [r1m, r2m, color] of ringZones) {
+    const r1 = R * r1m;
+    const r2 = R * r2m;
+    for (let r = r1; r <= r2; r += Math.max(1.5, scale * 0.4)) {
+      const steps = Math.max(60, Math.floor(r * 1.2));
+      charAvatarCtx.fillStyle = color;
+      for (let i = 0; i < steps; i++) {
+        const ang = (i / steps) * Math.PI * 2;
+        const isFront = Math.sin(ang) > 0;
+        if (frontHalf ? !isFront : isFront) continue;
+        const x = cx + r * Math.cos(ang);
+        const y = cy + r * tilt * Math.sin(ang);
+        const dot = Math.max(2, Math.floor(scale * 0.4));
+        charAvatarCtx.fillRect(Math.floor(x), Math.floor(y), dot, dot);
+      }
+    }
+  }
+}
+
+/* UPDATE */
+const ORBIT_COMPRESSION = 0.32;
+function update(dtSec) {
+  const starMult = inTransit ? 30 : 1;
+  for (const s of stars) {
+    s.x -= s.speed * starMult;
+    if (s.x < -2) s.x = W() + 2;
+    s.twinkle += s.tspeed;
+  }
+  maybeSpawnShooter();
+  if (shootingStar) {
+    shootingStar.trail.push({ x: shootingStar.x, y: shootingStar.y });
+    if (shootingStar.trail.length > 14) shootingStar.trail.shift();
+    shootingStar.x += shootingStar.vx;
+    shootingStar.y += shootingStar.vy;
+    if (shootingStar.x < -100 || shootingStar.x > W() + 100 ||
+        shootingStar.y > H() + 100) shootingStar = null;
+  }
+
+  if (inTransit) {
+    transitElapsed += dtSec;
+    if (transitElapsed >= TRANSIT_DURATION) {
+      finishTravel();
+      // fall through to position new system bodies this frame
+    } else {
+      return;
+    }
+  }
+
+  if (isPaused()) return;
+
+  simTime += dtSec * timeScale;
+
+  // Field type (asteroid belt) — everything flows right-to-left, wrapping at the edge
+  if (currentSystem.type === 'field') {
+    const step = dtSec * 60;
+    // Named asteroids — slow flow + gentle vertical bob
+    for (const b of currentSystem.bodies) {
+      const halfW = (b.sprite.w * b.scale) / 2;
+      if (b._x === undefined) {
+        b._x = W() * b.flow.startX;
+      }
+      b._x -= b.flow.speed * step;
+      if (b._x < -halfW - 20) b._x = W() + halfW + 20;
+      const t = simTime * b.flow.bobSpeed + b.flow.bobPhase;
+      b._y = H() * b.flow.baseY + Math.sin(t) * b.flow.bobAmp;
+      b._depth = 0;
+    }
+    // Background pebbles — faster flow, randomize y on wrap so the field stays varied
+    for (const p of backgroundPebbles) {
+      p.x -= p.speed * step;
+      if (p.x < -10) {
+        p.x = W() + Math.random() * 80;
+        p.y = Math.random() * H();
+      }
+    }
+    return;
+  }
+
+  // The Galaxy (Milky Way) — body parked at center for hover/click detection
+  if (currentSystem.isGalaxy) {
+    const g = currentSystem.bodies[0];
+    g._x = W() / 2;
+    g._y = H() / 2;
+    g._depth = 0;
+    g._rotation = 0;
+    return;
+  }
+
+  // The Sun (star) — sits at center, slowly rotates
+  if (currentSystem.isStar) {
+    const star = currentSystem.bodies[0];
+    star._x = W() / 2;
+    star._y = H() / 2;
+    star._depth = 0;
+    star._rotation = (simTime / star.rotationPeriod) * Math.PI * 2;
+    return;
+  }
+
+  // Binary systems (Pluto-Charon) — ALL bodies orbit a common barycenter at screen center
+  if (currentSystem.binarySystem) {
+    const cx = W() / 2;
+    const cy = H() / 2;
+    const primaryB = currentSystem.bodies[0];
+    primaryB._rotation = (simTime / primaryB.rotationPeriod) * Math.PI * 2;
+    for (let i = 0; i < currentSystem.bodies.length; i++) {
+      const b = currentSystem.bodies[i];
+      const dir = b.orbit.direction || 1;
+      const angle = dir * (simTime / b.orbit.period) * Math.PI * 2 + b.orbit.phase;
+      b._angle = angle;
+      b._x = cx + b.orbit.baseR * Math.cos(angle);
+      b._y = cy + b.orbit.baseR * ORBIT_COMPRESSION * Math.sin(angle);
+      b._depth = Math.sin(angle);
+    }
+    return;
+  }
+
+  // Orbital systems (Jupiter, Saturn, Mars, Earth, Uranus, Neptune) — primary at center + moons orbiting
+  const primary = currentSystem.bodies[0];
+  primary.bobPhase += primary.bobSpeed;
+  primary._x = W() / 2;
+  primary._y = H() / 2 + Math.sin(primary.bobPhase) * primary.bobAmp;
+  primary._depth = 0;
+  primary._rotation = (simTime / primary.rotationPeriod) * Math.PI * 2;
+  const tilted = currentSystem.tiltedOrbit;
+  for (let i = 1; i < currentSystem.bodies.length; i++) {
+    const b = currentSystem.bodies[i];
+    const dir = b.orbit.direction || 1;
+    const angle = dir * (simTime / b.orbit.period) * Math.PI * 2 + b.orbit.phase;
+    b._angle = angle;
+    if (tilted) {
+      // Vertical orbit ellipse — x is compressed, y is full
+      b._x = primary._x + b.orbit.baseR * ORBIT_COMPRESSION * Math.cos(angle);
+      b._y = primary._y + b.orbit.baseR * Math.sin(angle);
+      b._depth = Math.cos(angle);
+    } else {
+      // Standard horizontal orbit ellipse — y is compressed, x is full
+      b._x = primary._x + b.orbit.baseR * Math.cos(angle);
+      b._y = primary._y + b.orbit.baseR * ORBIT_COMPRESSION * Math.sin(angle);
+      b._depth = Math.sin(angle);
+    }
+  }
+}
+
+/* DRAW */
+function drawStars() {
+  for (const s of stars) {
+    const tw = (Math.sin(s.twinkle) + 1) / 2;
+    // Motion blur trails during transit
+    if (inTransit && s.size >= 2) {
+      const trailLen = s.size * 10 + 6;
+      ctx.globalAlpha = 0.35;
+      ctx.fillStyle = palette.stars[s.colorIdx];
+      ctx.fillRect(Math.floor(s.x), Math.floor(s.y), trailLen, s.size);
+    }
+    ctx.globalAlpha = 0.35 + tw * 0.65;
+    ctx.fillStyle = palette.stars[s.colorIdx];
+    ctx.fillRect(Math.floor(s.x), Math.floor(s.y), s.size, s.size);
+    if (s.size >= 3 && tw > 0.85 && !inTransit) {
+      ctx.fillRect(Math.floor(s.x) - 1, Math.floor(s.y) + 1, 1, 1);
+      ctx.fillRect(Math.floor(s.x) + 3, Math.floor(s.y) + 1, 1, 1);
+      ctx.fillRect(Math.floor(s.x) + 1, Math.floor(s.y) - 1, 1, 1);
+      ctx.fillRect(Math.floor(s.x) + 1, Math.floor(s.y) + 3, 1, 1);
+    }
+  }
+  ctx.globalAlpha = 1;
+}
+function drawShooter() {
+  if (!shootingStar) return;
+  const ss = shootingStar;
+  for (let i = 0; i < ss.trail.length; i++) {
+    const t = ss.trail[i];
+    const a = i / ss.trail.length;
+    ctx.globalAlpha = a * 0.9;
+    ctx.fillStyle = palette.warm;
+    const size = Math.max(1, Math.round(a * 3));
+    ctx.fillRect(Math.floor(t.x), Math.floor(t.y), size, size);
+  }
+  ctx.globalAlpha = 1;
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(Math.floor(ss.x) - 1, Math.floor(ss.y) - 1, 3, 3);
+  ctx.fillStyle = palette.warm;
+  ctx.fillRect(Math.floor(ss.x), Math.floor(ss.y), 1, 1);
+}
+function drawOrbitPath(cx, cy, radius, tilted) {
+  // Dotted pattern — draw 1 in every 3 potential positions for clear gaps
+  const totalSteps = Math.max(48, Math.floor((2 * Math.PI * radius) / 3));
+  for (let i = 0; i < totalSteps; i++) {
+    if (i % 3 !== 0) continue;
+    const ang = (i / totalSteps) * Math.PI * 2;
+    const px = tilted
+      ? cx + radius * ORBIT_COMPRESSION * Math.cos(ang)
+      : cx + radius * Math.cos(ang);
+    const py = tilted
+      ? cy + radius * Math.sin(ang)
+      : cy + radius * ORBIT_COMPRESSION * Math.sin(ang);
+    const isFront = tilted ? Math.cos(ang) > 0 : Math.sin(ang) > 0;
+    ctx.globalAlpha = isFront ? 0.45 : 0.22;
+    ctx.fillStyle = palette.shadow;
+    ctx.fillRect(Math.floor(px), Math.floor(py), 1, 1);
+  }
+  ctx.globalAlpha = 1;
+}
+
+function drawHoverHalo(b, ox, oy) {
+  if (!b._hovered) return;
+  ctx.save();
+  ctx.globalAlpha = 0.35;
+  ctx.fillStyle = palette.hot;
+  const pad = 3;
+  ctx.fillRect(ox - pad, oy - pad, b.sprite.w * b.scale + pad * 2, b.sprite.h * b.scale + pad * 2);
+  ctx.restore();
+}
+function drawBandsSprite(b, ox, oy) {
+  const s = b.sprite; const px = b.scale;
+  for (let r = 0; r < s.h; r++) {
+    const row = s.rows[r];
+    for (let c = 0; c < s.w; c++) {
+      const ch = row[c];
+      if (ch === '.') continue;
+      const col = b.colors[ch];
+      if (!col) continue;
+      ctx.fillStyle = col;
+      ctx.fillRect(ox + c * px, oy + r * px, px, px);
+    }
+  }
+}
+function drawJupiterBody(b) {
+  const s = b.sprite; const px = b.scale;
+  const ox = Math.round(b._x - (s.w * px) / 2);
+  const oy = Math.round(b._y - (s.h * px) / 2);
+  drawHoverHalo(b, ox, oy);
+  drawBandsSprite(b, ox, oy);
+  const R = s.w / 2;
+  const cx = R, cy = R;
+  const lon = b._rotation;
+  const cosLon = Math.cos(lon);
+  if (cosLon < 0.05) return;
+  const spotCol = cx + Math.sin(lon) * R * 0.82;
+  const spotRow = 13.5;
+  const widthFore = 3.4 * cosLon;
+  const heightFore = 1.7;
+  for (let dy = -2; dy <= 2; dy++) {
+    for (let dx = -4; dx <= 4; dx++) {
+      const ex = dx / widthFore;
+      const ey = dy / heightFore;
+      const distSq = ex * ex + ey * ey;
+      if (distSq > 1.0) continue;
+      const col = Math.round(spotCol + dx);
+      const row = spotRow + dy;
+      if (col < 0 || col >= s.w || row < 0 || row >= s.h) continue;
+      const pdx = col + 0.5 - cx;
+      const pdy = row + 0.5 - cy;
+      if (pdx * pdx + pdy * pdy > R * R) continue;
+      const color = (distSq < 0.4) ? b.colors.R : b.colors.A;
+      ctx.fillStyle = color;
+      ctx.fillRect(ox + col * px, oy + row * px, px, px);
+    }
+  }
+}
+function drawSaturnBody(b) {
+  const s = b.sprite; const px = b.scale;
+  const ox = Math.round(b._x - (s.w * px) / 2);
+  const oy = Math.round(b._y - (s.h * px) / 2);
+  drawHoverHalo(b, ox, oy);
+  drawBandsSprite(b, ox, oy);
+}
+
+/* ===== ROTATING PLANET SURFACE FEATURES ===== */
+// Each feature is [lat, lon, colorKey] where colorKey is 'L' (light), 'D' (dark), or a hex
+// lat: -π/2 (south pole) to π/2 (north pole); lon: any (wraps with rotation)
+
+// Earth continents — green land masses spread across the globe
+const EARTH_LAND = [
+  // North America
+  [0.85, -1.7], [0.85, -1.9], [0.65, -1.6], [0.65, -1.4], [0.45, -1.5], [0.25, -1.4],
+  // South America
+  [0.0, -1.0], [-0.25, -1.0], [-0.5, -0.9], [-0.75, -0.95], [-1.0, -1.0],
+  // Europe
+  [0.95, 0.4], [0.75, 0.2], [0.7, 0.5],
+  // Africa
+  [0.4, 0.2], [0.4, 0.5], [0.2, 0.3], [0.0, 0.4], [-0.25, 0.4], [-0.5, 0.4], [-0.7, 0.3],
+  // Asia (massive landmass)
+  [1.05, 1.0], [1.0, 1.5], [0.95, 2.0], [0.85, 2.5], [0.8, 1.2],
+  [0.7, 1.6], [0.5, 1.4], [0.4, 1.9], [0.45, 1.1], [0.25, 1.2],
+  // Southeast Asia / Indonesia
+  [0.1, 2.1], [-0.15, 2.2], [-0.25, 2.3],
+  // Australia
+  [-0.5, 2.4], [-0.55, 2.55], [-0.7, 2.5],
+];
+
+// Mercury surface — Caloris Basin (light material) + scattered dark craters
+const MERCURY_FEATURES = [
+  // Caloris Basin (large bright impact basin)
+  { lat: 0.35, lon: 0.0, color: 'L' },
+  { lat: 0.45, lon: 0.1, color: 'L' },
+  { lat: 0.45, lon: -0.1, color: 'L' },
+  { lat: 0.25, lon: 0.05, color: 'L' },
+  { lat: 0.25, lon: -0.05, color: 'L' },
+  // Dark crater scattering across the surface
+  { lat: -0.1, lon: 0.9, color: 'D' },
+  { lat: -0.4, lon: 1.5, color: 'D' },
+  { lat: 0.5, lon: 2.2, color: 'D' },
+  { lat: -0.5, lon: 2.8, color: 'D' },
+  { lat: 0.1, lon: -1.0, color: 'D' },
+  { lat: -0.5, lon: -1.6, color: 'D' },
+  { lat: 0.3, lon: -2.2, color: 'D' },
+  { lat: -0.6, lon: -2.6, color: 'D' },
+  { lat: 0.65, lon: 1.0, color: 'D' },
+  { lat: -0.2, lon: -0.5, color: 'D' },
+  { lat: 0.0, lon: -2.5, color: 'D' },
+  { lat: -0.75, lon: 0.6, color: 'D' },
+  { lat: 0.7, lon: -1.2, color: 'D' },
+];
+
+// Venus cloud Y-feature — the iconic UV-visible cloud pattern that drifts with super-rotation
+const VENUS_CLOUDS = [
+  // Top-left arm of the Y
+  [0.85, -0.5], [0.7, -0.4], [0.55, -0.3], [0.4, -0.2],
+  // Top-right arm of the Y
+  [0.85, 0.5], [0.7, 0.4], [0.55, 0.3], [0.4, 0.2],
+  // Center junction
+  [0.25, 0.0], [0.1, 0.0],
+  // Stem going down
+  [-0.05, -0.05], [-0.2, 0.0], [-0.35, 0.0], [-0.5, 0.05], [-0.65, 0.0], [-0.8, -0.05],
+  // Additional subtle banding texture
+  [0.55, 1.8], [0.3, 1.9], [0.0, 2.0], [-0.3, 1.95], [-0.55, 1.85],
+  [0.5, -1.6], [0.2, -1.7], [-0.1, -1.65], [-0.4, -1.5],
+];
+
+// Generic feature renderer — projects (lat, lon) onto the sprite disk with rotation
+function drawSurfaceFeatures(ctx2d, ox, oy, b, features, defaultColor, rotation) {
+  const s = b.sprite, px = b.scale, R = s.w / 2;
+  const cx = R, cy = R;
+  for (const f of features) {
+    const isObj = !Array.isArray(f);
+    const lat = isObj ? f.lat : f[0];
+    const lon = (isObj ? f.lon : f[1]) + rotation;
+    const colorKey = isObj ? f.color : null;
+    const color = (colorKey === 'L') ? b.colors.L
+                : (colorKey === 'D') ? b.colors.D
+                : (colorKey || defaultColor);
+
+    const cosLat = Math.cos(lat), sinLat = Math.sin(lat);
+    const cosLon = Math.cos(lon), sinLon = Math.sin(lon);
+    const depth = cosLat * cosLon;
+    if (depth < 0.12) continue; // far side or grazing limb
+
+    const col = Math.floor(cx + sinLon * cosLat * R * 0.92);
+    const row = Math.floor(cy - sinLat * R * 0.92);
+    if (col < 0 || col >= s.w || row < 0 || row >= s.h) continue;
+    const pdx = col + 0.5 - cx, pdy = row + 0.5 - cy;
+    if (pdx * pdx + pdy * pdy > R * R) continue;
+    ctx2d.fillStyle = color;
+    ctx2d.fillRect(ox + col * px, oy + row * px, px, px);
+  }
+}
+
+function drawEarthBody(b) {
+  const s = b.sprite, px = b.scale;
+  const ox = Math.round(b._x - (s.w * px) / 2);
+  const oy = Math.round(b._y - (s.h * px) / 2);
+  drawHoverHalo(b, ox, oy);
+  drawBandsSprite(b, ox, oy);
+  drawSurfaceFeatures(ctx, ox, oy, b, EARTH_LAND, b.colors.L, b._rotation);
+}
+
+function drawMercuryBody(b) {
+  const s = b.sprite, px = b.scale;
+  const ox = Math.round(b._x - (s.w * px) / 2);
+  const oy = Math.round(b._y - (s.h * px) / 2);
+  drawHoverHalo(b, ox, oy);
+  drawBandsSprite(b, ox, oy);
+  drawSurfaceFeatures(ctx, ox, oy, b, MERCURY_FEATURES, b.colors.D, b._rotation);
+}
+
+function drawVenusBody(b) {
+  const s = b.sprite, px = b.scale;
+  const ox = Math.round(b._x - (s.w * px) / 2);
+  const oy = Math.round(b._y - (s.h * px) / 2);
+  drawHoverHalo(b, ox, oy);
+  drawBandsSprite(b, ox, oy);
+  drawSurfaceFeatures(ctx, ox, oy, b, VENUS_CLOUDS, b.colors.D, b._rotation);
+}
+
+const RING_TILT = 0.32;
+function drawSaturnRings(b, frontHalf) {
+  const px = b.scale;
+  const R = (b.sprite.w / 2) * px;
+  const ringZones = [
+    [1.18, 1.42, '#5a4828'],
+    [1.45, 1.75, '#e8c890'],
+    [1.79, 1.83, '#1a0810'],
+    [1.86, 2.18, '#b8986a'],
+  ];
+  for (const [r1m, r2m, color] of ringZones) {
+    const r1 = R * r1m;
+    const r2 = R * r2m;
+    for (let r = r1; r <= r2; r += Math.max(1.5, px * 0.4)) {
+      drawRingArc(b._x, b._y, r, RING_TILT, color, frontHalf, px);
+    }
+  }
+}
+function drawRingArc(cx, cy, radius, tilt, color, frontHalf, px) {
+  ctx.fillStyle = color;
+  const steps = Math.max(80, Math.floor(radius * 1.4));
+  for (let i = 0; i < steps; i++) {
+    const angle = (i / steps) * Math.PI * 2;
+    const isFront = Math.sin(angle) > 0;
+    if (frontHalf ? !isFront : isFront) continue;
+    const x = cx + radius * Math.cos(angle);
+    const y = cy + radius * tilt * Math.sin(angle);
+    const dot = Math.max(2, Math.floor(px * 0.5));
+    ctx.fillRect(Math.floor(x), Math.floor(y), dot, dot);
+  }
+}
+
+/* SUN — corona rays, rotating sunspots, solar flares */
+function drawCoronaRays(star) {
+  const cx = star._x, cy = star._y;
+  const sunR = (star.sprite.w / 2) * star.scale;
+  const PSZ = star.scale; // chunky pixel art block size
+  const t = performance.now();
+
+  // 16 rays at fixed angles, lengths vary slightly with a slow flicker
+  const rayCount = 16;
+  for (let i = 0; i < rayCount; i++) {
+    const angle = (i / rayCount) * Math.PI * 2;
+    // Each ray has its own pulse phase
+    const pulse = 0.6 + 0.4 * Math.sin(t * 0.0008 + i * 0.7);
+    const baseLen = 14 + (i % 3) * 6; // varying base lengths
+    const len = baseLen + pulse * 12;
+    const segments = Math.floor(len / PSZ);
+
+    for (let s = 0; s < segments; s++) {
+      const d = sunR + 6 + s * PSZ;
+      // Fade out toward the tip
+      const fade = 1 - (s / segments);
+      if (Math.random() > fade * 0.85 && s > 2) continue; // sparse near tips
+
+      const x = cx + Math.cos(angle) * d;
+      const y = cy + Math.sin(angle) * d;
+      const px = Math.floor(x / PSZ) * PSZ;
+      const py = Math.floor(y / PSZ) * PSZ;
+
+      // Color gradient along the ray: hot orange near sun → deep red at tip
+      const heat = 1 - (s / segments);
+      let color;
+      if (heat > 0.7)      color = '#ffc858';
+      else if (heat > 0.4) color = '#ff8030';
+      else                 color = '#c84018';
+
+      ctx.fillStyle = color;
+      ctx.fillRect(px, py, PSZ, PSZ);
+    }
+  }
+}
+
+function drawRotatingSunspots(star) {
+  if (!star.sunspots) return;
+  const cx = star._x, cy = star._y;
+  const sunR = (star.sprite.w / 2) * star.scale * 0.78; // inset from edge
+  const PSZ = star.scale;
+
+  for (const spot of star.sunspots) {
+    const effLon = spot.lon + star._rotation;
+    const cosLon = Math.cos(effLon);
+    const sinLon = Math.sin(effLon);
+    const cosLat = Math.cos(spot.lat);
+    const sinLat = Math.sin(spot.lat);
+
+    // Depth toward camera; skip if on far side
+    const depth = cosLon * cosLat;
+    if (depth < 0.15) continue;
+
+    // Project sphere to screen
+    const x = cx + sinLon * cosLat * sunR;
+    const y = cy + sinLat * sunR;
+
+    // Foreshortening at limb
+    const sizeFactor = Math.max(0.35, depth);
+    const blocks = Math.max(1, Math.round(spot.size * sizeFactor * 1.8));
+
+    // Draw a cluster of dark blocks
+    for (let dy = -blocks; dy <= blocks; dy++) {
+      for (let dx = -blocks; dx <= blocks; dx++) {
+        // Roughly circular cluster
+        if (dx * dx + dy * dy > blocks * blocks + 1) continue;
+        const px = Math.floor((x + dx * PSZ) / PSZ) * PSZ;
+        const py = Math.floor((y + dy * PSZ) / PSZ) * PSZ;
+        // Penumbra (outer ring) vs umbra (core)
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        ctx.fillStyle = (dist > blocks * 0.6) ? '#a04018' : '#3a1808';
+        ctx.fillRect(px, py, PSZ, PSZ);
+      }
+    }
+  }
+}
+
+function drawSolarFlares(star) {
+  if (!star.flares) return;
+  const cx = star._x, cy = star._y;
+  const sunR = (star.sprite.w / 2) * star.scale;
+  const PSZ = star.scale;
+  const t = performance.now();
+
+  for (const flare of star.flares) {
+    // Pulsing height — but always above 5
+    const h = flare.height + Math.sin(t * flare.speed + flare.phase) * flare.ampH;
+    if (h < 8) continue;
+
+    const baseA = flare.baseAngle;
+    const endA = flare.endAngle;
+    const midA = (baseA + endA) / 2;
+
+    // Bezier control points: two on the limb, one outside
+    const x0 = cx + Math.cos(baseA) * sunR;
+    const y0 = cy + Math.sin(baseA) * sunR;
+    const x2 = cx + Math.cos(endA) * sunR;
+    const y2 = cy + Math.sin(endA) * sunR;
+    const x1 = cx + Math.cos(midA) * (sunR + h);
+    const y1 = cy + Math.sin(midA) * (sunR + h);
+
+    // Number of steps proportional to arc length
+    const steps = 32;
+    for (let i = 0; i <= steps; i++) {
+      const tParam = i / steps;
+      const oneT = 1 - tParam;
+      const x = oneT * oneT * x0 + 2 * oneT * tParam * x1 + tParam * tParam * x2;
+      const y = oneT * oneT * y0 + 2 * oneT * tParam * y1 + tParam * tParam * y2;
+
+      // Hottest at the base/end attachments, cooler at the top of the loop
+      const distFromPeak = Math.abs(tParam - 0.5) * 2; // 0 at peak, 1 at ends
+      let color;
+      if (distFromPeak > 0.65)      color = '#ffd470';
+      else if (distFromPeak > 0.35) color = '#ff9038';
+      else                          color = '#ff4818';
+
+      const px = Math.floor(x / PSZ) * PSZ;
+      const py = Math.floor(y / PSZ) * PSZ;
+
+      // Main pixel
+      ctx.fillStyle = color;
+      ctx.fillRect(px, py, PSZ, PSZ);
+
+      // Thickness — add an adjacent pixel for chunkier prominence (every other step)
+      if (i % 2 === 0) {
+        const tangentX = -Math.sin(midA);
+        const tangentY = Math.cos(midA);
+        const ox = Math.floor((x + tangentX * PSZ * 0.7) / PSZ) * PSZ;
+        const oy = Math.floor((y + tangentY * PSZ * 0.7) / PSZ) * PSZ;
+        ctx.fillRect(ox, oy, PSZ, PSZ);
+      }
+    }
+  }
+}
+
+/* MILKY WAY — tilted 3D perspective spiral with rich surrounding starfield */
+const GALAXY_CANVAS_SIZE = 1000;
+const GALAXY_TILT = 0.55;          // y-axis squash → 3D tilted perspective
+const GALAXY_BRIGHT_R = 350;       // outer extent of bright spiral structure
+let galaxyCanvas = null;
+
+function generateGalaxy() {
+  galaxyCanvas = document.createElement('canvas');
+  galaxyCanvas.width = GALAXY_CANVAS_SIZE;
+  galaxyCanvas.height = GALAXY_CANVAS_SIZE;
+  const g = galaxyCanvas.getContext('2d');
+  const cx = GALAXY_CANVAS_SIZE / 2;
+  const cy = GALAXY_CANVAS_SIZE / 2;
+  const TILT = GALAXY_TILT;
+
+  // Deterministic RNG
+  let seed = 1729;
+  const rng = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
+  const gauss = () => (rng() + rng() + rng() - 1.5) * 0.7;
+
+  // Helper — 4-point pixel sparkle star
+  const drawSparkle = (x, y, color, arm, withDiag) => {
+    g.fillStyle = color;
+    g.fillRect(x, y, 1, 1);
+    for (let i = 1; i <= arm; i++) {
+      g.fillRect(x - i, y, 1, 1);
+      g.fillRect(x + i, y, 1, 1);
+      g.fillRect(x, y - i, 1, 1);
+      g.fillRect(x, y + i, 1, 1);
+    }
+    if (withDiag) {
+      g.fillRect(x - 1, y - 1, 1, 1);
+      g.fillRect(x + 1, y - 1, 1, 1);
+      g.fillRect(x - 1, y + 1, 1, 1);
+      g.fillRect(x + 1, y + 1, 1, 1);
+    }
+  };
+
+  // Distance test for "inside galaxy disk" (tilted ellipse)
+  const inGalaxy = (x, y, r) => {
+    const dx = x - cx, dy = (y - cy) / TILT;
+    return dx * dx + dy * dy < r * r;
+  };
+
+  // ===== BACKGROUND SPACE — dim distant stars =====
+  for (let i = 0; i < 1400; i++) {
+    const x = Math.floor(rng() * GALAXY_CANVAS_SIZE);
+    const y = Math.floor(rng() * GALAXY_CANVAS_SIZE);
+    if (inGalaxy(x, y, 80)) continue; // skip dense galaxy center
+    const roll = rng();
+    let color;
+    if (roll < 0.30)      color = '#4050a0';
+    else if (roll < 0.60) color = '#6070a0';
+    else if (roll < 0.85) color = '#8090b8';
+    else                  color = '#b0b8d0';
+    g.fillStyle = color;
+    g.fillRect(x, y, 1, 1);
+  }
+
+  // ===== SMALL DISTANT NEBULAE in corners =====
+  const nebSpots = [
+    { x: cx - 380, y: cy - 320, color: 'rgba(255, 110, 199, 0.22)', accent: '#ff80c8' },
+    { x: cx + 360, y: cy - 340, color: 'rgba(180, 100, 220, 0.22)', accent: '#a070e0' },
+    { x: cx - 420, y: cy + 260, color: 'rgba(110, 255, 224, 0.16)', accent: '#6effe0' },
+    { x: cx + 390, y: cy + 310, color: 'rgba(255, 110, 199, 0.20)', accent: '#ff80c8' },
+  ];
+  for (const n of nebSpots) {
+    const haloR = 70;
+    const grad = g.createRadialGradient(n.x, n.y, 0, n.x, n.y, haloR);
+    grad.addColorStop(0, n.color);
+    grad.addColorStop(1, 'rgba(0,0,0,0)');
+    g.fillStyle = grad;
+    g.fillRect(n.x - haloR, n.y - haloR, haloR * 2, haloR * 2);
+    // Wispy pixel cluster inside the nebula
+    for (let i = 0; i < 50; i++) {
+      const r2 = Math.sqrt(rng()) * 55;
+      const t2 = rng() * Math.PI * 2;
+      const xx = n.x + r2 * Math.cos(t2);
+      const yy = n.y + r2 * Math.sin(t2) * 0.7;
+      const r3 = rng();
+      g.fillStyle = r3 < 0.4 ? n.accent : (r3 < 0.7 ? '#6080b0' : '#a060c0');
+      g.fillRect(Math.floor(xx), Math.floor(yy), 1, 1);
+    }
+  }
+
+  // ===== BIG SPARKLE STARS around the galaxy =====
+  const sparkles = [
+    { color: '#6effe0', size: 3 }, { color: '#ff6ec7', size: 3 }, { color: '#ffe890', size: 2 },
+    { color: '#ffffff', size: 2 }, { color: '#a8d0ff', size: 2 }, { color: '#ffe890', size: 3 },
+    { color: '#ff6ec7', size: 2 }, { color: '#6effe0', size: 2 }, { color: '#ffffff', size: 3 },
+  ];
+  // Distribute sparkles in a ring outside the galaxy
+  let placed = 0;
+  for (let i = 0; i < 200 && placed < 16; i++) {
+    const x = Math.floor(rng() * GALAXY_CANVAS_SIZE);
+    const y = Math.floor(rng() * GALAXY_CANVAS_SIZE);
+    if (inGalaxy(x, y, GALAXY_BRIGHT_R + 30)) continue;
+    if (x < 30 || x > GALAXY_CANVAS_SIZE - 30 || y < 30 || y > GALAXY_CANVAS_SIZE - 30) continue;
+    const s = sparkles[placed % sparkles.length];
+    drawSparkle(x, y, s.color, s.size, s.size >= 3);
+    placed++;
+  }
+
+  // ===== TILTED GLOW LAYERS (radial gradients squashed via canvas transform) =====
+  g.save();
+  g.translate(cx, cy);
+  g.scale(1, TILT);
+  // Diffuse outer disk glow
+  const disk = g.createRadialGradient(0, 0, 100, 0, 0, GALAXY_BRIGHT_R + 40);
+  disk.addColorStop(0, 'rgba(200, 150, 230, 0.14)');
+  disk.addColorStop(0.5, 'rgba(140, 90, 210, 0.08)');
+  disk.addColorStop(1, 'rgba(60, 40, 120, 0)');
+  g.fillStyle = disk;
+  g.fillRect(-(GALAXY_BRIGHT_R + 60), -(GALAXY_BRIGHT_R + 60), (GALAXY_BRIGHT_R + 60) * 2, (GALAXY_BRIGHT_R + 60) * 2);
+  // Warm bulge
+  const bulge = g.createRadialGradient(0, 0, 0, 0, 0, 200);
+  bulge.addColorStop(0, 'rgba(255, 245, 200, 0.62)');
+  bulge.addColorStop(0.4, 'rgba(255, 180, 90, 0.32)');
+  bulge.addColorStop(1, 'rgba(200, 80, 40, 0)');
+  g.fillStyle = bulge;
+  g.fillRect(-200, -200, 400, 400);
+  g.restore();
+
+  // ===== INTER-ARM DIFFUSE STARS — heavy fill so the disk reads as continuous, not striped =====
+  for (let i = 0; i < 5500; i++) {
+    const r = 55 + Math.sqrt(rng()) * (GALAXY_BRIGHT_R - 55);
+    const theta = rng() * Math.PI * 2;
+    const sx = r * Math.cos(theta);
+    const sy = r * Math.sin(theta) * TILT;
+    const x = Math.floor(cx + sx);
+    const y = Math.floor(cy + sy);
+    const roll = rng();
+    let color;
+    if (roll < 0.3)       color = '#7080a0';
+    else if (roll < 0.55) color = '#5060a0';
+    else if (roll < 0.78) color = '#90a0c0';
+    else if (roll < 0.92) color = '#a8b0d0';
+    else                  color = '#c8d0e8';
+    g.fillStyle = color;
+    g.fillRect(x, y, 1, 1);
+  }
+
+  // ===== SPIRAL ARMS — 3 arms, fewer turns + much wider so they merge into the disk =====
+  const ARM_COUNT = 3;
+  const ARM_INNER = 55;
+  const TURNS = 1.8;
+
+  for (let arm = 0; arm < ARM_COUNT; arm++) {
+    const armPhase = (arm / ARM_COUNT) * Math.PI * 2;
+    const SEGMENTS = 1100;
+    for (let i = 0; i < SEGMENTS; i++) {
+      const t = i / SEGMENTS;
+      const tEff = t + (rng() - 0.5) * 0.003;
+      const r = ARM_INNER + (GALAXY_BRIGHT_R - ARM_INNER) * Math.pow(tEff, 1.0);
+      const theta = armPhase + tEff * Math.PI * 2 * TURNS;
+      // WAY wider arms so they overlap and merge instead of looking like clean spiral lines
+      const armWidth = 20 + r * 0.10;
+      for (let s = 0; s < 10; s++) {
+        const scatter = gauss() * armWidth;
+        const perpAngle = theta + Math.PI / 2;
+        const sx = r * Math.cos(theta) + scatter * Math.cos(perpAngle);
+        const sy = (r * Math.sin(theta) + scatter * Math.sin(perpAngle)) * TILT;
+        const x = Math.floor(cx + sx);
+        const y = Math.floor(cy + sy);
+        const roll = rng();
+        let color, size = 1;
+        if (roll < 0.04 && r > 100)      { color = '#ff90c8'; size = 2; }
+        else if (roll < 0.10)             color = '#a8d0ff';
+        else if (roll < 0.40)             color = '#e8f0ff';
+        else if (roll < 0.72)             color = '#c8d0e8';
+        else                              color = '#90a0c0';
+        g.fillStyle = color;
+        g.fillRect(x, y, size, size);
+      }
+    }
+  }
+
+  // ===== DUST LANES — dark bands along arm inner edges =====
+  for (let arm = 0; arm < ARM_COUNT; arm++) {
+    const armPhase = (arm / ARM_COUNT) * Math.PI * 2;
+    for (let i = 0; i < 400; i++) {
+      const t = i / 400;
+      const r = ARM_INNER + (GALAXY_BRIGHT_R - ARM_INNER) * t;
+      const theta = armPhase + t * Math.PI * 2 * TURNS - 0.06;
+      const laneWidth = 5 + r * 0.03;
+      for (let s = 0; s < 3; s++) {
+        const scatter = gauss() * laneWidth * 0.45;
+        const perpAngle = theta + Math.PI / 2;
+        const sx = r * Math.cos(theta) + scatter * Math.cos(perpAngle);
+        const sy = (r * Math.sin(theta) + scatter * Math.sin(perpAngle)) * TILT;
+        g.fillStyle = `rgba(10, 5, 25, ${0.4 + rng() * 0.25})`;
+        g.fillRect(Math.floor(cx + sx), Math.floor(cy + sy), 2, 2);
+      }
+    }
+  }
+
+  // ===== H II REGIONS — pink star-forming clusters (no halo blobs, just stars) =====
+  for (let arm = 0; arm < ARM_COUNT; arm++) {
+    const armPhase = (arm / ARM_COUNT) * Math.PI * 2;
+    const CLUSTERS = 14;
+    for (let c = 0; c < CLUSTERS; c++) {
+      const t = 0.18 + (c / CLUSTERS) * 0.78;
+      const r = ARM_INNER + (GALAXY_BRIGHT_R - ARM_INNER) * t;
+      const theta = armPhase + t * Math.PI * 2 * TURNS;
+      const ccx = cx + r * Math.cos(theta);
+      const ccy = cy + r * Math.sin(theta) * TILT;
+      // Just spread pink cluster stars — no glow halo so they blend into the arms
+      const clusterStars = 28 + Math.floor(rng() * 14);
+      const clusterSize = 10 + rng() * 9;
+      for (let i = 0; i < clusterStars; i++) {
+        const cR = Math.sqrt(rng()) * clusterSize;
+        const cT = rng() * Math.PI * 2;
+        const xx = ccx + cR * Math.cos(cT);
+        const yy = ccy + cR * Math.sin(cT) * 0.85;
+        const roll = rng();
+        const color = roll < 0.45 ? '#ff6ec7' : (roll < 0.80 ? '#ff90c8' : '#ffb0d8');
+        const size = roll < 0.12 ? 2 : 1;
+        g.fillStyle = color;
+        g.fillRect(Math.floor(xx), Math.floor(yy), size, size);
+      }
+    }
+  }
+
+  // ===== CENTRAL BAR — dense elongated cluster =====
+  const BAR_LEN = 130;
+  const BAR_HEIGHT = 50;
+  const BAR_ANGLE = Math.PI / 6;
+  const cosBar = Math.cos(BAR_ANGLE);
+  const sinBar = Math.sin(BAR_ANGLE);
+  for (let i = 0; i < 3000; i++) {
+    const u = rng();
+    const phi = rng() * Math.PI * 2;
+    const distNorm = Math.pow(u, 1.2);
+    const lx = distNorm * Math.cos(phi) * BAR_LEN;
+    const ly = distNorm * Math.sin(phi) * BAR_HEIGHT;
+    const wx = lx * cosBar - ly * sinBar;
+    const wy = (lx * sinBar + ly * cosBar) * TILT;
+    const x = Math.floor(cx + wx);
+    const y = Math.floor(cy + wy);
+    const roll = rng();
+    let color;
+    if (roll < 0.10 && distNorm < 0.18)      color = '#ffffff';
+    else if (roll < 0.35 && distNorm < 0.5)  color = '#fff8e0';
+    else if (roll < 0.65)                    color = '#ffe890';
+    else if (roll < 0.90)                    color = '#ffc848';
+    else                                     color = '#e89030';
+    g.fillStyle = color;
+    g.fillRect(x, y, 1, 1);
+  }
+
+  // ===== INTENSE CORE SPIKE — the bright kernel =====
+  g.save();
+  g.translate(cx, cy);
+  g.scale(1, TILT);
+  const spike = g.createRadialGradient(0, 0, 0, 0, 0, 60);
+  spike.addColorStop(0, 'rgba(255, 255, 240, 1.0)');
+  spike.addColorStop(0.3, 'rgba(255, 240, 170, 0.85)');
+  spike.addColorStop(0.7, 'rgba(255, 200, 100, 0.4)');
+  spike.addColorStop(1, 'rgba(255, 150, 60, 0)');
+  g.fillStyle = spike;
+  g.fillRect(-60, -60, 120, 120);
+  g.restore();
+
+  // Tiny final sparkle right at the galactic center
+  drawSparkle(cx, cy, '#ffffff', 4, true);
+}
+generateGalaxy();
+
+function drawMilkyWay() {
+  const cx = W() / 2;
+  const cy = H() / 2;
+  const t = performance.now();
+  const galRot = t * 0.00003;
+
+  // Blit the pre-rendered galaxy, rotated about the screen center
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(galRot);
+  ctx.drawImage(galaxyCanvas, -GALAXY_CANVAS_SIZE / 2, -GALAXY_CANVAS_SIZE / 2);
+  ctx.restore();
+
+  drawSolarSystemMarker(cx, cy, t, Math.cos(galRot), Math.sin(galRot));
+}
+
+function drawSolarSystemMarker(cx, cy, t, cosG, sinG) {
+  // Our location: ~70% out from center on the Orion Arm
+  // Real: 26,000 ly from center / ~50,000 ly disk radius = ~50%, but popular illustrations
+  // and the BRIGHT structure put us closer to 70% out, on the outer edge of the visible arms
+  const sunR = 258;
+  const sunBaseTheta = Math.PI * 1.22; // lower-left quadrant pre-rotation
+  // Apply same tilt as the galaxy so marker rides the visible arm
+  const baseX = sunR * Math.cos(sunBaseTheta);
+  const baseY = sunR * Math.sin(sunBaseTheta) * GALAXY_TILT;
+  const rx = baseX * cosG - baseY * sinG;
+  const ry = baseX * sinG + baseY * cosG;
+  const sunX = Math.floor(cx + rx);
+  const sunY = Math.floor(cy + ry);
+
+  // Pulsing outer halo (3 concentric soft pink rings)
+  const pulse = (Math.sin(t * 0.004) + 1) / 2;
+  for (let i = 2; i >= 0; i--) {
+    const ringR = 9 + i * 5 + pulse * 5;
+    const alpha = (0.32 - i * 0.08) * (0.7 + pulse * 0.3);
+    ctx.fillStyle = `rgba(255, 110, 199, ${alpha})`;
+    ctx.fillRect(sunX - ringR, sunY - ringR, ringR * 2, ringR * 2);
+  }
+
+  // Bright inner blob — yellow with a cyan core to match the app palette
+  ctx.fillStyle = '#fff0a0';
+  ctx.fillRect(sunX - 4, sunY - 4, 8, 8);
+  ctx.fillStyle = '#6effe0';
+  ctx.fillRect(sunX - 2, sunY - 2, 4, 4);
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(sunX - 1, sunY - 1, 2, 2);
+
+  // Arrow + label callout — anchored to the down-right of the dot
+  const labelOffsetX = 70;
+  const labelOffsetY = 45;
+  const labelX = sunX + labelOffsetX;
+  const labelY = sunY + labelOffsetY;
+
+  // Pixel callout line from near the dot up to the label
+  drawCalloutLine(sunX + 8, sunY + 8, labelX - 4, labelY - 6, '#ff6ec7');
+  // Arrowhead pointing back at the dot
+  drawCalloutArrowhead(sunX + 8, sunY + 8, sunX + 18, sunY + 16, '#ff6ec7');
+
+  // Label background pill for readability
+  ctx.font = 'bold 11px "Press Start 2P", "Courier New", monospace';
+  ctx.textBaseline = 'middle';
+  const labelText = '☀ WE ARE HERE';
+  const labelW = ctx.measureText(labelText).width;
+  const padX = 8, padY = 6;
+  ctx.fillStyle = 'rgba(10, 6, 18, 0.88)';
+  ctx.fillRect(labelX - padX, labelY - 10 - padY, labelW + padX * 2, 20 + padY * 2);
+  // Pink dashed border
+  ctx.strokeStyle = '#ff6ec7';
+  ctx.setLineDash([3, 3]);
+  ctx.lineWidth = 1;
+  ctx.strokeRect(labelX - padX, labelY - 10 - padY, labelW + padX * 2, 20 + padY * 2);
+  ctx.setLineDash([]);
+  // Label text
+  ctx.fillStyle = '#ff6ec7';
+  ctx.fillText(labelText, labelX, labelY);
+  ctx.textBaseline = 'alphabetic';
+
+  // Tiny "Orion Arm" sub-tag below the main label
+  ctx.font = '9px "VT323", monospace';
+  ctx.fillStyle = '#6effe0';
+  ctx.fillText('Orion Arm · 26,000 ly from core', labelX - padX, labelY + 18);
+}
+
+function drawCalloutLine(x0, y0, x1, y1, color) {
+  // Stepped pixel line at 2px chunks
+  ctx.fillStyle = color;
+  const dx = x1 - x0, dy = y1 - y0;
+  const steps = Math.max(Math.abs(dx), Math.abs(dy));
+  const stepX = dx / steps, stepY = dy / steps;
+  for (let i = 0; i <= steps; i += 2) {
+    const px = Math.floor(x0 + stepX * i);
+    const py = Math.floor(y0 + stepY * i);
+    ctx.fillRect(px, py, 2, 2);
+  }
+}
+
+function drawCalloutArrowhead(tipX, tipY, fromX, fromY, color) {
+  // Tiny triangular pixel arrowhead pointing from (fromX,fromY) → (tipX,tipY)
+  const dx = tipX - fromX, dy = tipY - fromY;
+  const len = Math.sqrt(dx * dx + dy * dy);
+  const ux = dx / len, uy = dy / len;
+  const px = -uy, py = ux; // perpendicular
+  ctx.fillStyle = color;
+  // Three small chunks forming the arrowhead
+  for (let i = 0; i < 4; i++) {
+    const back = i;
+    const spread = (4 - i) * 0.7;
+    const x1 = Math.floor(tipX - ux * back * 2 + px * spread);
+    const y1 = Math.floor(tipY - uy * back * 2 + py * spread);
+    const x2 = Math.floor(tipX - ux * back * 2 - px * spread);
+    const y2 = Math.floor(tipY - uy * back * 2 - py * spread);
+    ctx.fillRect(x1, y1, 2, 2);
+    ctx.fillRect(x2, y2, 2, 2);
+  }
+}
+
+function drawSprite(b) {
+  if (b.draw === 'jupiter') return drawJupiterBody(b);
+  if (b.draw === 'saturn')  return drawSaturnBody(b);
+  if (b.draw === 'earth')   return drawEarthBody(b);
+  if (b.draw === 'mercury') return drawMercuryBody(b);
+  if (b.draw === 'venus')   return drawVenusBody(b);
+  const s = b.sprite; const px = b.scale;
+  const ox = Math.round(b._x - (s.w * px) / 2);
+  const oy = Math.round(b._y - (s.h * px) / 2);
+  drawHoverHalo(b, ox, oy);
+  drawBandsSprite(b, ox, oy);
+}
+
+/* SHIP — UFO saucer with blinking lights & tractor beam */
+function drawShip(cx, cy, dir) {
+  const s = SHIP;
+  const px = 4;
+
+  // UFO wobbles side-to-side as it travels (the stars do the heavy lifting on motion)
+  const driftX = Math.sin(transitElapsed * 1.7) * 8;
+  const realCx = cx + driftX;
+
+  const ox = Math.round(realCx - (s.w * px) / 2);
+  const oy = Math.round(cy - (s.h * px) / 2);
+
+  const phase = transitElapsed * 8;
+  const lightTick = Math.floor(transitElapsed * 5) % 2;
+
+  // Pass 1: body (everything that isn't beam)
+  for (let r = 0; r < s.h; r++) {
+    const row = s.rows[r];
+    for (let c = 0; c < s.w; c++) {
+      const ch = row[c];
+      if (ch === '.' || ch === 'B') continue;
+      let col = SHIP_COLORS[ch];
+      // Blinking rim lights — alternate between yellow and hot pink
+      if (ch === 'L') {
+        col = ((c + lightTick) % 2 === 0) ? '#ffe890' : '#ff6ec7';
+      }
+      if (!col) continue;
+      ctx.fillStyle = col;
+      ctx.fillRect(ox + c * px, oy + r * px, px, px);
+    }
+  }
+
+  // Pass 2: tractor beam — translucent, falls off toward the bottom, pulses
+  const beamStart = 8;
+  const pulse = 0.85 + Math.sin(phase) * 0.15;
+  for (let r = beamStart; r < s.h; r++) {
+    const row = s.rows[r];
+    const fallProgress = (r - beamStart) / Math.max(1, s.h - 1 - beamStart);
+    const alpha = (1 - fallProgress * 0.5) * pulse;
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = SHIP_COLORS.B;
+    for (let c = 0; c < s.w; c++) {
+      if (row[c] !== 'B') continue;
+      ctx.fillRect(ox + c * px, oy + r * px, px, px);
+    }
+  }
+  ctx.globalAlpha = 1;
+}
+
+function draw() {
+  ctx.drawImage(nebulaCanvas, 0, 0, W(), H());
+  drawStars();
+  drawShooter();
+
+  if (inTransit) {
+    // Just the ship cruising through deep space
+    const shipY = H() / 2 + Math.sin(transitElapsed * 3) * 10;
+    const shipX = W() / 2;
+    drawShip(shipX, shipY, shipDir);
+    return;
+  }
+
+  // Field type (asteroid belt) — pebbles behind, named asteroids in front
+  if (currentSystem.type === 'field') {
+    // Background pebbles
+    for (const p of backgroundPebbles) {
+      ctx.fillStyle = p.color;
+      ctx.fillRect(Math.floor(p.x), Math.floor(p.y), p.size, p.size);
+    }
+    const hit = findHit(mouseX, mouseY);
+    for (const b of currentSystem.bodies) b._hovered = (b === hit);
+    if (currentSystem.bodies[0]._x === undefined) return;
+    for (const b of currentSystem.bodies) drawSprite(b);
+    if (hit) {
+      const labelEl = document.getElementById('label');
+      labelEl.style.left = hit._x + 'px';
+      labelEl.style.top = (hit._y - (hit.sprite.h * hit.scale) / 2 - 8) + 'px';
+    }
+    return;
+  }
+
+  const bodies = currentSystem.bodies;
+
+  // The Milky Way — procedural galaxy rendering with location indicator
+  if (currentSystem.isGalaxy) {
+    const g = bodies[0];
+    if (g._x === undefined) return;
+    drawMilkyWay();
+    const hit = findHit(mouseX, mouseY);
+    g._hovered = (g === hit);
+    if (hit) {
+      const labelEl = document.getElementById('label');
+      labelEl.style.left = mouseX + 'px';
+      labelEl.style.top = (mouseY - 18) + 'px';
+    }
+    return;
+  }
+
+  // The Sun (star) — corona behind body, sunspots on disk, flares extending outward
+  if (currentSystem.isStar) {
+    const star = bodies[0];
+    if (star._x === undefined) return;
+
+    drawCoronaRays(star);
+    drawSprite(star);
+    drawRotatingSunspots(star);
+    drawSolarFlares(star);
+
+    const hit = findHit(mouseX, mouseY);
+    star._hovered = (star === hit);
+    if (hit) {
+      const labelEl = document.getElementById('label');
+      labelEl.style.left = hit._x + 'px';
+      labelEl.style.top = (hit._y - (hit.sprite.h * hit.scale) / 2 - 80) + 'px';
+    }
+    return;
+  }
+
+  // Binary system (Pluto-Charon) — all bodies orbit a barycenter at screen center
+  if (currentSystem.binarySystem) {
+    if (bodies[0]._x === undefined) return;
+    const cx = W() / 2;
+    const cy = H() / 2;
+    if (showPaths) {
+      for (let i = 0; i < bodies.length; i++) {
+        if (!bodies[i].orbit) continue;
+        drawOrbitPath(cx, cy, bodies[i].orbit.baseR, false);
+      }
+    }
+    const hit = findHit(mouseX, mouseY);
+    for (const b of bodies) b._hovered = (b === hit);
+    // Back layer
+    for (const b of bodies) {
+      if ((b._depth ?? 0) <= 0) drawSprite(b);
+    }
+    // Front layer
+    for (const b of bodies) {
+      if ((b._depth ?? 0) > 0) drawSprite(b);
+    }
+    if (hit) {
+      const labelEl = document.getElementById('label');
+      labelEl.style.left = hit._x + 'px';
+      labelEl.style.top = (hit._y - (hit.sprite.h * hit.scale) / 2 - 8) + 'px';
+    }
+    return;
+  }
+
+  const primary = bodies[0];
+  if (!primary._x) return; // not yet positioned
+
+  if (showPaths) {
+    for (let i = 1; i < bodies.length; i++) {
+      drawOrbitPath(primary._x, primary._y, bodies[i].orbit.baseR, currentSystem.tiltedOrbit);
+    }
+  }
+
+  const hit = findHit(mouseX, mouseY);
+  for (const b of bodies) b._hovered = (b === hit);
+
+  const isSaturn = currentSystemKey === 'saturn';
+  const isSun = currentSystemKey === 'sun';
+
+  // Corona rays behind everything (Sun)
+  if (isSun) drawCoronaRays(primary);
+
+  // Back rings (behind the planet) first
+  if (isSaturn) drawSaturnRings(primary, false);
+
+  // Back-side moons
+  for (let i = 1; i < bodies.length; i++) {
+    if (bodies[i]._depth <= 0) drawSprite(bodies[i]);
+  }
+
+  // The primary planet itself
+  drawSprite(primary);
+
+  // Surface features overlaid on the body
+  if (isSun) drawRotatingSunspots(primary);
+
+  // Front rings on top of the planet
+  if (isSaturn) drawSaturnRings(primary, true);
+
+  // Solar flares — extending outward from the disk (drawn after body so they layer in front)
+  if (isSun) drawSolarFlares(primary);
+
+  // Front-side moons (on top of everything else)
+  for (let i = 1; i < bodies.length; i++) {
+    if (bodies[i]._depth > 0) drawSprite(bodies[i]);
+  }
+
+  if (hit) {
+    const labelEl = document.getElementById('label');
+    labelEl.style.left = hit._x + 'px';
+    labelEl.style.top = (hit._y - (hit.sprite.h * hit.scale) / 2 - 8) + 'px';
+  }
+}
+
+let lastTime = performance.now();
+function loop(now) {
+  const dt = Math.min(0.05, (now - lastTime) / 1000);
+  lastTime = now;
+  // Run update if not paused, OR during transit (so transit timer advances)
+  if (!isPaused() || inTransit) update(dt);
+  draw();
+  if (pageBody) {
+    if (pageBody.draw === 'jupiter') {
+      charAvatarRot += dt * (Math.PI * 2) / 2.5;
+    } else if (pageBody.draw === 'earth') {
+      charAvatarRot += dt * (Math.PI * 2) / 8;   // 8s per rotation — smooth & visible
+    } else if (pageBody.draw === 'mercury') {
+      charAvatarRot += dt * (Math.PI * 2) / 14;  // 14s per rotation
+    } else if (pageBody.draw === 'venus') {
+      charAvatarRot += dt * (Math.PI * 2) / 12;  // 12s per rotation for cloud drift
+    }
+    charAvatarBob += dt * 1.2;
+    drawCharAvatar();
+  }
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
