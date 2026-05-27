@@ -36,6 +36,24 @@
 
   .frame { max-width: 1180px; margin: 0 auto; padding: 56px 40px 80px; }
 
+  /* Mobile-only viewing notice */
+  .mobile-notice { display: none; }
+  @media (max-width: 720px) {
+    .mobile-notice {
+      display: block;
+      background: var(--accent);
+      color: var(--card);
+      padding: 14px 18px;
+      text-align: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      letter-spacing: 0.12em;
+      line-height: 1.6;
+      text-transform: uppercase;
+    }
+    .mobile-notice strong { color: var(--card); font-weight: 700; }
+  }
+
   .top-bar {
     display: flex;
     justify-content: space-between;
@@ -644,6 +662,10 @@
 </style>
 </head>
 <body>
+
+<div class="mobile-notice">
+  <strong>Optimized for desktop.</strong> Best viewed at 1024px width and above.
+</div>
 
 <div class="frame">
 
