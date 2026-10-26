@@ -671,18 +671,19 @@
   .p-status.done { background: #DCE4D3; border-color: #C3D1B8; color: var(--accent-deep); }
   .p-status.wip { background: #EFE0C2; border-color: #E0CC9F; color: #6B4A12; }
 
-  /* ====== CAROUSEL RAILS (Oct 2026): project cards scroll sideways ====== */
-  .rail { grid-column: 1 / -1; position: relative; margin: -6px -10px 0; min-width: 0; }
+  /* ====== CAROUSEL RAILS (Oct 2026): project cards scroll sideways ======
+     The visible window of each rail lines up exactly with the banner edges above it. */
+  .rail { grid-column: 1 / -1; position: relative; min-width: 0; }
   .deck > * { min-width: 0; }
   .rail-track {
     display: flex; gap: 28px; overflow-x: auto; overscroll-behavior-x: contain;
-    scroll-snap-type: x mandatory; scroll-padding-left: 10px;
-    padding: 14px 10px 30px;              /* room so the lift and green highlight are not clipped */
-    scrollbar-width: thin; scrollbar-color: rgba(242,239,231,.35) transparent;
+    scroll-snap-type: x mandatory; scroll-padding: 0;
+    padding: 14px 0 26px;                 /* vertical room for the lift and highlight */
+    margin-top: -14px;
+    scrollbar-width: none;                /* replaced by the full-width progress line */
   }
-  .rail-track::-webkit-scrollbar { height: 6px; }
-  .rail-track::-webkit-scrollbar-thumb { background: rgba(242,239,231,.3); border-radius: 3px; }
-  .rail-track:focus-visible { outline: 3px solid #1F5FBF; outline-offset: 2px; border-radius: 6px; }
+  .rail-track::-webkit-scrollbar { display: none; }
+  .rail-track:focus-visible { outline: 3px solid #1F5FBF; outline-offset: 4px; border-radius: 4px; }
   .rail-item {
     position: relative; flex: 0 0 calc((100% - 28px) / 2.25); min-width: 300px;
     scroll-snap-align: start; display: flex;
@@ -694,11 +695,15 @@
     transform: translate(0, 0); opacity: 0; z-index: 0;
     transition: transform .28s cubic-bezier(.2,.7,.2,1), opacity .2s ease;
   }
-  .rail-item:hover::before, .rail-item:focus-within::before { transform: translate(9px, 9px); opacity: 1; }
+  .rail-item:hover::before, .rail-item:focus-within::before { transform: translate(0, 9px); opacity: 1; }
   .rail-item:hover > .card.project, .rail-item:focus-within > .card.project {
-    transform: translate(-3px, -3px);
+    transform: translateY(-5px);
     box-shadow: 0 10px 22px rgba(0,0,0,.24), 0 26px 60px rgba(0,0,0,.26);
   }
+  /* full-width progress line: spans the same width as the banners */
+  .rail-progress { position: relative; height: 3px; border-radius: 2px; background: rgba(242, 239, 231, 0.16); margin-top: 4px; }
+  .rail-progress span { position: absolute; top: 0; bottom: 0; left: 0; width: 40%; border-radius: 2px; background: #8FB283; transition: left .12s linear; }
+  .rail-progress[hidden] { display: none; }
   .rail-btn {
     position: absolute; top: 50%; z-index: 5; width: 48px; height: 48px; margin-top: -24px;
     display: grid; place-items: center; border-radius: 50%; cursor: pointer;
@@ -707,21 +712,18 @@
   }
   .rail-btn:hover { background: var(--accent-deep); transform: scale(1.06); }
   .rail-btn:focus-visible { outline: 3px solid #1F5FBF; outline-offset: 3px; }
-  .rail-btn.next { right: -14px; }
-  .rail-btn.prev { left: -14px; }
+  .rail-btn.next { right: -24px; }
+  .rail-btn.prev { left: -24px; }
   .rail-btn[hidden] { display: none; }
   @media (prefers-reduced-motion: reduce) {
-    .rail-item::before, .rail-item > .card.project { transition: none; }
-    .rail-track { scroll-behavior: auto; }
+    .rail-item::before, .rail-item > .card.project, .rail-progress span { transition: none; }
   }
   @media (max-width: 720px) {
-    .rail { margin: -6px -16px 0; }
-    .rail-track { gap: 16px; padding: 12px 16px 26px; scroll-padding-left: 16px; }
-    .rail-item { flex-basis: 84%; min-width: 0; }
+    .rail-track { gap: 16px; }
+    .rail-item { flex-basis: 86%; min-width: 0; }
     .rail-btn { width: 42px; height: 42px; margin-top: -21px; }
-    .rail-btn.next { right: 4px; } .rail-btn.prev { left: 4px; }
+    .rail-btn.next { right: 6px; } .rail-btn.prev { left: 6px; }
   }
-
   .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
   a:focus-visible, .p-btn:focus-visible { outline: 3px solid #1F5FBF; outline-offset: 3px; }
   @media (prefers-reduced-motion: reduce) { .p-shot img, .p-btn { transition: none; } }
@@ -1029,6 +1031,7 @@
     </article>
     </div>
       </div>
+      <div class="rail-progress" aria-hidden="true"><span></span></div>
       <button class="rail-btn next" type="button" aria-label="Scroll instructional design projects right">
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
       </button>
@@ -1138,6 +1141,7 @@
     </article>
     </div>
       </div>
+      <div class="rail-progress" aria-hidden="true"><span></span></div>
       <button class="rail-btn next" type="button" aria-label="Scroll project management projects right">
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
       </button>
@@ -1186,10 +1190,19 @@ document.querySelectorAll('[data-rail]').forEach(rail => {
   const go = dir => track.scrollBy({ left: dir * step(), behavior: reduce ? 'auto' : 'smooth' });
   prev.addEventListener('click', () => go(-1));
   next.addEventListener('click', () => go(1));
+  const bar = rail.querySelector('.rail-progress');
+  const thumb = bar && bar.querySelector('span');
   const update = () => {
     const max = track.scrollWidth - track.clientWidth - 4;
     prev.hidden = track.scrollLeft <= 4;
     next.hidden = track.scrollLeft >= max;
+    if (bar) {
+      const overflow = track.scrollWidth > track.clientWidth + 4;
+      bar.hidden = !overflow;
+      const ratio = track.clientWidth / track.scrollWidth;
+      thumb.style.width = (ratio * 100) + '%';
+      thumb.style.left = ((track.scrollLeft / track.scrollWidth) * 100) + '%';
+    }
   };
   track.addEventListener('scroll', update, { passive: true });
   window.addEventListener('resize', update);
