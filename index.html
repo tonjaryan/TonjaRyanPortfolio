@@ -916,6 +916,17 @@
     .card.approach { padding: 24px 22px 26px; }
   }
 
+
+  /* About Me: last paragraph runs full width beneath the photo */
+  .intro-about-full { grid-column: 1 / -1; margin-top: -26px; }
+  .intro-about-full .about-body { max-width: none; }
+  @media (max-width: 720px) {
+    .intro-about-grid { display: flex; flex-direction: column; }
+    .intro-about-right { order: 1; }
+    .intro-about-left { order: 2; }
+    .intro-about-full { order: 3; margin-top: -10px; }
+  }
+
   /* ====== RESPONSIVE ====== */
   @media (max-width: 720px) {
     .frame { padding: 28px 16px 48px; }
@@ -991,15 +1002,17 @@
             <p class="about-body">
               My work encompasses the full lifecycle of curriculum and e-learning initiatives, from initial needs analysis and conceptual development through instructional design, production, implementation, and evaluation. I manage the academic and operational dimensions of these projects, including stakeholder collaboration, resource planning, timelines, deliverables, and continuous improvement informed by learner feedback and performance data.
             </p>
-            <p class="about-body">
-              My experience spans K–12 education, higher education, and digital learning, including curriculum development, educator training, instructional technology, and the management of large-scale learning programs. Across these settings, I focus on creating effective learning experiences while establishing the processes and systems needed to implement and sustain them.
-            </p>
-            <p class="about-cta"><a href="#work">See my work <span aria-hidden="true">↓</span></a></p>
           </div>
           <div class="intro-about-right">
             <div class="about-photo">
             <img src="assets/img/headshot.webp" width="480" height="600" alt="Tonja Ryan" />
           </div>
+        </div>
+        <div class="intro-about-full">
+            <p class="about-body">
+              My experience spans K–12 education, higher education, and digital learning, including curriculum development, educator training, instructional technology, and the management of large-scale learning programs. Across these settings, I focus on creating effective learning experiences while establishing the processes and systems needed to implement and sustain them.
+            </p>
+            <p class="about-cta"><a href="#work">See my work <span aria-hidden="true">↓</span></a></p>
         </div>
       </div>
       </div>
