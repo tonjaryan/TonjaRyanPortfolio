@@ -850,6 +850,72 @@
     .process-title { font-size: 36px; }
   }
 
+
+  /* ====== Pacing pass: compact principles, process navigator (one stage at a time) ====== */
+  .approach-head { align-items: end; padding-bottom: 22px; margin-bottom: 24px; }
+  .approach-lede, .process-lede { font-size: 16px; line-height: 1.6; color: var(--ink-2); max-width: 54ch; }
+  .process-lede { color: rgba(242, 239, 231, 0.88); }
+  .card.approach { padding: 30px 40px 32px; }
+  .about-cta { margin-top: 18px; }
+  .about-cta a { font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 700; color: var(--accent); text-decoration: none; border-bottom: 1.5px solid var(--accent); padding-bottom: 2px; }
+  .about-cta a:hover { color: var(--accent-deep); }
+  h2.thanks-tag { margin: 0 0 8px; }
+  .thanks-bg { font-size: 14px; line-height: 1.65; color: var(--ink-2); max-width: 46ch; margin: 4px 0 22px; text-transform: none; letter-spacing: 0; font-family: 'Inter', sans-serif; }
+  .ps-tabs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+  .ps-tab {
+    text-align: left; cursor: pointer; font-family: inherit; color: rgba(242, 239, 231, 0.85);
+    background: rgba(242, 239, 231, 0.05); border: 1px solid rgba(242, 239, 231, 0.14); border-bottom: 3px solid transparent;
+    border-radius: 4px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px;
+    transition: background-color .18s, border-color .18s, color .18s;
+  }
+  .ps-tab:hover { background: rgba(242, 239, 231, 0.09); color: var(--card); }
+  .ps-tab[aria-selected="true"] { background: rgba(122, 156, 110, 0.22); border-color: rgba(143, 178, 131, 0.5); border-bottom-color: #8FB283; color: var(--card); }
+  .ps-tab:focus-visible { outline: 3px solid #1F5FBF; outline-offset: 3px; }
+  .ps-num { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; letter-spacing: 0.16em; color: #8FB283; }
+  .ps-name { font-size: 14.5px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.25; }
+  .ps-short { font-size: 12.5px; line-height: 1.45; color: rgba(242, 239, 231, 0.75); }
+  .ps-panel {
+    margin-top: 14px; border: 1px solid rgba(242, 239, 231, 0.14); border-radius: 4px; background: rgba(242, 239, 231, 0.04);
+    padding: 26px 28px; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 32px; align-items: start;
+    min-height: 330px; animation: psIn .22s ease;
+  }
+  .ps-panel[hidden] { display: none; }
+  .ps-panel:focus-visible { outline: 3px solid #1F5FBF; outline-offset: 3px; }
+  @keyframes psIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+  .ps-stage { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #8FB283; margin-bottom: 8px; }
+  .ps-text h3 { font-size: 26px; font-weight: 800; letter-spacing: -0.025em; line-height: 1.15; color: var(--card); margin-bottom: 12px; }
+  .ps-q { font-size: 17px; line-height: 1.5; color: rgba(242, 239, 231, 0.92); padding-bottom: 18px; margin-bottom: 18px; border-bottom: 1px solid rgba(242, 239, 231, 0.16); }
+  .ps-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .ps-lbl { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #8FB283; margin-bottom: 4px; }
+  .ps-cols p:not(.ps-lbl) { font-size: 14px; line-height: 1.6; color: rgba(242, 239, 231, 0.88); }
+  .ps-art { margin: 0; }
+  .ps-art img { width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; object-position: top left; border: 1px solid rgba(242, 239, 231, 0.3); border-radius: 2px; background: var(--card); display: block; }
+  .ps-art figcaption { margin-top: 8px; font-size: 12.5px; color: rgba(242, 239, 231, 0.75); }
+  .ps-art a { color: #B7D3A9; }
+  .ps-art a:hover { color: #fff; }
+  .ps-foot { display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-top: 18px; }
+  .ps-foot p { font-size: 13px; line-height: 1.55; color: rgba(242, 239, 231, 0.8); max-width: 70ch; }
+  .ps-next {
+    flex-shrink: 0; cursor: pointer; font-family: inherit; font-size: 14px; font-weight: 600; color: var(--card);
+    background: transparent; border: 1.5px solid rgba(242, 239, 231, 0.55); border-radius: 999px; padding: 10px 18px;
+  }
+  .ps-next:hover { border-color: var(--card); background: rgba(242, 239, 231, 0.08); }
+  .ps-next:focus-visible { outline: 3px solid #1F5FBF; outline-offset: 3px; }
+  @media (prefers-reduced-motion: reduce) { .ps-panel { animation: none; } .ps-tab { transition: none; } }
+  @media (max-width: 900px) {
+    .ps-panel { grid-template-columns: minmax(0, 1fr); min-height: 0; }
+  }
+  @media (max-width: 720px) {
+    .ps-tabs { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 8px; padding-bottom: 6px; scrollbar-width: none; }
+    .ps-tabs::-webkit-scrollbar { display: none; }
+    .ps-tab { flex: 0 0 64%; scroll-snap-align: start; min-height: 48px; }
+    .ps-panel { padding: 20px 18px; }
+    .ps-text h3 { font-size: 22px; }
+    .ps-cols { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+    .ps-foot { flex-direction: column; align-items: flex-start; }
+    .card.approach { padding: 24px 22px 26px; }
+  }
+
   /* ====== RESPONSIVE ====== */
   @media (max-width: 720px) {
     .frame { padding: 28px 16px 48px; }
@@ -881,12 +947,11 @@
   <nav class="top-bar" aria-label="Sections">
     <a class="left" href="#about"><span class="dot" aria-hidden="true"></span>Tonja Ryan</a>
     <ul class="right">
-      <li><a href="#about">About</a></li>
-      <li><a href="#approach">My Approach</a></li>
       <li><a href="#work">Learning Experience Design</a></li>
       <li><a href="#curriculum">Curriculum Design</a></li>
       <li><a href="#program-management">Program &amp; Project Management</a></li>
-      <li><a href="#contact">Contact</a></li>
+      <li><a href="#approach">My Approach</a></li>
+      <li><a href="#contact">About &amp; Contact</a></li>
     </ul>
   </nav>
 </header>
@@ -922,9 +987,7 @@
             <p class="about-body">
               I design engaging learning experiences that help people develop skills they can use confidently long after training ends. My approach begins with understanding the learner: what they already know, where they may struggle, and what will help them stay engaged as they build proficiency.
             </p>
-            <p class="about-body">
-              My background spans instructional design, curriculum development, learning operations, and program management. At UT Austin’s Sanger Learning Center, I support a peer educator program serving approximately 2,500 students each semester, developing training, improving learning experiences, and managing the systems that support our student educators.
-            </p>
+            <p class="about-cta"><a href="#work">See my work <span aria-hidden="true">↓</span></a></p>
           </div>
           <div class="intro-about-right">
             <div class="about-photo">
@@ -934,102 +997,6 @@
       </div>
       </div>
     </div>
-
-
-    <!-- ============== WHAT GUIDES MY DESIGN ============== -->
-    <section class="card approach" id="approach" aria-labelledby="approach-title">
-      <div class="approach-head">
-        <h2 class="about-title" id="approach-title">What Guides My Design<span class="pd">.</span></h2>
-        <div class="approach-intro">
-          <p>I believe learning should be engaging, purposeful, and built to last. My goal isn’t simply to help someone complete a course or understand something in the moment. I want them to leave with knowledge and skills they can retrieve, apply, and continue developing.</p>
-          <p>That means paying attention to how people learn, where they get stuck, and what kinds of practice help them move from understanding a concept to using it independently.</p>
-        </div>
-      </div>
-      <ol class="principles">
-        <li>
-          <span class="pr-num">01</span>
-          <h3>Engagement With Purpose</h3>
-          <p>I want learners to actively work with the material, not just move through it. Whether I’m developing an interactive module, facilitating a workshop, or building a course, I look for opportunities that encourage curiosity, decision-making, and meaningful participation.</p>
-          <p>Engagement should serve the learning, not distract from it.</p>
-        </li>
-        <li>
-          <span class="pr-num">02</span>
-          <h3>Learning That Lasts</h3>
-          <p>Understanding something once isn’t the same as being able to use it later. I incorporate opportunities for retrieval, application, reflection, and repeated practice so learners can build confidence and proficiency over time.</p>
-          <p>My goal is to help learners become increasingly independent, rather than dependent on the training itself.</p>
-        </li>
-        <li>
-          <span class="pr-num">03</span>
-          <h3>Removing Barriers to Learning</h3>
-          <p>I pay attention to where learners lose momentum, become confused, or struggle to apply what they’ve learned. Those moments provide valuable information about what needs to change.</p>
-          <p>Sometimes the solution is clearer instruction. Other times, it’s a different activity, additional scaffolding, a more accessible format, or an opportunity to practice in a new context.</p>
-        </li>
-      </ol>
-    </section>
-
-    <!-- ============== FROM CONCEPT TO LEARNING EXPERIENCE ============== -->
-    <section class="card process-card" id="process" aria-labelledby="process-title">
-      <div class="process-head">
-        <h2 class="process-title" id="process-title">From Concept to Learning Experience<span class="pd">.</span></h2>
-        <div class="process-intro">
-          <p>Every project starts with a different challenge, but my process follows a consistent set of questions: Who am I designing for? What do they need to learn or accomplish? What might get in their way? And how will I know whether the experience is working?</p>
-          <p>I use those questions to guide my decisions from the initial concept through development, implementation, and revision.</p>
-        </div>
-      </div>
-      <ol class="stages">
-        <li class="stage">
-          <span class="stage-num">01</span>
-          <h3>Understand the Learner</h3>
-          <p>I begin by identifying the audience, their existing knowledge, and the skills they need to develop.</p>
-          <details>
-            <summary>Details &amp; key activities</summary>
-            <p>Depending on the project, that might involve reviewing performance data, speaking with stakeholders, gathering learner feedback, or examining existing materials.</p><p>I also look for practical barriers, including time, accessibility, unclear expectations, and gaps in foundational knowledge.</p>
-            <p class="acts"><span>Key activities</span>Learner analysis, stakeholder conversations, needs assessment, performance-gap identification, and review of existing materials.</p>
-          </details>
-        </li>
-        <li class="stage">
-          <span class="stage-num">02</span>
-          <h3>Establish Learning Goals</h3>
-          <p>Once I understand the audience and the challenge, I identify what learners should be able to do by the end of the experience.</p>
-          <details>
-            <summary>Details &amp; key activities</summary>
-            <p>I distinguish between information learners need to understand and skills they need to demonstrate. From there, I align objectives, instructional activities, and assessments.</p>
-            <p class="acts"><span>Key activities</span>Learning objectives, task analysis, curriculum mapping, content sequencing, and assessment planning.</p>
-          </details>
-        </li>
-        <li class="stage">
-          <span class="stage-num">03</span>
-          <h3>Design for Engagement &amp; Practice</h3>
-          <p>This is where I consider how learners will interact with the material. I select instructional strategies based on what learners need to practice.</p>
-          <details>
-            <summary>Details &amp; key activities</summary>
-            <p>That might involve scenarios, simulations, collaborative activities, guided reflection, interactive models, or opportunities to retrieve and apply information.</p><p>I consider the amount of support learners need initially and how that support can be reduced as they become more proficient.</p>
-            <p class="acts"><span>Key activities</span>Storyboarding, instructional strategy selection, scaffolding, authentic practice, interaction design, and formative assessment.</p>
-          </details>
-        </li>
-        <li class="stage">
-          <span class="stage-num">04</span>
-          <h3>Develop, Test &amp; Refine</h3>
-          <p>I build and refine learning materials through an iterative process.</p>
-          <details>
-            <summary>Details &amp; key activities</summary>
-            <p>I consider clarity, accessibility, navigation, cognitive load, and how effectively each activity supports its intended objective.</p><p>I use development tools, including AI-assisted workflows where appropriate, to prototype ideas and accelerate production while retaining responsibility for instructional accuracy and quality.</p>
-            <p class="acts"><span>Key activities</span>Prototyping, authoring, usability review, accessibility checks, quality assurance, and revision.</p>
-          </details>
-        </li>
-        <li class="stage">
-          <span class="stage-num">05</span>
-          <h3>Evaluate &amp; Improve</h3>
-          <p>I look beyond whether learners enjoyed or completed the experience. I want to understand what they learned, where they continued to struggle, and whether they can apply their knowledge independently.</p>
-          <details>
-            <summary>Details &amp; key activities</summary>
-            <p>Depending on the project, that might involve assessment results, learner feedback, observations, engagement data, or longer-term performance measures.</p><p>Findings inform future revisions and help identify where additional support may be needed.</p>
-            <p class="acts"><span>Key activities</span>Formative and summative evaluation, learner feedback, assessment analysis, performance review, and continuous improvement.</p>
-          </details>
-        </li>
-      </ol>
-      <p class="process-loop"><span aria-hidden="true">↺</span> These stages recur and overlap. Discovery, development, testing, and revision often happen together, and what I learn from evaluation feeds the next round of design.</p>
-    </section>
 
     <div class="card section-divider banner" id="work">
       <div class="banner-left">
@@ -1405,10 +1372,143 @@
       </button>
     </div>
 
+
+    <!-- ============== WHAT GUIDES MY WORK ============== -->
+    <section class="card approach" id="approach" aria-labelledby="approach-title">
+      <div class="approach-head">
+        <h2 class="about-title" id="approach-title">What Guides My Work<span class="pd">.</span></h2>
+        <p class="approach-lede">I design for the moment someone needs to use what they've learned, not just the moment they're introduced to it. Three priorities shape my decisions.</p>
+      </div>
+      <ol class="principles">
+        <li>
+          <span class="pr-num">01</span>
+          <h3>Engagement With Purpose</h3>
+          <p>Learners should actively work with the material. I use discussion, problem-solving, and meaningful decisions to encourage participation that supports the learning objective.</p>
+        </li>
+        <li>
+          <span class="pr-num">02</span>
+          <h3>Learning That Lasts</h3>
+          <p>Understanding a concept once doesn't guarantee proficiency. I incorporate retrieval, feedback, and opportunities for repeated application so learners can use what they've learned independently.</p>
+        </li>
+        <li>
+          <span class="pr-num">03</span>
+          <h3>Removing Barriers to Learning</h3>
+          <p>When learners struggle, I look at why. Missing foundational knowledge, unclear expectations, accessibility challenges, and unnecessary complexity can all interfere with progress. Identifying those barriers helps me design more effective support.</p>
+        </li>
+      </ol>
+    </section>
+
+    <!-- ============== FROM CHALLENGE TO LEARNING EXPERIENCE ============== -->
+    <section class="card process-card" id="process" aria-labelledby="process-title">
+      <div class="process-head">
+        <h2 class="process-title" id="process-title">From Challenge to Learning Experience<span class="pd">.</span></h2>
+        <p class="process-lede">Before I build a module or choose a tool, I identify what learners need to do and what's getting in their way. That understanding shapes the learning goals, opportunities for practice, development, and evaluation.</p>
+      </div>
+      <div class="ps" data-ps>
+        <div class="ps-tabs" role="tablist" aria-label="Design process stages">
+        <button class="ps-tab" role="tab" id="ps-tab-1" aria-controls="ps-panel-1" aria-selected="true" tabindex="0">
+          <span class="ps-num">01</span><span class="ps-name">Understand the Learner</span><span class="ps-short">Identify needs, existing knowledge, and barriers.</span>
+        </button>
+        <button class="ps-tab" role="tab" id="ps-tab-2" aria-controls="ps-panel-2" aria-selected="false" tabindex="-1">
+          <span class="ps-num">02</span><span class="ps-name">Define Learning Goals</span><span class="ps-short">Determine what learners need to demonstrate.</span>
+        </button>
+        <button class="ps-tab" role="tab" id="ps-tab-3" aria-controls="ps-panel-3" aria-selected="false" tabindex="-1">
+          <span class="ps-num">03</span><span class="ps-name">Design the Practice</span><span class="ps-short">Create meaningful opportunities to apply learning.</span>
+        </button>
+        <button class="ps-tab" role="tab" id="ps-tab-4" aria-controls="ps-panel-4" aria-selected="false" tabindex="-1">
+          <span class="ps-num">04</span><span class="ps-name">Build, Test &amp; Refine</span><span class="ps-short">Develop and improve the experience.</span>
+        </button>
+        <button class="ps-tab" role="tab" id="ps-tab-5" aria-controls="ps-panel-5" aria-selected="false" tabindex="-1">
+          <span class="ps-num">05</span><span class="ps-name">Evaluate &amp; Improve</span><span class="ps-short">Use learning evidence to guide what comes next.</span>
+        </button>
+        </div>
+      <div class="ps-panel" role="tabpanel" id="ps-panel-1" aria-labelledby="ps-tab-1" tabindex="0">
+        <div class="ps-text">
+          <p class="ps-stage">Stage 01</p>
+          <h3>Understand the Learner</h3>
+          <p class="ps-q">What do learners already know, what are they expected to do, and where are they encountering difficulty?</p>
+          <div class="ps-cols">
+            <div><p class="ps-lbl">What I do</p><p>Review performance data, gather feedback, consult stakeholders, and examine existing materials and learning conditions.</p></div>
+            <div><p class="ps-lbl">What this produces</p><p>A clearer definition of learner needs, constraints, and the performance gap the experience should address.</p></div>
+          </div>
+        </div>
+        <figure class="ps-art">
+          <a href="case-studies/trust-services-criteria.html#analysis"><img src="assets/img/tsc-needs.webp" width="1200" height="750" loading="lazy" alt="The needs analysis document, Section 2, comparing typical and desired performance with paragraph references to the standard."></a>
+          <figcaption>From the work: <a href="case-studies/trust-services-criteria.html#analysis">Needs analysis, Trust Services Criteria</a></figcaption>
+        </figure>
+      </div>
+      <div class="ps-panel" role="tabpanel" id="ps-panel-2" aria-labelledby="ps-tab-2" tabindex="0" hidden>
+        <div class="ps-text">
+          <p class="ps-stage">Stage 02</p>
+          <h3>Define Learning Goals</h3>
+          <p class="ps-q">What should learners be able to demonstrate by the end of the experience?</p>
+          <div class="ps-cols">
+            <div><p class="ps-lbl">What I do</p><p>Translate identified needs into measurable objectives, prioritize essential content, and align activities and assessments with the intended outcomes.</p></div>
+            <div><p class="ps-lbl">What this produces</p><p>Learning objectives, content organization, curriculum maps, and assessment criteria.</p></div>
+          </div>
+        </div>
+        <figure class="ps-art">
+          <a href="case-studies/trust-services-criteria.html#objectives"><img src="assets/img/tsc-matrix.webp" width="1200" height="750" loading="lazy" alt="An alignment matrix showing where each of seven terminal objectives is introduced, developed, and assessed across ten modules."></a>
+          <figcaption>From the work: <a href="case-studies/trust-services-criteria.html#objectives">Objective alignment matrix, Trust Services Criteria</a></figcaption>
+        </figure>
+      </div>
+      <div class="ps-panel" role="tabpanel" id="ps-panel-3" aria-labelledby="ps-tab-3" tabindex="0" hidden>
+        <div class="ps-text">
+          <p class="ps-stage">Stage 03</p>
+          <h3>Design the Practice</h3>
+          <p class="ps-q">How can learners move from understanding an idea to using it with confidence?</p>
+          <div class="ps-cols">
+            <div><p class="ps-lbl">What I do</p><p>Develop scenarios, collaborative activities, guided practice, reflection, retrieval opportunities, and feedback that supports growing independence.</p></div>
+            <div><p class="ps-lbl">What this produces</p><p>Storyboards, activity designs, facilitation plans, and opportunities to demonstrate learning.</p></div>
+          </div>
+        </div>
+        <figure class="ps-art">
+          <a href="case-studies/reviewing-with-the-copilot.html#decisions"><img src="assets/img/copilot-s4.webp" width="1200" height="750" loading="lazy" alt="A practice screen where learners mark each cited scene as supported or not supported."></a>
+          <figcaption>From the work: <a href="case-studies/reviewing-with-the-copilot.html#decisions">Evidence-check practice, Reviewing with the Co-Pilot</a></figcaption>
+        </figure>
+      </div>
+      <div class="ps-panel" role="tabpanel" id="ps-panel-4" aria-labelledby="ps-tab-4" tabindex="0" hidden>
+        <div class="ps-text">
+          <p class="ps-stage">Stage 04</p>
+          <h3>Build, Test &amp; Refine</h3>
+          <p class="ps-q">Does the experience work as intended for the people using it?</p>
+          <div class="ps-cols">
+            <div><p class="ps-lbl">What I do</p><p>Develop and prototype materials, review clarity and navigation, check accessibility and accuracy, and revise based on testing and feedback.</p></div>
+            <div><p class="ps-lbl">What this produces</p><p>Functional learning materials, documented review findings, and targeted improvements.</p></div>
+          </div>
+        </div>
+        <figure class="ps-art">
+          <a href="case-studies/reviewing-with-the-copilot.html#process"><img src="assets/img/copilot-qa.webp" width="1200" height="750" loading="lazy" alt="A quality-assurance table listing issues found in an AI-drafted practice item and the correction made for each."></a>
+          <figcaption>From the work: <a href="case-studies/reviewing-with-the-copilot.html#process">Review log, Reviewing with the Co-Pilot</a></figcaption>
+        </figure>
+      </div>
+      <div class="ps-panel" role="tabpanel" id="ps-panel-5" aria-labelledby="ps-tab-5" tabindex="0" hidden>
+        <div class="ps-text">
+          <p class="ps-stage">Stage 05</p>
+          <h3>Evaluate &amp; Improve</h3>
+          <p class="ps-q">What can learners now demonstrate, and what still needs attention?</p>
+          <div class="ps-cols">
+            <div><p class="ps-lbl">What I do</p><p>Review assessment results, learner feedback, engagement patterns, and performance evidence. Where feasible, examine whether skills transfer beyond the initial experience.</p></div>
+            <div><p class="ps-lbl">What this produces</p><p>Evaluation findings, recommendations, and priorities for future revisions.</p></div>
+          </div>
+        </div>
+        <figure class="ps-art">
+          <a href="case-studies/student-educator-forum.html#evaluation"><img src="assets/img/sef.webp" width="1200" height="750" loading="lazy" alt="Results from the post-event survey and team debrief, with attendance, satisfaction, and the changes recommended for the next cycle."></a>
+          <figcaption>From the work: <a href="case-studies/student-educator-forum.html#evaluation">Survey results and debrief, Student Educator Forum</a></figcaption>
+        </figure>
+      </div>
+      </div>
+      <div class="ps-foot">
+        <p>Discovery, design, testing, and evaluation frequently overlap. Findings from one stage can send me back to another, and that is a normal part of developing an effective learning experience.</p>
+        <button class="ps-next" type="button" data-ps-next>Next stage <span aria-hidden="true">→</span></button>
+      </div>
+    </section>
+
     <!-- ============== 14 THANK YOU ============== -->
     <div class="card thanks" id="contact">
       <div class="thanks-left">
-        <div class="thanks-tag">Get in touch</div>
+        <h2 class="thanks-tag">About &amp; contact</h2>
+          <p class="thanks-bg">My background spans instructional design, curriculum development, learning operations, and program management. At UT Austin’s Sanger Learning Center, I support a peer educator program serving approximately 2,500 students each semester, developing training, improving learning experiences, and managing the systems that support our student educators.</p>
         <div class="thanks-corner">
           <div>Tonja Ryan</div>
           <div>Austin, Texas</div>
@@ -1463,6 +1563,41 @@ document.querySelectorAll('[data-rail]').forEach(rail => {
   track.addEventListener('scroll', update, { passive: true });
   window.addEventListener('resize', update);
   update();
+});
+</script>
+
+<script>
+/* Process navigator: accessible tabs (click, arrow keys, Home/End), one panel at a time */
+document.querySelectorAll('[data-ps]').forEach(ps => {
+  const tabs = [...ps.querySelectorAll('[role="tab"]')];
+  const panels = tabs.map(t => document.getElementById(t.getAttribute('aria-controls')));
+  const card = ps.closest('section');
+  const next = card && card.querySelector('[data-ps-next]');
+  let current = 0;
+  function select(i, focus) {
+    current = (i + tabs.length) % tabs.length;
+    tabs.forEach((t, k) => {
+      const on = k === current;
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      t.tabIndex = on ? 0 : -1;
+      panels[k].hidden = !on;
+    });
+    if (focus) tabs[current].focus();
+    const strip = tabs[current].parentElement;
+    if (strip.scrollWidth > strip.clientWidth) {
+      strip.scrollTo({ left: tabs[current].offsetLeft - strip.offsetLeft, behavior: 'smooth' });
+    }
+  }
+  tabs.forEach((t, i) => {
+    t.addEventListener('click', () => select(i, false));
+    t.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); select(i + 1, true); }
+      else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); select(i - 1, true); }
+      else if (e.key === 'Home') { e.preventDefault(); select(0, true); }
+      else if (e.key === 'End') { e.preventDefault(); select(tabs.length - 1, true); }
+    });
+  });
+  if (next) next.addEventListener('click', () => select(current + 1, false));
 });
 </script>
 </body>
