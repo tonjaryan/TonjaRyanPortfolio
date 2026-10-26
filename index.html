@@ -737,6 +737,16 @@
   h2.about-title { margin-bottom: 14px; }
   .colophon { color: rgba(242, 239, 231, 0.75); }
   .thanks-corner a { display: inline-block; padding: 3px 0; }
+  /* Banner keywords: plain typeset list (no pill shape, so nothing looks clickable) */
+  .section-divider.banner .banner-chips { gap: 4px 0; margin-top: 2px; }
+  .section-divider.banner .banner-chips span {
+    background: none; border: 0; border-radius: 0; padding: 0;
+    font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--card); line-height: 1.9;
+  }
+  .section-divider.banner .banner-chips span:not(:last-child)::after {
+    content: '/'; margin: 0 10px; color: rgba(242, 239, 231, 0.5);
+  }
   @media (max-width: 720px) {
     .card.section-divider.banner { grid-template-columns: 1fr; }
     .card.intro .intro-title { font-size: clamp(38px, 12.5vw, 56px); white-space: normal; }
