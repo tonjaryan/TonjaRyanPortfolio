@@ -927,6 +927,12 @@
     .intro-about-full { order: 3; margin-top: -10px; }
   }
 
+
+  /* Nav: centered links sitting just above the rule */
+  .site-top .top-bar { justify-content: center; padding-bottom: 12px; }
+  .site-top .top-bar .right { justify-content: center; gap: 8px 40px; }
+  @media (max-width: 720px) { .site-top .top-bar .right { justify-content: center; gap: 4px 22px; } }
+
   /* ====== RESPONSIVE ====== */
   @media (max-width: 720px) {
     .frame { padding: 28px 16px 48px; }
@@ -956,13 +962,10 @@
 
 <header class="site-top">
   <nav class="top-bar" aria-label="Sections">
-    <a class="left" href="#about"><span class="dot" aria-hidden="true"></span>Tonja Ryan</a>
     <ul class="right">
-      <li><a href="#about">About</a></li>
       <li><a href="#work">Learning Experience Design</a></li>
       <li><a href="#curriculum">Curriculum Design</a></li>
       <li><a href="#program-management">Program &amp; Project Management</a></li>
-      <li><a href="#approach">My Approach</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
   </nav>
