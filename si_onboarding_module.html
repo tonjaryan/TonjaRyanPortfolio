@@ -175,6 +175,44 @@ body {
   font-family: var(--ff-body);
 }
 .nav-label.locked { color: var(--ink-faint); }
+.nav-sitting {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin: 18px 14px 0; padding: 10px 6px 0; border-top: 1px solid var(--cream-deep);
+  font-family: var(--ff-body); font-size: 0.7rem; font-weight: 800; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--ink);
+}
+.nav-sitting em { font-style: normal; font-weight: 500; letter-spacing: 0.02em; text-transform: none; color: var(--ink-muted); }
+#sidebar-nav > .nav-sitting:first-child { margin-top: 6px; border-top: 0; }
+.sitting-plan { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 6px; }
+.sitting-plan li {
+  display: grid; grid-template-columns: 92px 1fr auto; gap: 12px; align-items: baseline;
+  padding: 9px 14px; background: var(--white); border-radius: 10px; font-size: 0.9rem;
+}
+.sitting-plan .sp-num { font-weight: 800; color: var(--terra-deep); font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; }
+.sitting-plan .sp-what { color: var(--ink); }
+.sitting-plan .sp-time { color: var(--ink-muted); font-size: 0.82rem; white-space: nowrap; }
+@media (max-width: 600px) {
+  .sitting-plan li { grid-template-columns: 1fr; gap: 2px; }
+}
+.sitting-break {
+  margin-top: 36px; padding: 22px 26px; border-radius: 16px;
+  background: var(--ink-bg); color: var(--paper);
+  display: grid; grid-template-columns: 1fr auto; gap: 18px; align-items: center;
+}
+.sitting-break .sb-eyebrow { font-size: 0.68rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--terra-soft); margin-bottom: 6px; }
+.sitting-break h4 { font-family: var(--ff-display); font-size: 1.3rem; font-weight: 700; margin: 0 0 4px; color: var(--white); }
+.sitting-break p { margin: 0; font-size: 0.92rem; color: #E8DCC4; line-height: 1.55; }
+@media (max-width: 700px) { .sitting-break { grid-template-columns: 1fr; } }
+.sidebar-reset { margin: 22px 20px 28px; padding-top: 14px; border-top: 1px solid var(--cream-deep); font-size: 0.78rem; color: var(--ink-muted); line-height: 1.5; }
+.sidebar-reset button {
+  margin-top: 8px; background: none; border: 1px solid var(--ink-faint); border-radius: 999px;
+  padding: 6px 12px; font: inherit; font-weight: 600; color: var(--ink-mid); cursor: pointer;
+}
+.sidebar-reset button:hover { border-color: var(--warm-red); color: var(--warm-red); }
+.sidebar-reset button.confirm { background: var(--warm-red); border-color: var(--warm-red); color: var(--white); }
+[role="button"][tabindex="0"]:focus-visible, button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
+  outline: 3px solid #1F5FBF; outline-offset: 2px;
+}
 
 /* Nav item — flat button with check + label */
 .nav-item {
@@ -4520,6 +4558,31 @@ body {
   height: auto;
   display: block;
 }
+/* The hotspots are positioned as percentages of this box, which is always
+   exactly the size of the drawing. (Previously they were positioned against
+   .scene-svg, which stretched with the text panel and pulled them off the plan.) */
+.scene-svg { align-self: start; }
+/* Mobile: let the main column shrink to the screen instead of growing to its widest child */
+.app > .main, .main .panel { min-width: 0; }
+.nav-toggle { display: none; }
+@media (max-width: 900px) {
+  .brand { display: flex; align-items: center; }
+  .nav-toggle {
+    display: inline-flex; margin-left: auto; align-items: center; gap: 6px;
+    background: var(--white); border: 1px solid var(--ink-faint); border-radius: 999px;
+    padding: 7px 14px; font: 600 0.82rem var(--ff-body); color: var(--ink); cursor: pointer;
+  }
+  .nav-toggle::after { content: '▾'; font-size: 0.8em; transition: transform .2s; }
+  .nav-toggle[aria-expanded="true"]::after { transform: rotate(180deg); }
+  #sidebar-collapsible { display: none; }
+  .sidebar.nav-open #sidebar-collapsible { display: block; }
+  .sidebar:not(.nav-open) { padding-bottom: 0 !important; min-height: 0; }
+  .sidebar:not(.nav-open) .brand { border-bottom: 0; margin-bottom: 0; }
+}
+@media (max-width: 900px) {
+  .comparison, .heatmap-wrap, .schedule-grid-wrap { max-width: 100%; overflow-x: auto; }
+}
+.scene-canvas { position: relative; }
 .scene-info {
   background: var(--paper);
   border-radius: var(--r-md);
@@ -4586,6 +4649,9 @@ body {
   background: var(--terra);
   transform: translate(-50%, -50%) scale(1.18);
 }
+.scene-hotspot.active::before { animation: none; opacity: 0.55; transform: scale(1.25); }
+.scene-hotspot:focus-visible { outline: 3px solid #1F5FBF; outline-offset: 4px; }
+@media (prefers-reduced-motion: reduce) { .scene-hotspot::before { animation: none; } }
 .scene-hotspot::before {
   content: '';
   position: absolute;
@@ -6086,9 +6152,16 @@ body {
         <h1>SI Leader Onboarding</h1>
         <p>Sanger Learning Center</p>
       </div>
+      <button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="sidebar-collapsible">Contents</button>
     </div>
+    <div id="sidebar-collapsible">
 
     <nav id="sidebar-nav"></nav>
+    <div class="sidebar-reset">
+      Your work is saved in this browser only.
+      <br><button type="button" id="reset-progress">Start over</button>
+    </div>
+    </div>
   </aside>
 
   <!-- ============ MAIN ============ -->
@@ -6144,7 +6217,16 @@ body {
         <div class="card tinted-cream" style="margin-top: 28px;">
           <div class="card-eyebrow">A few notes before you start</div>
           <p style="font-size: 0.95rem;">
-            <strong>This module takes about 50–60 minutes</strong> — but you don't need to do it all at once. Your work auto-saves as you go, and you can jump between sections anytime using the sidebar. By the end, you'll have a polished email ready to send to your professor and a draft lesson plan you can bring to Training Day 1.
+            <strong>This training takes about 4 hours.</strong> It's designed to be spread over several days, in four sittings of about an hour each, so plan to start well before Training Day 1. Your work saves in this browser as you go, so you can close the page and pick up where you left off. You can also jump to any section from the sidebar.
+          </p>
+          <ol class="sitting-plan">
+            <li><span class="sp-num">Sitting 1</span><span class="sp-what">Foundation: why SI works</span><span class="sp-time">about 1 hour</span></li>
+            <li><span class="sp-num">Sitting 2</span><span class="sp-what">Facilitation toolkit</span><span class="sp-time">about 1 hour</span></li>
+            <li><span class="sp-num">Sitting 3</span><span class="sp-what">Before your first session and your professor email</span><span class="sp-time">about 1 hour</span></li>
+            <li><span class="sp-num">Sitting 4</span><span class="sp-what">Lesson planning and your summary</span><span class="sp-time">about 1 hour</span></li>
+          </ol>
+          <p style="font-size: 0.95rem; margin-top: 14px;">
+            By the end, you'll have a polished email ready to send to your professor and a draft lesson plan to bring to Training Day 1. Using a shared computer? Use <em>Start over</em> at the bottom of the sidebar when you're done.
           </p>
         </div>
 
@@ -6524,7 +6606,8 @@ body {
 
       <div class="scene-wrap">
         <div class="scene-svg">
-          <svg viewBox="0 0 720 440" xmlns="http://www.w3.org/2000/svg">
+          <div class="scene-canvas">
+          <svg viewBox="0 0 720 440" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Floor plan of an SI session: three clustered tables with chairs, a whiteboard at the top, a door on the right, and the leader's path moving between tables.">
             <!-- Floor plan background -->
             <rect width="720" height="440" fill="#FBF6E9"/>
             
@@ -6608,13 +6691,14 @@ body {
           </svg>
 
           <!-- Hotspots overlay -->
-          <button class="scene-hotspot" style="top: 22%; left: 50%;" data-hs="board" onclick="showSceneHS('board', this)">1</button>
-          <button class="scene-hotspot" style="top: 50%; left: 25%;" data-hs="groups" onclick="showSceneHS('groups', this)">2</button>
-          <button class="scene-hotspot" style="top: 42%; left: 50%;" data-hs="leader" onclick="showSceneHS('leader', this)">3</button>
-          <button class="scene-hotspot" style="top: 50%; left: 75%;" data-hs="setup" onclick="showSceneHS('setup', this)">4</button>
+          <button class="scene-hotspot" style="top: 22%; left: 50%;" data-hs="board" aria-pressed="false" aria-label="Hotspot 1: the whiteboard" onclick="showSceneHS('board', this)">1</button>
+          <button class="scene-hotspot" style="top: 52.7%; left: 23.6%;" data-hs="groups" aria-pressed="false" aria-label="Hotspot 2: the student groups" onclick="showSceneHS('groups', this)">2</button>
+          <button class="scene-hotspot" style="top: 44%; left: 50%;" data-hs="leader" aria-pressed="false" aria-label="Hotspot 3: the leader" onclick="showSceneHS('leader', this)">3</button>
+          <button class="scene-hotspot" style="top: 52.7%; left: 75%;" data-hs="setup" aria-pressed="false" aria-label="Hotspot 4: the room setup" onclick="showSceneHS('setup', this)">4</button>
+          </div>
         </div>
 
-        <div class="scene-info" id="scene-info">
+        <div class="scene-info" id="scene-info" aria-live="polite">
           <div class="placeholder">Tap a numbered hotspot to learn what it shows.</div>
         </div>
       </div>
@@ -6913,8 +6997,8 @@ body {
         <div class="score-num" id="kc-score">–</div>
         <h3>Section 1 complete</h3>
         <p id="kc-message">You've finished the foundation module.</p>
-        <button class="btn gold large" onclick="goToTab('1.1'); window.scrollTo(0,0);">
-          Review Section 1
+        <button class="btn gold large" onclick="goToTab('2.1')">
+          Continue to the facilitation toolkit
         </button>
       </div>
 
@@ -6923,7 +7007,10 @@ body {
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
           Back
         </button>
-        <span style="font-size: 0.85rem; color: var(--ink-muted); font-style: italic;">More sections coming in the next build →</span>
+        <button class="btn" onclick="goToTab('2.1')">
+          Next: Foundational techniques
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
       </div>
     </section>
 
@@ -9433,37 +9520,37 @@ const state = {
    NAV STRUCTURE
    ========================================================== */
 const SECTIONS = [
-  { num: '01', title: 'Foundation — Why SI works', active: true, subtabs: [
+  { num: '01', title: 'Foundation — Why SI works', active: true, sitting: 1, subtabs: [
     { id: '1.1', label: 'Welcome' },
     { id: '1.2', label: 'What is SI?' },
     { id: '1.3', label: 'Ingredients' },
     { id: '1.4', label: 'SI is not passive' },
     { id: '1.5', label: 'Knowledge check' },
   ]},
-  { num: '02', title: 'Facilitation toolkit', active: true, subtabs: [
+  { num: '02', title: 'Facilitation toolkit', active: true, sitting: 2, subtabs: [
     { id: '2.1', label: 'Foundational techniques' },
     { id: '2.2', label: 'Scenario practice' },
     { id: '2.3', label: 'Strategy library' },
     { id: '2.4', label: 'Reflection' },
   ]},
-  { num: '03', title: 'Before your first session', active: true, subtabs: [
+  { num: '03', title: 'Before your first session', active: true, sitting: 3, subtabs: [
     { id: '3.1', label: 'Action items' },
     { id: '3.2', label: 'Plan your schedule' },
     { id: '3.3', label: 'Canvas announcements' },
     { id: '3.4', label: 'Your in-class pitch' },
   ]},
-  { num: '04', title: 'Professor email generator', active: true, subtabs: [
+  { num: '04', title: 'Professor email generator', active: true, sitting: 3, subtabs: [
     { id: '4.1', label: 'Your professor as partner' },
     { id: '4.2', label: 'Build your email' },
   ]},
-  { num: '05', title: 'Lesson planning', active: true, subtabs: [
+  { num: '05', title: 'Lesson planning', active: true, sitting: 4, subtabs: [
     { id: '5.1', label: 'Anatomy of a session' },
     { id: '5.2', label: 'Worked example: MCAT' },
     { id: '5.3', label: 'Reflect on yourself' },
     { id: '5.4', label: 'Build your lesson' },
     { id: '5.5', label: 'Submit & feedback' },
   ]},
-  { num: '06', title: 'Your SI leader summary', active: true, subtabs: [
+  { num: '06', title: 'Your SI leader summary', active: true, sitting: 4, subtabs: [
     { id: '7.1', label: 'Review & pre-flight' },
   ]},
 ];
@@ -9472,8 +9559,12 @@ const TOTAL_SUBTABS = SECTIONS.reduce((s, sec) => s + sec.subtabs.length, 0);
 
 function renderSidebar() {
   const nav = document.getElementById('sidebar-nav');
+  let lastSitting = 0;
   nav.innerHTML = SECTIONS.map(sec => {
     const isActive = sec.active;
+    const sittingHead = (sec.sitting && sec.sitting !== lastSitting)
+      ? `<span class="nav-sitting">Sitting ${sec.sitting} of 4 <em>about 1 hr</em></span>` : '';
+    lastSitting = sec.sitting || lastSitting;
     const labelCls = isActive ? 'nav-label' : 'nav-label locked';
     const items = sec.subtabs.map(st => {
       const visited = state.visited.has(st.id);
@@ -9488,7 +9579,7 @@ function renderSidebar() {
         <span>${st.label}</span>
       </button>`;
     }).join('');
-    return `<span class="${labelCls}">${sec.title}</span>${items}`;
+    return `${sittingHead}<span class="${labelCls}">${sec.title}</span>${items}`;
   }).join('');
 }
 
@@ -11351,8 +11442,8 @@ function showSceneHS(key, btn) {
   const hs = SCENE_HOTSPOTS[key];
   const info = document.getElementById('scene-info');
   if (!hs || !info) return;
-  document.querySelectorAll('.scene-hotspot').forEach(b => b.classList.remove('active'));
-  if (btn) btn.classList.add('active');
+  document.querySelectorAll('.scene-hotspot').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
+  if (btn) { btn.classList.add('active'); btn.setAttribute('aria-pressed', 'true'); }
   info.innerHTML = `
     <div class="si-tag">${hs.tag}</div>
     <h5>${hs.title}</h5>
@@ -12298,6 +12389,169 @@ renderSummary();
 renderSidebar();
 updateBreadcrumb();
 updateProgress();
+</script>
+
+<script>
+/* ==========================================================
+   ADDED Oct 2026
+   1) Save progress in this browser so the 4-hour training can be
+      done over several days.
+   2) "End of sitting" stopping points.
+   3) Keyboard access for clickable cards and labels for fields.
+   ========================================================== */
+(function () {
+  const KEY = 'si-onboarding-progress-v1';
+  let saveTimer = null;
+  let restoring = false;
+
+  const store = {
+    get() { try { return JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { return null; } },
+    set(v) { try { localStorage.setItem(KEY, JSON.stringify(v)); } catch (e) {} },
+    clear() { try { localStorage.removeItem(KEY); } catch (e) {} }
+  };
+
+  function fieldKey(el) {
+    if (el.id) return '#' + el.id;
+    const panel = el.closest('.panel');
+    if (!panel) return null;
+    const all = [...panel.querySelectorAll('input, textarea, select')];
+    return panel.dataset.tab + ':' + all.indexOf(el);
+  }
+  function collectFields() {
+    const out = {};
+    document.querySelectorAll('.main input, .main textarea, .main select').forEach(el => {
+      if (['button', 'submit', 'file', 'password', 'search'].includes(el.type)) return;
+      const k = fieldKey(el); if (!k) return;
+      out[k] = (el.type === 'checkbox' || el.type === 'radio') ? { c: el.checked } : { v: el.value };
+    });
+    return out;
+  }
+  function serializeState() {
+    return JSON.parse(JSON.stringify(state, (k, v) => (v instanceof Set) ? { __set: [...v] } : v));
+  }
+  function save() {
+    if (restoring) return;
+    store.set({ savedAt: Date.now(), state: serializeState(), fields: collectFields() });
+  }
+  function scheduleSave() { clearTimeout(saveTimer); saveTimer = setTimeout(save, 400); }
+
+  function restore() {
+    const saved = store.get();
+    if (!saved || !saved.state) return false;
+    restoring = true;
+    try {
+      Object.keys(saved.state).forEach(k => {
+        const v = saved.state[k];
+        state[k] = (v && typeof v === 'object' && Array.isArray(v.__set)) ? new Set(v.__set) : v;
+      });
+      const renders = ['renderSort', 'renderMyths', 'renderKC', 'renderMatch', 'renderScenarios', 'renderChecklist',
+        'renderHeatmap', 'deriveScheduleFromHeatmap', 'renderBlooms', 'renderPhaseBuilder', 'renderLPReview',
+        'renderBloomSort', 'renderLibrary', 'renderPitchScript', 'renderGenPreview', 'renderQualityCheck'];
+      renders.forEach(n => { try { if (typeof window[n] === 'function') window[n](); } catch (e) {} });
+      ['first', 'weekly'].forEach(w => { try { renderPostPreview(w); } catch (e) {} });
+      const fields = saved.fields || {};
+      document.querySelectorAll('.main input, .main textarea, .main select').forEach(el => {
+        const k = fieldKey(el); const f = k && fields[k]; if (!f) return;
+        if ('c' in f) { if (el.checked !== f.c) { el.checked = f.c; el.dispatchEvent(new Event('change', { bubbles: true })); } }
+        else if (el.value !== f.v) {
+          el.value = f.v;
+          el.dispatchEvent(new Event(el.tagName === 'SELECT' ? 'change' : 'input', { bubbles: true }));
+        }
+      });
+      try { renderSummary(); } catch (e) {}
+    } finally { restoring = false; }
+    if (state.current) goToTab(state.current);
+    return true;
+  }
+
+  /* Wrap navigation so every move is saved */
+  const _go = goToTab;
+  goToTab = function (id) { _go(id); scheduleSave(); };
+
+  ['input', 'change', 'click'].forEach(t => document.addEventListener(t, scheduleSave, true));
+  window.addEventListener('pagehide', save);
+
+  /* Start over */
+  const resetBtn = document.getElementById('reset-progress');
+  if (resetBtn) {
+    let armed = false, timer = null;
+    resetBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      if (!armed) {
+        armed = true; resetBtn.textContent = 'Click again to erase your work'; resetBtn.classList.add('confirm');
+        timer = setTimeout(() => { armed = false; resetBtn.textContent = 'Start over'; resetBtn.classList.remove('confirm'); }, 4000);
+        return;
+      }
+      clearTimeout(timer); store.clear(); window.removeEventListener('pagehide', save);
+      location.reload();
+    });
+  }
+
+  /* Mobile contents toggle */
+  const tog = document.getElementById('nav-toggle');
+  if (tog) {
+    const side = tog.closest('.sidebar');
+    tog.addEventListener('click', () => {
+      const open = side.classList.toggle('nav-open');
+      tog.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    document.getElementById('sidebar-nav').addEventListener('click', e => {
+      if (e.target.closest('.nav-item') && window.matchMedia('(max-width: 900px)').matches) {
+        side.classList.remove('nav-open'); tog.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+
+  /* End-of-sitting stopping points */
+  const BREAKS = {
+    '1.5': { n: 1, next: '2.1', label: 'Foundational techniques' },
+    '2.4': { n: 2, next: '3.1', label: 'Action items' },
+    '4.2': { n: 3, next: '5.1', label: 'Anatomy of a session' }
+  };
+  Object.entries(BREAKS).forEach(([tab, b]) => {
+    const panel = document.querySelector(`.panel[data-tab="${tab}"]`);
+    if (!panel) return;
+    const nav = panel.querySelector('.panel-nav');
+    const card = document.createElement('div');
+    card.className = 'sitting-break';
+    card.innerHTML = `<div>
+        <div class="sb-eyebrow">End of sitting ${b.n} of 4</div>
+        <h4>This is a good place to stop.</h4>
+        <p>Your work is saved in this browser. Next time, start Sitting ${b.n + 1} with <strong>${b.label}</strong>; the sidebar will remember where you are.</p>
+      </div>
+      <button class="btn" type="button" onclick="goToTab('${b.next}')">Start sitting ${b.n + 1}</button>`;
+    if (nav) panel.insertBefore(card, nav); else panel.appendChild(card);
+  });
+
+  /* Keyboard access: clickable cards become buttons; fields get names */
+  function enhance(root) {
+    root.querySelectorAll('[onclick]').forEach(el => {
+      if (['BUTTON', 'A', 'INPUT', 'SELECT', 'TEXTAREA', 'LABEL', 'SUMMARY'].includes(el.tagName)) return;
+      if (!el.hasAttribute('role')) el.setAttribute('role', 'button');
+      if (!el.hasAttribute('tabindex')) el.setAttribute('tabindex', '0');
+      if (!el.dataset.kbd) {
+        el.dataset.kbd = '1';
+        el.addEventListener('keydown', e => {
+          if ((e.key === 'Enter' || e.key === ' ') && e.target === el) { e.preventDefault(); el.click(); }
+        });
+      }
+    });
+    root.querySelectorAll('input, textarea, select').forEach(el => {
+      if (el.labels && el.labels.length) return;
+      if (el.getAttribute('aria-label') || el.getAttribute('aria-labelledby')) return;
+      let name = el.getAttribute('placeholder') || '';
+      let prev = el.previousElementSibling;
+      while (prev && !name) { const t = (prev.innerText || '').trim(); if (t && t.length < 90) name = t; prev = prev.previousElementSibling; }
+      if (!name) { const card = el.closest('.card, .reflect-card, div'); const h = card && card.querySelector('h3, h4, h5, label, .label'); if (h) name = h.innerText.trim().slice(0, 90); }
+      if (name) el.setAttribute('aria-label', name);
+    });
+  }
+  enhance(document);
+  new MutationObserver(muts => muts.forEach(m => m.addedNodes.forEach(n => { if (n.nodeType === 1) enhance(n.parentElement || n); })))
+    .observe(document.querySelector('.app') || document.body, { childList: true, subtree: true });
+
+  restore();
+})();
 </script>
 </body>
 </html>

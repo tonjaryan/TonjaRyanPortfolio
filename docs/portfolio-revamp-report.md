@@ -111,8 +111,6 @@ Tested locally with Playwright (Chromium) serving the repo over HTTP. CDNs and G
 - **GEOL notebook:** save-and-reload test, before and after the fix.
 
 **Known limitations in the modules (not changed):**
-- Biology Cohort Hub tiles are `<a onclick>` elements without `href`; they take focus but Enter may not activate them.
-- SI Onboarding portfolio copy does not persist progress.
 - TSC course has no skip link (its own design system lists this as outstanding).
 - Co-Pilot, onboarding, and TSC have no link back to the portfolio; every launch opens in a new tab so the portfolio stays open.
 - GEOL notebook depends on three CDNs (Tailwind Play, esm.sh, unpkg Babel) at runtime.
@@ -127,3 +125,13 @@ Tested locally with Playwright (Chromium) serving the repo over HTTP. CDNs and G
 6. **Hub keyboard fix.** Give the hub tiles an `href="#"` or make them `<button>`s.
 7. **Self-host GEOL dependencies** to remove the runtime CDN risk.
 8. **Live-site check.** After merging, click through on a phone and run the same axe pass against the published URL.
+
+## 9. SI Leader Onboarding revision (Oct 26)
+
+- Hotspot graphic: numbers now sit in a box the exact size of the drawing, so they stay on the floor plan when the text panel grows. Buttons announce their state (`aria-pressed`), and the explanation panel is a live region.
+- Timing: the welcome screen now says about 4 hours across four sittings of about an hour, with a sitting plan. The sidebar groups sections by sitting, and end-of-sitting cards close Sittings 1–3.
+- Saving: progress, answers, and every text field save to the browser (localStorage) and restore on return, including the last screen visited. "Start over" in the sidebar clears it (two clicks, no dialog).
+- Knowledge check: removed "More sections coming in the next build"; the completion and footer buttons now continue to Section 02.
+- Keyboard: about 160 clickable cards became keyboard-operable buttons; unlabeled fields get accessible names.
+- Phones: the sidebar collapses behind a Contents button, and two screens that pushed the page sideways (1.2, 3.2) now fit.
+- Tested: save, reload, restore; reset; keyboard Enter on cards; all 21 screens at 1440 and 390 px with no console errors.
