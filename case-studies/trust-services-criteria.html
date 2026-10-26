@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trust Services Criteria for GRC Staff · Case study · Tonja Ryan</title>
+<meta name="description" content="Case study: a ten-module self-paced course teaching GRC staff to read and apply the AICPA Trust Services Criteria behind SOC 2.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/portfolio.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="inner">
+    <a class="wordmark" href="../index.html">Tonja Ryan</a>
+    <nav class="site-nav" aria-label="Primary">
+      <ul>
+        <li><a href="../index.html#work" aria-current="page">Work</a></li>
+        <li><a href="../index.html#approach">Approach</a></li>
+        <li><a href="../index.html#about">About</a></li>
+        <li><a href="../index.html#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main" class="frame">
+  <p class="crumb"><a href="../index.html#work">← All work</a></p>
+
+  <section class="sheet cs-hero" id="overview" aria-labelledby="title">
+    <p class="feature-category">Compliance learning</p>
+    <h1 id="title">Trust Services Criteria for GRC Staff</h1>
+    <p class="lead">A ten-module self-paced course that prepares governance, risk, and compliance staff to read, interpret, and apply the AICPA Trust Services Criteria, the standard every SOC 2 report is built on.</p>
+    <div class="actions">
+      <a class="btn btn-primary" href="../tsc-grc-course.html#home" target="_blank" rel="noopener">Open the course<span class="sr-only"> (opens in a new tab)</span></a>
+      <a class="btn btn-secondary" href="../tsc-grc-course.html#needs-analysis" target="_blank" rel="noopener">Read the needs analysis<span class="sr-only"> (opens in a new tab)</span></a>
+    </div>
+
+    <dl class="overview">
+      <div><dt>Project type</dt><dd>Self-paced web course with embedded practice</dd></div>
+      <div><dt>Audience</dt><dd>GRC staff and control owners at SaaS service organizations</dd></div>
+      <div><dt>My role</dt><dd>Needs analysis, course architecture, writing, UI and design system, front-end build</dd></div>
+      <div><dt>Status</dt><dd><span class="status is-sample">Independent work sample</span></dd></div>
+      <div class="wide"><dt>Problem</dt><dd>The source standard is 75 pages of legalistic prose with 61 criteria and conventions explained only in passing. Staff who learn it from secondhand summaries pick up misconceptions that show up as audit rework.</dd></div>
+      <div class="wide"><dt>Deliverables</dt><dd>Ten modules (about 10 hours), 93-term glossary, optional capstone, needs analysis, learning design document, design system, case study</dd></div>
+      <div class="wide"><dt>Source</dt><dd>AICPA TSP Section 100: 2017 Trust Services Criteria with revised points of focus (2022)</dd></div>
+      <div class="wide"><dt>Tools</dt><dd>Hand-coded HTML, CSS, and JavaScript on a Material Design 3 foundation; single-file deployment with hash routing</dd></div>
+    </dl>
+
+    <p class="disclosure"><strong>What this is.</strong> An independent work sample developed from the primary source, without a client organization. The needs analysis is documentary and assumption-based: no interviews, surveys, or organizational records were available, and none are reported. The course is complete; no pilot has run.</p>
+
+    <a class="shot" href="../tsc-grc-course.html#home" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
+      <img src="../assets/img/tsc.webp" width="1200" height="750" alt="">
+    </a>
+  </section>
+
+  <nav class="cs-nav" aria-label="On this page">
+    <ul>
+      <li><a href="#problem">Problem</a></li>
+      <li><a href="#analysis">Analysis</a></li>
+      <li><a href="#objectives">Objectives</a></li>
+      <li><a href="#decisions">Design decisions</a></li>
+      <li><a href="#process">Process</a></li>
+      <li><a href="#solution">Solution</a></li>
+      <li><a href="#evaluation">Evaluation</a></li>
+      <li><a href="#results">Status and lessons</a></li>
+    </ul>
+  </nav>
+
+  <section class="sheet cs-section" id="problem" aria-labelledby="h-problem">
+    <h2 id="h-problem">The problem</h2>
+    <div class="prose">
+      <p>GRC staff are expected to read the criteria accurately, apply them to their organization's system, and produce scoping decisions, control narratives, evidence, and a system description that a service auditor can test. The standard does not make that easy. Its conventions, such as what italic text means or what the [C] and [P] markers on privacy points of focus signal, are explained briefly or in footnotes.</p>
+      <p>The needs analysis states the gap as typical current performance against desired performance, each tied to a paragraph of the standard. Three examples:</p>
+    </div>
+    <div class="table-wrap" style="margin-top: var(--s-4);" tabindex="0" role="region" aria-label="Table 1, scrollable">
+      <table>
+        <thead><tr><th scope="col">Area</th><th scope="col">Typical current performance</th><th scope="col">Desired performance</th><th scope="col">Basis</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Points of focus</th><td>Treated as a mandatory checklist</td><td>Criteria treated as required outcomes; points of focus used as guidance and customized where warranted</td><td>TSP 100, .04–.07</td></tr>
+          <tr><th scope="row">Control narratives</th><td>Describe intent ("access is reviewed regularly") in terms an auditor cannot test</td><td>State who, what, when, how, the evidence produced, and how exceptions are handled</td><td>TSP 100, .01</td></tr>
+          <tr><th scope="row">Privacy</th><td>All privacy points of focus applied regardless of role</td><td>Staff determine whether the organization is a controller, processor, or both, and read the markers accordingly</td><td>TSP 100, fn. 21</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="small note"><span class="tag tag-assumed">Assumed</span>These describe typical difficulty areas reasoned from the standard and a content review of an earlier draft. They are not measured findings.</p>
+  </section>
+
+  <section class="sheet cs-section" id="analysis" aria-labelledby="h-analysis">
+    <h2 id="h-analysis">Analysis</h2>
+    <div class="prose">
+      <p>The needs analysis is the strongest process artifact in this project. It runs twelve sections and draws on four stated sources: a close reading of TSP 100, the tasks GRC staff perform across the SOC 2 cycle, a content gap analysis of an earlier draft of Modules 1 to 5, and explicit assumptions, each paired with a validation method.</p>
+    </div>
+    <h3>Training and non-training causes</h3>
+    <div class="prose">
+      <p>The analysis separates what a course can fix (knowledge of the standard, skill in scoping, mapping, and narrative writing) from environmental causes it cannot. For the second group it recommends companion changes: a control-narrative template built on the six elements taught in Module 8, a central evidence repository with a naming convention, a control-ownership matrix, a commitments register kept with legal and sales, and compliance tooling configured around criteria. Without those, transfer is likely to be limited, and the document says so.</p>
+    </div>
+    <h3>Learners and tasks</h3>
+    <div class="prose">
+      <p>Three composite learner profiles shaped the design: the new GRC analyst (needs vocabulary and guided practice), the transferring professional from IT audit or security (needs to know what is different, with citations to verify), and the control owner (very limited time, will complete selected modules only). A task analysis rated eleven tasks by frequency, criticality, and difficulty. Tasks rated high on both criticality and difficulty, such as writing control narratives and determining that a criterion does not apply, receive guided practice with explanatory feedback; the rest are supported mainly by worked examples and reference material.</p>
+    </div>
+    <h3>Delivery decision</h3>
+    <div class="prose">
+      <p>Instructor-led training would allow organization-specific discussion but needs a facilitator for every cohort and leaves no lasting reference. A job aid alone would help experienced staff but cannot build judgment for scoping or gap assessment. Self-paced e-learning with embedded practice fit the 30 to 60 minute sessions these learners have, let control owners study selectively, and stays available afterward. A one- to two-page job aid is recommended alongside it.</p>
+    </div>
+    <figure class="shot-fig" style="margin-top: var(--s-5);">
+      <img src="../assets/img/tsc-needs.webp" width="1200" height="750" loading="lazy" alt="The needs analysis document open to Section 2, a table comparing typical and desired performance with paragraph references to TSP 100.">
+      <figcaption>Section 2 of the needs analysis: each performance gap is tied to the paragraph of the standard it comes from.</figcaption>
+    </figure>
+  </section>
+
+  <section class="sheet cs-section" id="objectives" aria-labelledby="h-objectives">
+    <h2 id="h-objectives">Objectives and alignment</h2>
+    <div class="prose">
+      <p>Seven terminal objectives come straight out of the gap analysis and move from understanding the standard to evaluating an organization's readiness. The course home page shows an alignment matrix marking where each objective is introduced, developed, and assessed across the ten modules, and a sequencing map listing what each module builds on.</p>
+    </div>
+    <div class="table-wrap" style="margin-top: var(--s-4);" tabindex="0" role="region" aria-label="Table 2, scrollable">
+      <table>
+        <thead><tr><th scope="col">Terminal objective</th><th scope="col">Level</th><th scope="col">Assessed by</th></tr></thead>
+        <tbody>
+          <tr><td>TO1 Explain the purpose, authority, and structure of the criteria, including criteria versus points of focus</td><td>Understand</td><td>Knowledge checks in M1 and M3; capstone Section 2</td></tr>
+          <tr><td>TO2 Determine which of the five categories apply, given service commitments and system requirements</td><td>Analyze</td><td>Knowledge checks in M2 and M7; capstone Section 1</td></tr>
+          <tr><td>TO3 Interpret the outcome required by each Common Criterion</td><td>Understand</td><td>Knowledge checks in M4 and M5; capstone Section 2</td></tr>
+          <tr><td>TO4 Apply the category-specific and privacy criteria, including controller versus processor</td><td>Apply</td><td>Knowledge check in M6; capstone Section 1</td></tr>
+          <tr><td>TO5 Scope an engagement: system boundary, system description, inapplicable criteria</td><td>Apply</td><td>Knowledge check in M7; capstone Section 1</td></tr>
+          <tr><td>TO6 Map controls to criteria and write testable narratives with appropriate evidence</td><td>Create</td><td>Knowledge check in M8; capstone Section 3</td></tr>
+          <tr><td>TO7 Evaluate readiness through a gap assessment and recommend priorities</td><td>Evaluate</td><td>Knowledge check in M7; capstone Sections 3 and 4</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="sheet cs-section" id="decisions" aria-labelledby="h-decisions">
+    <h2 id="h-decisions">Design decisions</h2>
+    <ol class="decisions">
+      <li class="decision">
+        <h3>Correct the checklist misconception on the first screen</h3>
+        <dl>
+          <dt>Design challenge</dt><dd>The most common misconception among GRC staff is that SOC 2 is a checklist, which drives the over-documentation of points of focus described in the gap analysis.</dd>
+          <dt>Decision</dt><dd>Frame the whole course around the standard's own outcome-based principle (TSP 100, para. .03) and raise it immediately.</dd>
+          <dt>Rationale</dt><dd>A misconception left in place through the structural modules would shape how learners read every criterion that follows.</dd>
+          <dt>Implementation</dt><dd>Section 1.1 opens with the principle. Module 8 returns to it when learners build controls, and Module 10 presents it as one of five mental models.</dd>
+          <dt>Evidence</dt><dd>A late coverage audit found the principle was not yet anchored in Module 1; a source-cited callout was added there.</dd>
+        </dl>
+      </li>
+      <li class="decision">
+        <h3>Sequence structure before application</h3>
+        <dl>
+          <dt>Design challenge</dt><dd>Learners want to get to scoping and control narratives, but those tasks depend on distinctions the standard makes early and quietly.</dd>
+          <dt>Decision</dt><dd>Order the course in phases: orientation (M1–M2), structure (M3–M5), application (M6–M8), then reference and synthesis (M9–M10).</dd>
+          <dt>Rationale</dt><dd>The content analysis showed that a learner who has not consolidated the criteria versus points-of-focus distinction (M3) is likely to write narratives that conflate the two in M8.</dd>
+          <dt>Implementation</dt><dd>Each module card in the sequencing map lists the modules it builds on. Navigation stays free, so transferring professionals can skip ahead.</dd>
+        </dl>
+      </li>
+      <li class="decision">
+        <h3>Make the capstone optional and the mental models required</h3>
+        <dl>
+          <dt>Design challenge</dt><dd>The original outline made completion depend on a 15-question capstone scenario. The audience analysis described professionals with little time who would return to the course over weeks.</dd>
+          <dt>Decision</dt><dd>Reverse the arrangement. The mental models and role-based playbooks became the core of Module 10, and the capstone moved to a clearly marked optional section with a "Skip to course wrap" link.</dd>
+          <dt>Rationale</dt><dd>Withholding completion behind an optional test would create the resistance the course is designed to avoid, while the playbooks carry the next-day actions learners need.</dd>
+          <dt>Implementation</dt><dd>Five-question formative checks close Modules 1 to 8. The capstone gives a per-section breakdown so learners can see which areas to revisit.</dd>
+        </dl>
+      </li>
+      <li class="decision">
+        <h3>Build Module 9 as a working reference, cited to the source</h3>
+        <dl>
+          <dt>Design challenge</dt><dd>Learners study alongside the job and come back to specific topics later, and a skeptical professional audience needs to verify claims.</dd>
+          <dt>Decision</dt><dd>Give Module 9 no knowledge check and design it for use after the course, and cite TSP 100 by paragraph throughout every module.</dd>
+          <dt>Rationale</dt><dd>The needs analysis named post-course reference as a primary need. Paragraph citations let learners check the course against the standard and use it as a citable source.</dd>
+          <dt>Implementation</dt><dd>A searchable 93-term glossary with badges separating the AICPA's definitions from practice terms, three quick-lookup tables, six source-document cards, and an 18-card flashcard set.</dd>
+        </dl>
+      </li>
+    </ol>
+  </section>
+
+  <section class="sheet cs-section" id="process" aria-labelledby="h-process">
+    <h2 id="h-process">Design and development</h2>
+    <div class="prose">
+      <p>Analysis produced the gap table, profiles, task ratings, and objectives. Design set the module structure, the lesson pattern (orientation and key terms, explanation, worked example, activity, checkpoint), and fourteen engagement types, each matched in the learning design document to the cognitive task it supports. A Material Design 3 system with color roles generated from my palette came next, then an iterative build of all ten modules.</p>
+      <p>Four documented review rounds followed the build:</p>
+      <ol>
+        <li><strong>Visual breakage at scale.</strong> Fixed-size badges crushed multi-word labels and pill-shaped sort tiles turned long sentences into ovals. Flexible sizing replaced fixed dimensions wherever content length varied.</li>
+        <li><strong>A CSS collision in the single-file build.</strong> A Module 7 rule silently undid the Module 1 fix once the modules were merged. Classes were namespaced, and a rebuild script now checks for collisions.</li>
+        <li><strong>Coverage audit.</strong> Every numbered paragraph of the standard was cross-checked against the course. Two gaps were closed with source-cited callouts.</li>
+        <li><strong>Second audit.</strong> Three more source anchors added, and one apparent gap confirmed as already covered in different wording, a reminder that keyword checks produce false negatives.</li>
+      </ol>
+    </div>
+
+    <h3>Selected design artifacts</h3>
+    <ul class="artifacts">
+      <li class="artifact"><a href="../tsc-grc-course.html#needs-analysis" target="_blank" rel="noopener">Needs analysis<span class="sr-only"> (opens in a new tab)</span></a><p>Gap table, training versus environmental causes, learner profiles, task analysis, constraints, success measures, and an assumptions-and-validation plan.</p></li>
+      <li class="artifact"><a href="../tsc-grc-course.html#home" target="_blank" rel="noopener">Alignment matrix and sequencing map<span class="sr-only"> (opens in a new tab)</span></a><p>Where each objective is introduced, developed, and assessed, and what each module builds on.</p></li>
+      <li class="artifact"><a href="../tsc-grc-course.html#learning-design" target="_blank" rel="noopener">Learning design document<span class="sr-only"> (opens in a new tab)</span></a><p>Bloom's progression by module, the engagement-type rationale matrix, Mayer's multimedia principles as applied, and the evaluation plan.</p></li>
+      <li class="artifact"><a href="../tsc-grc-course.html#design-system" target="_blank" rel="noopener">Design system<span class="sr-only"> (opens in a new tab)</span></a><p>Color roles with measured contrast, type, components, lesson structure, and accessibility measures, including what is still outstanding.</p></li>
+    </ul>
+  </section>
+
+  <section class="sheet cs-section" id="solution" aria-labelledby="h-solution">
+    <h2 id="h-solution">The finished course</h2>
+    <div class="prose">
+      <p>Ten modules, from foundations to a synthesis module with role-based playbooks for situations such as a first SOC 2 preparation, an annual cycle, vendor review, and a learner's first 30 days in a GRC role. Learners move lesson by lesson; each lesson ends in a checkpoint whose format varies (complete the statement, highlight, classify, sequence, multiple choice). Feedback is explanatory and the course records no scores. It runs as a single file with deep-linkable sections, so it also works offline and as a bookmarkable reference.</p>
+    </div>
+    <div class="fig-pair" style="margin-top: var(--s-5);">
+      <figure class="shot-fig">
+        <img src="../assets/img/tsc-m2.webp" width="1200" height="750" loading="lazy" alt="Module 2, The Five Trust Services Categories, showing the lesson stepper and four learning objectives.">
+        <figcaption>Each module opens with observable objectives and a lesson stepper that shows the learner's position on return.</figcaption>
+      </figure>
+      <figure class="shot-fig">
+        <img src="../assets/img/tsc-ld.webp" width="1200" height="750" loading="lazy" alt="The learning design document's engagement type rationale matrix, listing each interaction type, where it is used, its cognitive purpose, and framework alignment.">
+        <figcaption>The engagement-type matrix in the learning design document records why each interaction was chosen.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="sheet cs-section" id="evaluation" aria-labelledby="h-evaluation">
+    <h2 id="h-evaluation">Evaluation</h2>
+    <h3 style="margin-top: 0;"><span class="tag tag-done">Completed</span>Accuracy and quality review</h3>
+    <div class="prose">
+      <ul>
+        <li>Two coverage audits of the course against every numbered paragraph of TSP 100, with gaps closed and documented.</li>
+        <li>Screenshot-based design review for rendering defects, with fixes verified.</li>
+        <li>Contrast measured for every text pairing in the design system; focus indicators, keyboard alternatives for every drag interaction, live-region feedback, and reduced-motion support in place. Skip-to-content links are listed as outstanding work.</li>
+      </ul>
+    </div>
+    <h3><span class="tag tag-planned">Proposed</span>Evaluation in a deployment</h3>
+    <div class="prose">
+      <p>The learning design document sets out a four-level plan (Kirkpatrick). Level 2 measures are built into the course as knowledge checks and the capstone; aggregation across learners would be the next step. Level 3 uses manager checklists at 30, 60, and 90 days against seven observable behaviors, such as narratives that address all six elements and scope decisions that cite service commitments. Level 4 compares audit findings and fieldwork records across examination periods, against baselines set before release, and reports results as evidence of contribution since training is one input among many.</p>
+    </div>
+  </section>
+
+  <section class="sheet cs-section" id="results" aria-labelledby="h-results">
+    <h2 id="h-results">Status and lessons</h2>
+    <div class="prose">
+      <p><strong>Status.</strong> Development complete. No pilot or organizational deployment has taken place, and the assumptions in Section 11 of the needs analysis remain to be validated with practitioners.</p>
+      <p><strong>What I'd change.</strong> Pilot earlier: one learner working through Module 1 in the first week would have caught the badge problem before all ten modules were written. Define reaction, learning, behavior, and results measures during design; here the evaluation framework was applied after the build. Keep an accessibility checklist from the start, since contrast and semantic structure are easier to get right as you go.</p>
+    </div>
+  </section>
+
+  <section class="sheet cs-section" aria-labelledby="h-related">
+    <h2 id="h-related">More work</h2>
+    <div class="related">
+      <a href="reviewing-with-the-copilot.html"><span class="shot"><img src="../assets/img/copilot.webp" width="1200" height="750" loading="lazy" alt=""></span><h3>Reviewing with the Co&#8209;Pilot</h3><p>Scenario-based technical training</p></a>
+      <a href="sharing-data-protecting-people.html"><span class="shot"><img src="../assets/img/sharing-data.webp" width="1200" height="750" loading="lazy" alt=""></span><h3>Sharing Data, Protecting People</h3><p>Technical training, in revision</p></a>
+      <a href="fall-2025-program-launch.html"><span class="shot"><img src="../assets/img/fall-2025.webp" width="1200" height="750" loading="lazy" alt=""></span><h3>Fall 2025 SI Program Launch</h3><p>Learning program management</p></a>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <span>Tonja Ryan, Austin, Texas</span>
+  <span><a href="../index.html">Back to the portfolio</a></span>
+</footer>
+</body>
+</html>

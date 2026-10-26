@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reviewing with the Co-Pilot · Case study · Tonja Ryan</title>
+<meta name="description" content="Case study: a scenario-based simulation that trains content-rating analysts to verify AI-suggested age ratings before publication.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/portfolio.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="inner">
+    <a class="wordmark" href="../index.html">Tonja Ryan</a>
+    <nav class="site-nav" aria-label="Primary">
+      <ul>
+        <li><a href="../index.html#work" aria-current="page">Work</a></li>
+        <li><a href="../index.html#approach">Approach</a></li>
+        <li><a href="../index.html#about">About</a></li>
+        <li><a href="../index.html#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main" class="frame">
+  <p class="crumb"><a href="../index.html#work">← All work</a></p>
+
+  <section class="sheet cs-hero" id="overview" aria-labelledby="title">
+    <p class="feature-category">Scenario-based technical training</p>
+    <h1 id="title">Reviewing with the Co&#8209;Pilot</h1>
+    <p class="lead">A narrated simulation that teaches content-rating analysts to check an AI co-pilot's suggested age rating and content descriptors before a title is published, then choose and justify a review action.</p>
+    <div class="actions">
+      <a class="btn btn-primary" href="../reviewing-with-the-copilot/index.html#module" target="_blank" rel="noopener">Launch the simulation<span class="sr-only"> (opens in a new tab)</span></a>
+      <a class="btn btn-secondary" href="../reviewing-with-the-copilot/job-aid.html" target="_blank" rel="noopener">Open the job aid<span class="sr-only"> (opens in a new tab)</span></a>
+      <a class="btn btn-secondary" href="../reviewing-with-the-copilot/index.html" target="_blank" rel="noopener">Full design documentation<span class="sr-only"> (opens in a new tab)</span></a>
+    </div>
+
+    <dl class="overview">
+      <div><dt>Project type</dt><dd>Scenario-based simulation with scored practice</dd></div>
+      <div><dt>Audience</dt><dd>Content-rating analysts, new and tenured</dd></div>
+      <div><dt>My role</dt><dd>Gap analysis, objectives, scripting, assessment design, build, QA</dd></div>
+      <div><dt>Status</dt><dd><span class="status is-sample">Independent work sample</span></dd></div>
+      <div class="wide"><dt>Problem</dt><dd>When an AI tool drafts the rating, the analyst's job shifts from writing a rating to checking one, and people tend to accept confident machine output without opening the evidence.</dd></div>
+      <div class="wide"><dt>Deliverables</dt><dd>12-screen narrated HTML module, six-case scored review queue, rationale rubric, ten-item targeted practice set, printable job aid, design document and evaluation plan</dd></div>
+      <div class="wide"><dt>Tools</dt><dd>Hand-coded HTML, CSS, and JavaScript built with Claude under my direction; ElevenLabs text-to-speech for narration; automated browser tests</dd></div>
+      <div class="wide"><dt>Standards used</dt><dd>U.S. TV Parental Guidelines; MPA Classification and Rating Rules (rev. July 24, 2020)</dd></div>
+    </dl>
+
+    <p class="disclosure"><strong>What this is.</strong> An independent work sample, prepared for an instructional designer role on a streaming Trust and Safety team. It is one completed module (Module 3) of a proposed five-module onboarding curriculum. No company commissioned, reviewed, or approved it, no analysts have piloted it, and no performance results exist. Titles, scenes, and co-pilot output are invented; the rating definitions come from the published guidelines.</p>
+
+    <a class="shot" href="../reviewing-with-the-copilot/index.html#module" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
+      <img src="../assets/img/copilot.webp" width="1200" height="750" alt="">
+    </a>
+  </section>
+
+  <nav class="cs-nav" aria-label="On this page">
+    <ul>
+      <li><a href="#problem">Problem</a></li>
+      <li><a href="#analysis">Analysis</a></li>
+      <li><a href="#objectives">Objectives</a></li>
+      <li><a href="#decisions">Design decisions</a></li>
+      <li><a href="#process">Process</a></li>
+      <li><a href="#solution">Solution</a></li>
+      <li><a href="#evaluation">Evaluation</a></li>
+      <li><a href="#results">Status and lessons</a></li>
+    </ul>
+  </nav>
+
+  <section class="sheet cs-section" id="problem" aria-labelledby="h-problem">
+    <h2 id="h-problem">The problem</h2>
+    <div class="prose">
+      <p>Rating tools can now draft the age rating, the content descriptors, and the supporting timestamps before an analyst presses play. That changes the work. The analyst reviews a finished-looking answer, and checking is a different skill from authoring. Without practice, reviewers drift toward accepting confident output, a pattern known as automation bias, and quality can fall even as throughput rises.</p>
+      <p>Three errors matter most in this task: accepting a descriptor without opening the cited moment, misjudging context or frequency (tone, genre, a sustained sequence versus a single moment, rules that turn on count), and applying the wrong rating system. A fourth problem sits downstream: override notes vary in quality, which makes them hard for QA to audit.</p>
+      <p><span class="tag tag-assumed">Assumed</span>These gaps come from a desk analysis of the role description and the published rating rules. No organization supplied error data, and the module says so on its first page.</p>
+    </div>
+    <h3>Constraints</h3>
+    <div class="prose">
+      <ul>
+        <li>Rules had to be real enough to transfer to the job, while every title and scene had to be fictional.</li>
+        <li>The module could not represent any company's proprietary tools or policies, so the co-pilot interface and review workflow are labeled as illustrative.</li>
+        <li>No LMS: the module runs as a standalone HTML file and records nothing.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="sheet cs-section" id="analysis" aria-labelledby="h-analysis">
+    <h2 id="h-analysis">Analysis</h2>
+    <div class="prose">
+      <p>I started from the task the analyst performs once a co-pilot is in the loop and broke it into the checks a reviewer has to make before acting on a suggestion. That produced four verification checks, which became the spine of the module and of the job aid:</p>
+      <ol>
+        <li><strong>Evidence.</strong> Does each cited moment support both the descriptor and its level?</li>
+        <li><strong>Context.</strong> How do tone, genre, realism, and duration change the reading?</li>
+        <li><strong>Count.</strong> Do frequency or persistence change the result? Some MPA rules turn on how many times something appears.</li>
+        <li><strong>System and policy.</strong> Which rating system applies to this title and version, and does an additional review rule apply?</li>
+      </ol>
+      <p>I then separated three layers of content and labeled each one in the module: the published rating systems (quoted or paraphrased, with source links), synthetic practice material, and an illustrative workflow (the four review actions, QA sampling, and a fictional "Training Market X" review rule).</p>
+      <p>A proposed stakeholder map identifies who would review what in a real deployment: Policy for answer keys, Operations and QA for measures, Product for the tool walkthrough, Science for error patterns, and analyst representatives for pilot readiness. <span class="tag tag-planned">Planned</span>None of these reviews has happened.</p>
+    </div>
+  </section>
+
+  <section class="sheet cs-section" id="objectives" aria-labelledby="h-objectives">
+    <h2 id="h-objectives">Objectives and alignment</h2>
+    <div class="prose">
+      <p>The terminal objective has two parts. <strong>Decision accuracy:</strong> given six synthetic titles with AI-suggested ratings, the analyst chooses the correct action, final rating, and publication status in at least five of six cases. <strong>Rationale quality:</strong> for each decision, the analyst selects the supporting evidence and policy, and for overrides and escalations writes a claim, evidence, and policy rationale. A critical safety rule sits on top: any decision that lets a title publish when a hold is required fails the assessment.</p>
+    </div>
+    <div class="table-wrap" style="margin-top: var(--s-5);" tabindex="0" role="region" aria-label="Table 1, scrollable">
+      <table>
+        <caption>Enabling objectives, where they are taught, and what counts as evidence</caption>
+        <thead><tr><th scope="col">Objective</th><th scope="col">Screens</th><th scope="col">Practice</th><th scope="col">Assessment evidence</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">EO1 Explain what the co-pilot produces, what its confidence signal means, and where it errs</th><td>1–3</td><td>Annotated co-pilot panel</td><td>Formative knowledge check on Screen 3</td></tr>
+          <tr><th scope="row">EO2 Verify that each descriptor and level is supported by the cited moment</th><td>4</td><td>12 evidence items, marked supported or not</td><td>Evidence selections in the queue, credited only when every essential log entry is cited</td></tr>
+          <tr><th scope="row">EO3 Apply context, count, and rating-system rules</th><td>5–7</td><td>6 context scenes, 6 counting examples, 13 system items</td><td>Policy selections and final rating in the queue</td></tr>
+          <tr><th scope="row">EO4 Choose accept, modify, override, or escalate</th><td>8</td><td>4 decision-tree cases</td><td>Action and publication status against the key</td></tr>
+          <tr><th scope="row">EO5 Write a claim, evidence, and policy rationale</th><td>9</td><td>Rationale builder with a transparent rubric</td><td>Self-comparison with a model answer</td></tr>
+          <tr><th scope="row">EO6 Recognize when a decision needs Policy</th><td>8, 10</td><td>Escalation cases in the queue</td><td>Escalation choice plus the hold gate</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="sheet cs-section" id="decisions" aria-labelledby="h-decisions">
+    <h2 id="h-decisions">Design decisions</h2>
+    <ol class="decisions">
+      <li class="decision">
+        <h3>Score the decision and the reasoning separately</h3>
+        <dl>
+          <dt>Design challenge</dt><dd>An analyst can land on the right action for the wrong reason. A single score would hide that, and an early draft claimed to measure rationales it did not actually check.</dd>
+          <dt>Decision</dt><dd>Split the terminal objective into decision accuracy and rationale quality, and make each case ask for the action first, then the evidence and policy that support it.</dd>
+          <dt>Rationale</dt><dd>The job asks for a defensible call, and QA audits the note as much as the rating. Assessing them apart shows whether the learner can apply the criteria or only recognize the right answer.</dd>
+          <dt>Implementation</dt><dd>Action, rating, and hold are scored against a key. Evidence earns credit only when every essential log entry is cited and nothing irrelevant is. Written rationales are compared with a model answer, and the Screen 9 checker flags gaps with a keyword-and-timestamp rubric that always calls for human review.</dd>
+          <dt>Limitation</dt><dd>Written rationales are not machine-graded. In a deployment, QA reviewers would score a sample against the same rubric.</dd>
+        </dl>
+      </li>
+      <li class="decision">
+        <h3>Make the publication hold a pass/fail gate</h3>
+        <dl>
+          <dt>Design challenge</dt><dd>During review I found a learner could escalate "The Old Flag" correctly, leave it set to publish, and still pass with six of six.</dd>
+          <dt>Decision</dt><dd>Count publication status as part of the decision and fail any attempt that lets a held title publish, whatever the overall score.</dd>
+          <dt>Rationale</dt><dd>Some errors are more costly than others. Averaging a safety failure into a percentage would teach that it is one mistake among many.</dd>
+          <dt>Implementation</dt><dd>The results screen reports a correct escalation with the wrong publication status separately from a wrong action, so the learner sees exactly which part failed.</dd>
+          <dt>Evidence</dt><dd>Documented in the module's revision table as a change made after the designer's own review round.</dd>
+        </dl>
+      </li>
+      <li class="decision">
+        <h3>Teach the four checks one at a time, then combine them in a queue</h3>
+        <dl>
+          <dt>Design challenge</dt><dd>A full review case asks the learner to juggle evidence, context, count, and system rules at once, which is a lot for someone new to the rating systems.</dd>
+          <dt>Decision</dt><dd>Give each check its own screen with focused practice (Screens 4 to 7), introduce the four actions on Screen 8, and only then open a six-case queue that requires all of them.</dd>
+          <dt>Rationale</dt><dd>Part-task practice builds each judgment before the whole task, and the queue mirrors how the work arrives on the job: a list of titles, each with a suggestion to verify.</dd>
+          <dt>Implementation</dt><dd>The queue has a case menu with status, one case per panel, and results that link each missed pattern back to the screen that teaches it. A targeted-practice screen draws ten items from the patterns the learner missed.</dd>
+          <dt>Limitation</dt><dd>Six cases cannot show calibration. The evaluation plan calls for confidence tracking across many more decisions.</dd>
+        </dl>
+      </li>
+      <li class="decision">
+        <h3>Build on published rating systems, with every invented element labeled</h3>
+        <dl>
+          <dt>Design challenge</dt><dd>An early version used a made-up rating standard, which would not transfer to real work. Using a real company's policies was not an option.</dd>
+          <dt>Decision</dt><dd>Rebuild on the TV Parental Guidelines and MPA rules, keep all titles and scenes synthetic, and mark the illustrative workflow wherever it appears.</dd>
+          <dt>Rationale</dt><dd>Analysts can check the rules against the source, and the skills of verifying evidence against a written standard carry over to any proprietary policy.</dd>
+          <dt>Implementation</dt><dd>Every rule card links to its official source. Illustrative elements carry an "Illustrative" label. An AI-drafted practice item that stated an MPA rule too absolutely was corrected to name the Rating Board's two-thirds special-vote exception.</dd>
+        </dl>
+      </li>
+    </ol>
+  </section>
+
+  <section class="sheet cs-section" id="process" aria-labelledby="h-process">
+    <h2 id="h-process">Design and development</h2>
+    <div class="prose">
+      <p>The module's documentation lays out ten steps from needs analysis through revision and marks each one as done, partly done, or planned. Done for this sample: the gap analysis, objectives, screen-by-screen outline and narration script, design system, build, and the designer's own review rounds. Partly done: program sequencing (five modules outlined, one built). Planned: stakeholder review, pilot, and measurement.</p>
+      <p>I used Claude to produce the module and its revisions under my direction, and ElevenLabs for narration. Because the module teaches people to catch confident AI errors, the drafting workflow had the same check built in: every AI-drafted rule was compared word for word with the published source before it went into practice.</p>
+    </div>
+
+    <h3>Revisions from review rounds</h3>
+    <p class="small">These came from my own review passes. No external reviewers were involved.</p>
+    <div class="table-wrap" style="margin-top: var(--s-3);" tabindex="0" role="region" aria-label="Table 2, scrollable">
+      <table>
+        <thead><tr><th scope="col">What I found</th><th scope="col">What changed</th></tr></thead>
+        <tbody>
+          <tr><td>Narration was audio only</td><td>Every screen opens with the narration as text, with an optional Listen button</td></tr>
+          <tr><td>Hard to tell where instructions end and the activity begins</td><td>A "Now you try" divider, plain directions, and bolded action words</td></tr>
+          <tr><td>Too much text beside the co-pilot panel</td><td>Explanations moved into numbered notes that open on hover, keyboard focus, or tap</td></tr>
+          <tr><td>Not enough practice</td><td>12 evidence items, 6 context scenes, 6 counting examples, 13 system items, 4 decision-tree cases, 10 targeted items</td></tr>
+          <tr><td>Some policy statements too absolute, such as the MPA profanity rule</td><td>Exceptions named, sources updated to official pages, illustrative rules labeled</td></tr>
+          <tr><td>Evidence credit given for citing one of several essential moments</td><td>Credit requires every essential log entry, and feedback names any that are missing</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Selected design artifacts</h3>
+    <ul class="artifacts">
+      <li class="artifact"><a href="../reviewing-with-the-copilot/index.html" target="_blank" rel="noopener">Design documentation<span class="sr-only"> (opens in a new tab)</span></a><p>Scope, objectives, the ten-step process, stakeholder map, and evaluation plan, with each step marked as done or proposed.</p></li>
+      <li class="artifact"><a href="../reviewing-with-the-copilot/index.html" target="_blank" rel="noopener">AI-assisted scenario QA example<span class="sr-only"> (opens in a new tab)</span></a><p>A sample prompt, an AI draft, and the five corrections made in review, including an invented NC-17 threshold that was removed. The prompt and draft are illustrative; the corrections are real.</p></li>
+      <li class="artifact"><a href="../reviewing-with-the-copilot/job-aid.html" target="_blank" rel="noopener">Verification job aid<span class="sr-only"> (opens in a new tab)</span></a><p>The four checks, four actions, rating levels, and the rationale format on one printable page, so the module's structure stays with the analyst after training.</p></li>
+    </ul>
+  </section>
+
+  <section class="sheet cs-section" id="solution" aria-labelledby="h-solution">
+    <h2 id="h-solution">The finished module</h2>
+    <div class="prose">
+      <p>Twelve screens plus optional targeted practice, estimated at two to three hours (not yet timed with users). Each screen opens with its narration as text and an optional audio track. Learners meet the co-pilot panel, work through each check with immediate feedback, then clear a queue of six titles, choosing an action, a final rating, the evidence, the policy, a publication status, and a confidence level for each.</p>
+    </div>
+    <div class="fig-pair" style="margin-top: var(--s-5);">
+      <figure class="shot-fig">
+        <img src="../assets/img/copilot-s2.webp" width="1200" height="750" loading="lazy" alt="Screen 2, Meet the co-pilot: narration text above a numbered co-pilot suggestion panel that learners open part by part.">
+        <figcaption>Screen 2 introduces the co-pilot panel. Each numbered part opens a note by hover, keyboard, or tap.</figcaption>
+      </figure>
+      <figure class="shot-fig">
+        <img src="../assets/img/copilot-s4.webp" width="1200" height="750" loading="lazy" alt="Screen 4, Check 1: Evidence, with narration text and a Now you try section of scenes to mark as supported or not supported.">
+        <figcaption>Screen 4 practices the evidence check: twelve scenes, each marked supported or not supported.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="sheet cs-section" id="evaluation" aria-labelledby="h-evaluation">
+    <h2 id="h-evaluation">Evaluation</h2>
+    <h3 style="margin-top: 0;"><span class="tag tag-done">Completed</span>Review and testing of the module itself</h3>
+    <div class="prose">
+      <ul>
+        <li>Policy statements checked against the published TV Parental Guidelines and MPA rules; corrections are listed in the module's QA table.</li>
+        <li>Designer review rounds, with each finding and change documented (see the table above).</li>
+        <li>An automated browser test suite, described in the module documentation. The test report is not published in this repository.</li>
+      </ul>
+    </div>
+    <h3><span class="tag tag-planned">Proposed</span>Evaluation in a deployment</h3>
+    <div class="prose">
+      <p>The plan below has not been run. No learner data or results exist.</p>
+    </div>
+    <div class="table-wrap" style="margin-top: var(--s-3);" tabindex="0" role="region" aria-label="Table 3, scrollable">
+      <table>
+        <thead><tr><th scope="col">Measure</th><th scope="col">How it would be collected</th><th scope="col">When</th></tr></thead>
+        <tbody>
+          <tr><td>Rating accuracy before and after training, by error pattern</td><td>Blind samples of each new analyst's reviews, scored by QA</td><td>Week 1, then weeks 2 and 6</td></tr>
+          <tr><td>Time to competency</td><td>Certification date against start date</td><td>At certification</td></tr>
+          <tr><td>Evidence-verification behavior</td><td>Tool logs of evidence clicks before submit</td><td>Weekly, first 8 weeks</td></tr>
+          <tr><td>Rationale quality</td><td>QA rubric on a sample of overrides and escalations</td><td>Monthly</td></tr>
+          <tr><td>Escalation accuracy</td><td>Policy disposition of each escalation; QA audit for misses</td><td>Monthly</td></tr>
+          <tr><td>Confidence against accuracy</td><td>Confidence rating logged with each decision</td><td>Per practice set, then monthly</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="sheet cs-section" id="results" aria-labelledby="h-results">
+    <h2 id="h-results">Status and lessons</h2>
+    <div class="prose">
+      <p><strong>Status.</strong> Complete as a demonstration module. Modules 1, 2, 4, and 5 exist only as outlines in the design document. Answer keys were approved by me; in a real program, Policy would sign off.</p>
+      <p><strong>What the module does well.</strong> It assesses the call and the reasoning separately, it treats a safety failure as a failure, and it keeps a clear line between published rules and illustrative workflow.</p>
+      <p><strong>What remains untested.</strong> Seat time, item difficulty, and whether practice on six titles changes how analysts behave in a live queue. A pilot with a small analyst group would answer the first two; the evaluation plan addresses the third.</p>
+      <p><strong>What I would do next.</strong> Run stakeholder review on the answer keys, pilot with analysts, flag items that strong performers miss, and grow the tagged practice library so targeted practice has more to draw on.</p>
+    </div>
+  </section>
+
+  <section class="sheet cs-section" aria-labelledby="h-related">
+    <h2 id="h-related">More work</h2>
+    <div class="related">
+      <a href="trust-services-criteria.html"><span class="shot"><img src="../assets/img/tsc.webp" width="1200" height="750" loading="lazy" alt=""></span><h3 id="r1">Trust Services Criteria for GRC Staff</h3><p>Compliance learning</p></a>
+      <a href="fall-2025-program-launch.html"><span class="shot"><img src="../assets/img/fall-2025.webp" width="1200" height="750" loading="lazy" alt=""></span><h3>Fall 2025 SI Program Launch</h3><p>Learning program management</p></a>
+      <a href="geol-1403.html"><span class="shot"><img src="../assets/img/geol-1403.webp" width="1200" height="750" loading="lazy" alt=""></span><h3>GEOL 1403: Activate Your Core</h3><p>Curriculum design</p></a>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <span>Tonja Ryan, Austin, Texas</span>
+  <span><a href="../index.html">Back to the portfolio</a></span>
+</footer>
+</body>
+</html>

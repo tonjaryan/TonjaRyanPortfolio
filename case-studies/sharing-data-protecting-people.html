@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sharing Data, Protecting People · Case study · Tonja Ryan</title>
+<meta name="description" content="Case study: a self-paced module on re-identification risk and data-release review, with documented cases, a k-anonymity model, and a scored review exercise.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/portfolio.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="inner">
+    <a class="wordmark" href="../index.html">Tonja Ryan</a>
+    <nav class="site-nav" aria-label="Primary">
+      <ul>
+        <li><a href="../index.html#work" aria-current="page">Work</a></li>
+        <li><a href="../index.html#approach">Approach</a></li>
+        <li><a href="../index.html#about">About</a></li>
+        <li><a href="../index.html#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main" class="frame">
+  <p class="crumb"><a href="../index.html#more-work">← All work</a></p>
+
+  <section class="sheet cs-hero" id="overview" aria-labelledby="title">
+    <p class="feature-category">Technical training</p>
+    <h1 id="title">Sharing Data, Protecting People</h1>
+    <p class="lead">A self-paced module for staff who prepare, request, or approve data releases. It shows how data stripped of names can still identify people, and gives reviewers a structured way to decide whether a release should go ahead.</p>
+    <div class="actions">
+      <a class="btn btn-primary" href="../Data_Training.html">Open the module</a>
+    </div>
+
+    <dl class="overview">
+      <div><dt>Project type</dt><dd>Interactive technical training module</dd></div>
+      <div><dt>Audience</dt><dd>Privacy, compliance, product, engineering, analytics, and data governance staff</dd></div>
+      <div><dt>My role</dt><dd>Design, writing, and build</dd></div>
+      <div><dt>Status</dt><dd><span class="status is-progress">In revision</span> Independent work sample</dd></div>
+      <div class="wide"><dt>Problem</dt><dd>Teams remove names and IDs and assume a dataset is anonymous. Quasi-identifiers such as ZIP code, birth date, and sex, combined with outside data, can still single people out.</dd></div>
+      <div class="wide"><dt>Deliverables</dt><dd>Module 01 of a proposed four-module program: 15 screens, 11 practice activities, a release-review exercise, an eight-question knowledge check, a printable review checklist</dd></div>
+      <div class="wide"><dt>Format</dt><dd>Self-paced, 45 to 60 minutes; every screen reachable from the contents menu</dd></div>
+      <div class="wide"><dt>Tools</dt><dd>Hand-coded HTML, CSS, and JavaScript; no tracking and no data collection</dd></div>
+    </dl>
+
+    <p class="disclosure"><strong>Status.</strong> This module is going through a separate instructional, technical, and editorial revision, so it sits in Additional Work for now. It is a portfolio demonstration: it is not connected to a learning management system and records nothing. Modules 02 to 04 are planned and have not been built.</p>
+
+    <a class="shot" href="../Data_Training.html" tabindex="-1" aria-hidden="true">
+      <img src="../assets/img/sharing-data.webp" width="1200" height="750" alt="">
+    </a>
+  </section>
+
+  <nav class="cs-nav" aria-label="On this page">
+    <ul>
+      <li><a href="#problem">Problem</a></li>
+      <li><a href="#objectives">Objectives</a></li>
+      <li><a href="#decisions">Design decisions</a></li>
+      <li><a href="#solution">Solution</a></li>
+      <li><a href="#evaluation">Evaluation</a></li>
+      <li><a href="#results">Status</a></li>
+    </ul>
+  </nav>
+
+  <section class="sheet cs-section" id="problem" aria-labelledby="h-problem">
+    <h2 id="h-problem">The problem</h2>
+    <div class="prose">
+      <p>Organizations share data with vendors, researchers, and partners every day, and the usual safeguard is to remove names. Published research and documented incidents show that this often isn't enough. A few ordinary attributes, matched against another source, can identify a person; aggregated activity data can expose sensitive locations; and once a copy is shared it usually can't be recalled.</p>
+      <p>The people who approve releases are spread across privacy, product, engineering, and analytics. Many of them are not privacy specialists, so the module needed to give them a working method, with enough of the underlying measures to judge risk.</p>
+      <p><span class="tag tag-assumed">Assumed</span>The learner population and the gap are portfolio assumptions. No organization supplied data.</p>
+    </div>
+  </section>
+
+  <section class="sheet cs-section" id="objectives" aria-labelledby="h-objectives">
+    <h2 id="h-objectives">Objectives and alignment</h2>
+    <div class="prose">
+      <p>The module's goal is that learners can review a proposed release and recommend, with a documented rationale, whether it should proceed with safeguards, be modified, be escalated, or be declined. Six objectives support it, and the overview screen shows each objective's practice and check screens.</p>
+    </div>
+    <div class="table-wrap" style="margin-top: var(--s-4);" tabindex="0" role="region" aria-label="Table 1, scrollable">
+      <table>
+        <thead><tr><th scope="col">Objective</th><th scope="col">Practice</th><th scope="col">Checked in</th></tr></thead>
+        <tbody>
+          <tr><td>Classify attributes as direct identifiers, quasi-identifiers, or sensitive attributes, and explain when context changes the classification</td><td>Screen 01</td><td>12, 13</td></tr>
+          <tr><td>Trace how personal data moves through a real-time bidding auction and where disclosure occurs</td><td>Screen 02</td><td>13</td></tr>
+          <tr><td>Explain how external data enabled re-identification in documented cases; distinguish record uniqueness from identification</td><td>Screens 03, 05, 06</td><td>12, 13</td></tr>
+          <tr><td>Distinguish pseudonymization from anonymization and select techniques for modifying data</td><td>Screens 07, 08</td><td>12, 13</td></tr>
+          <tr><td>Evaluate whether records can be singled out, linked, or used for inference, using k-anonymity and l-diversity where they apply</td><td>Screens 09–11</td><td>12, 13</td></tr>
+          <tr><td>Recommend and justify a release decision for a realistic proposal</td><td>Screen 04</td><td>12, 13</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="sheet cs-section" id="decisions" aria-labelledby="h-decisions">
+    <h2 id="h-decisions">Design decisions</h2>
+    <ol class="decisions">
+      <li class="decision">
+        <h3>Teach the mechanism through documented cases</h3>
+        <dl>
+          <dt>Design challenge</dt><dd>"Removing names makes data anonymous" is an intuitive belief, and a definition of quasi-identifiers alone rarely dislodges it.</dd>
+          <dt>Decision</dt><dd>Walk learners through real cases in stages: the Massachusetts hospital records, the Strava heatmap, and the @PierreDelecto account, each with its sources.</dd>
+          <dt>Rationale</dt><dd>Seeing the same linkage mechanism succeed in different contexts makes the risk concrete and gives reviewers examples they can cite.</dd>
+          <dt>Implementation</dt><dd>Staged case walkthroughs and an illustrative map exploration, followed by a screen on what the cases have in common.</dd>
+        </dl>
+      </li>
+      <li class="decision">
+        <h3>Let learners adjust the data and watch the measure change</h3>
+        <dl>
+          <dt>Design challenge</dt><dd>K-anonymity is easy to define and hard to feel: the trade-off between protecting people and keeping data useful only shows up when you change the data.</dd>
+          <dt>Decision</dt><dd>Build a live model on a 60-record synthetic dataset where learners change the generalization level and suppression until the data meets k = 5.</dd>
+          <dt>Rationale</dt><dd>Manipulating the dataset shows directly how coarsening ZIP codes or ages merges groups, and how much detail is lost to get there.</dd>
+          <dt>Implementation</dt><dd>A grid of records grouped into equivalence classes, with an optional table view, updates as the settings change. An l-diversity screen follows to show what k-anonymity misses.</dd>
+        </dl>
+      </li>
+      <li class="decision">
+        <h3>Assess with an integrated release review</h3>
+        <dl>
+          <dt>Design challenge</dt><dd>Separate activities show that learners know each concept, not that they can combine them into a decision.</dd>
+          <dt>Decision</dt><dd>End with a fictional employee-wellness data request that learners work through in six ordered decisions, from identifying risks to justifying a recommendation.</dd>
+          <dt>Rationale</dt><dd>The exercise mirrors the actual review task, and fixing each decision once checked keeps learners from guessing their way through.</dd>
+          <dt>Implementation</dt><dd>A five-criterion rubric (risk identification, choice of safeguards, purpose and minimization, recommendation, justification) and a model reviewer response. An eight-question knowledge check follows, most of it set in new situations.</dd>
+        </dl>
+      </li>
+    </ol>
+  </section>
+
+  <section class="sheet cs-section" id="solution" aria-labelledby="h-solution">
+    <h2 id="h-solution">The module</h2>
+    <div class="prose">
+      <p>Fifteen screens in five parts: foundations, where releases fail, controls, measuring residual risk, and apply and assess. A contents menu tracks which screens have been opened and which activities are complete. The completion summary states plainly that in a deployed version an LMS would record completion, for example through SCORM or xAPI.</p>
+    </div>
+    <figure class="shot-fig" style="margin-top: var(--s-5);">
+      <img src="../assets/img/sharing-data-review.webp" width="1200" height="750" loading="lazy" alt="Screen 12, Data release review, showing a seven-item release review checklist with a print option.">
+      <figcaption>Screen 12: the release review checklist that frames the final exercise, printable as a job aid.</figcaption>
+    </figure>
+  </section>
+
+  <section class="sheet cs-section" id="evaluation" aria-labelledby="h-evaluation">
+    <h2 id="h-evaluation">Evaluation</h2>
+    <div class="prose">
+      <p><span class="tag tag-done">In place</span>The module is built toward WCAG 2.2 AA, with keyboard operation and screen-reader support, and cites its sources on each case. Its technical and functional QA is part of the revision now under way; that documentation is not yet published here.</p>
+      <p><span class="tag tag-planned">Proposed</span>A pilot with reviewers from two or three of the target functions, comparing their release decisions on a held-out scenario before and after the module, would show whether the method transfers to new proposals.</p>
+    </div>
+  </section>
+
+  <section class="sheet cs-section" id="results" aria-labelledby="h-results">
+    <h2 id="h-results">Status</h2>
+    <div class="prose">
+      <p>In revision. Once the technical and functional review is complete, this module is a candidate for the Selected Work section, either in place of GEOL 1403 or in rotation depending on the role being applied for.</p>
+    </div>
+  </section>
+
+  <section class="sheet cs-section" aria-labelledby="h-related">
+    <h2 id="h-related">More work</h2>
+    <div class="related">
+      <a href="trust-services-criteria.html"><span class="shot"><img src="../assets/img/tsc.webp" width="1200" height="750" loading="lazy" alt=""></span><h3>Trust Services Criteria for GRC Staff</h3><p>Compliance learning</p></a>
+      <a href="reviewing-with-the-copilot.html"><span class="shot"><img src="../assets/img/copilot.webp" width="1200" height="750" loading="lazy" alt=""></span><h3>Reviewing with the Co&#8209;Pilot</h3><p>Scenario-based technical training</p></a>
+      <a href="geol-1403.html"><span class="shot"><img src="../assets/img/geol-1403.webp" width="1200" height="750" loading="lazy" alt=""></span><h3>GEOL 1403: Activate Your Core</h3><p>Curriculum design</p></a>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <span>Tonja Ryan, Austin, Texas</span>
+  <span><a href="../index.html">Back to the portfolio</a></span>
+</footer>
+</body>
+</html>

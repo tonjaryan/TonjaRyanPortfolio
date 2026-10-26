@@ -26,6 +26,24 @@
 }
 </script>
 
+<!-- Storage adapter (added Oct 2026): the module was written against an async
+     window.storage API ({get, set}) that GitHub Pages does not provide, so notebook
+     entries were not being saved. This maps that API onto localStorage in the reader's
+     own browser. Nothing is sent anywhere. -->
+<script>
+  if (!window.storage) {
+    window.storage = {
+      get: async (key) => {
+        const v = localStorage.getItem(key);
+        if (v === null) throw new Error('not found');
+        return { key, value: v };
+      },
+      set: async (key, value) => { localStorage.setItem(key, value); return { key, value }; },
+      delete: async (key) => { localStorage.removeItem(key); return { key, deleted: true }; }
+    };
+  }
+</script>
+
 <!-- Babel standalone, with module support so import statements work inside our script -->
 <script src="https://unpkg.com/@babel/standalone@7.24.7/babel.min.js"></script>
 
