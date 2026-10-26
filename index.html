@@ -689,17 +689,12 @@
     scroll-snap-align: start; display: flex;
   }
   .rail-item > .card.project { flex: 1; position: relative; z-index: 1; transition: transform .28s cubic-bezier(.2,.7,.2,1), box-shadow .28s ease; }
-  /* the green highlight that rises from behind the card */
-  .rail-item::before {
-    content: ''; position: absolute; inset: 0; border-radius: 4px; background: var(--accent);
-    transform: translate(0, 0); opacity: 0; z-index: 0;
-    transition: transform .28s cubic-bezier(.2,.7,.2,1), opacity .2s ease;
-  }
-  .rail-item:hover::before, .rail-item:focus-within::before { transform: translate(0, 9px); opacity: 1; }
   .rail-item:hover > .card.project, .rail-item:focus-within > .card.project {
     transform: translateY(-5px);
+    background: #E9E4D8;                  /* slightly darker cream while hovered */
     box-shadow: 0 10px 22px rgba(0,0,0,.24), 0 26px 60px rgba(0,0,0,.26);
   }
+  .rail-item > .card.project { transition: transform .28s cubic-bezier(.2,.7,.2,1), box-shadow .28s ease, background-color .2s ease; }
   /* full-width progress line: spans the same width as the banners */
   .rail-progress { position: relative; height: 3px; border-radius: 2px; background: rgba(242, 239, 231, 0.16); margin-top: 4px; }
   .rail-progress span { position: absolute; top: 0; bottom: 0; left: 0; width: 40%; border-radius: 2px; background: #8FB283; transition: left .12s linear; }
@@ -716,7 +711,7 @@
   .rail-btn.prev { left: -24px; }
   .rail-btn[hidden] { display: none; }
   @media (prefers-reduced-motion: reduce) {
-    .rail-item::before, .rail-item > .card.project, .rail-progress span { transition: none; }
+    .rail-item > .card.project, .rail-progress span { transition: none; }
   }
   @media (max-width: 720px) {
     .rail-track { gap: 16px; }
