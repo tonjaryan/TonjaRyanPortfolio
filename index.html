@@ -4,6 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Tonja Ryan · Portfolio</title>
+<meta name="description" content="Tonja Ryan: learning experience design, curriculum development, training and enablement, and program and project management.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -773,6 +774,82 @@
     .colophon { flex-wrap: wrap; gap: 8px; }
   }
 
+
+  /* ====== OCT 26 ADDITIONS: section nav, approach, process ====== */
+  .skip-link { position: absolute; left: 16px; top: -60px; z-index: 50; background: var(--card); color: var(--ink); padding: 10px 16px; border-radius: 4px; font-weight: 600; text-decoration: none; }
+  .skip-link:focus { top: 12px; }
+  html { scroll-padding-top: 16px; }
+  .site-top { max-width: 1180px; margin: 0 auto; padding: 28px 40px 0; }
+  .site-top .top-bar { margin-bottom: 0; flex-wrap: wrap; gap: 14px 28px; }
+  .site-top .top-bar a { color: rgba(242, 239, 231, 0.85); text-decoration: none; border-bottom: 1.5px solid transparent; padding: 2px 0; }
+  .site-top .top-bar a:hover { color: var(--card); border-bottom-color: var(--accent); }
+  .site-top .top-bar .left { color: var(--card); font-weight: 700; display: inline-flex; gap: 10px; align-items: center; }
+  .site-top .top-bar .right { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: flex-end; }
+  .frame { padding-top: 32px; }
+
+  .card.approach, .card.process-card { grid-column: 1 / -1; min-height: 0; display: block; padding: 36px 40px 40px; }
+  .approach-head, .process-head { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 40px; align-items: start; padding-bottom: 28px; margin-bottom: 28px; border-bottom: 1.5px solid var(--ink); }
+  .approach-head .about-title { margin-bottom: 0; }
+  .approach-intro p, .process-intro p { font-size: 14px; line-height: 1.7; color: var(--ink-2); max-width: 62ch; }
+  .approach-intro p + p, .process-intro p + p { margin-top: 12px; }
+  .principles { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .principles li { padding: 0 26px; }
+  .principles li:first-child { padding-left: 0; }
+  .principles li + li { border-left: 1px solid var(--rule); }
+  .pr-num, .stage-num { display: block; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; letter-spacing: 0.18em; color: var(--accent); margin-bottom: 10px; }
+  .principles h3 { font-size: 19px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.2; margin-bottom: 10px; color: var(--ink); }
+  .principles p { font-size: 13.5px; line-height: 1.65; color: var(--ink-2); }
+  .principles p + p { margin-top: 10px; }
+
+  .card.process-card { background: var(--ink); color: var(--card); }
+  .process-head { border-bottom-color: rgba(242, 239, 231, 0.25); }
+  .process-title { font-weight: 900; font-size: clamp(34px, 4.6vw, 58px); color: #7A9C6E; letter-spacing: -0.04em; line-height: 0.88; text-transform: uppercase; margin: 0; }
+  .process-title .pd { color: var(--card); }
+  .process-intro p { color: rgba(242, 239, 231, 0.88); }
+  .stages { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .stage { padding: 0 18px; }
+  .stage:first-child { padding-left: 0; }
+  .stage + .stage { border-left: 1px solid rgba(242, 239, 231, 0.2); }
+  .stage .stage-num { color: #8FB283; }
+  .stage h3 { font-size: 17px; font-weight: 800; letter-spacing: -0.015em; line-height: 1.2; margin-bottom: 8px; color: var(--card); }
+  .stage > p { font-size: 13.5px; line-height: 1.6; color: rgba(242, 239, 231, 0.88); }
+  .stage details { margin-top: 12px; }
+  .stage summary {
+    cursor: pointer; list-style: none; display: inline-flex; align-items: center; gap: 6px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: #B7D3A9; border-bottom: 1px solid rgba(183, 211, 169, 0.5); padding: 2px 0;
+  }
+  .stage summary::-webkit-details-marker { display: none; }
+  .stage summary::before { content: '+'; font-weight: 700; }
+  .stage details[open] summary::before { content: '\2212'; }
+  .stage summary:hover { color: #fff; }
+  .stage summary:focus-visible { outline: 3px solid #1F5FBF; outline-offset: 3px; }
+  .stage details p { font-size: 13px; line-height: 1.6; color: rgba(242, 239, 231, 0.85); margin-top: 10px; }
+  .stage .acts span { display: block; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #8FB283; margin-bottom: 2px; }
+  .process-loop { margin-top: 26px; padding-top: 16px; border-top: 1px solid rgba(242, 239, 231, 0.2); font-size: 13px; color: rgba(242, 239, 231, 0.85); }
+  .process-loop span { color: #8FB283; font-size: 16px; margin-right: 6px; }
+  .p-meta a { color: var(--ink); text-decoration-color: var(--accent); }
+  .section-divider.banner .banner-right .banner-about + .banner-about { margin-top: 10px; }
+
+  @media (max-width: 900px) {
+    .stages { grid-template-columns: minmax(0, 1fr); }
+    .stage, .stage:first-child { padding: 18px 0; }
+    .stage + .stage { border-left: 0; border-top: 1px solid rgba(242, 239, 231, 0.2); }
+    .stage:first-child { padding-top: 0; }
+  }
+  @media (max-width: 720px) {
+    .site-top { padding: 20px 16px 0; }
+    .site-top .top-bar .right { justify-content: flex-start; gap: 4px 18px; }
+    .site-top .top-bar .right a { display: inline-block; padding: 6px 0; min-height: 24px; }
+    .card.approach, .card.process-card { padding: 24px 22px 28px; }
+    .approach-head, .process-head { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+    .principles { grid-template-columns: minmax(0, 1fr); }
+    .principles li, .principles li:first-child { padding: 18px 0; }
+    .principles li + li { border-left: 0; border-top: 1px solid var(--rule); }
+    .principles li:first-child { padding-top: 0; }
+    .process-title { font-size: 36px; }
+  }
+
   /* ====== RESPONSIVE ====== */
   @media (max-width: 720px) {
     .frame { padding: 28px 16px 48px; }
@@ -798,7 +875,21 @@
 </style>
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
 
+<header class="site-top">
+  <nav class="top-bar" aria-label="Sections">
+    <a class="left" href="#about"><span class="dot" aria-hidden="true"></span>Tonja Ryan</a>
+    <ul class="right">
+      <li><a href="#about">About</a></li>
+      <li><a href="#approach">My Approach</a></li>
+      <li><a href="#work">Learning Experience Design</a></li>
+      <li><a href="#curriculum">Curriculum Design</a></li>
+      <li><a href="#program-management">Program &amp; Project Management</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+</header>
 <main class="frame" id="main">
 
   <div class="deck">
@@ -817,13 +908,11 @@
       <div class="practices-bar">
         <span class="practice">Learning Experience Design</span>
         <span class="sep">|</span>
+        <span class="practice">Curriculum Development</span>
+        <span class="sep">|</span>
         <span class="practice">Training &amp; Enablement</span>
         <span class="sep">|</span>
-        <span class="practice">Learning Operations</span>
-        <span class="sep">|</span>
-        <span class="practice">Program Management</span>
-        <span class="sep">|</span>
-        <span class="practice">Project Management</span>
+        <span class="practice">Program &amp; Project Management</span>
       </div>
 
       <div class="intro-about">
@@ -831,18 +920,10 @@
           <div class="intro-about-left">
             <h2 class="about-title">About Me</h2>
             <p class="about-body">
-              I design learning systems that help people build skill, confidence, and
-              consistency in complex roles. My work combines <strong>instructional
-              design, program management, and learning operations</strong> to turn
-              training needs into usable materials, scalable workflows, and measurable
-              program improvements.
+              I design engaging learning experiences that help people develop skills they can use confidently long after training ends. My approach begins with understanding the learner: what they already know, where they may struggle, and what will help them stay engaged as they build proficiency.
             </p>
             <p class="about-body">
-              At the Sanger Learning Center at UT Austin, I support a
-              peer educator program serving approximately 2,500 students each semester.
-              I manage training systems, coordinate cross-functional logistics, and
-              develop AI-augmented learning tools that make peer
-              education more consistent, scalable, and effective.
+              My background spans instructional design, curriculum development, learning operations, and program management. At UT Austin’s Sanger Learning Center, I support a peer educator program serving approximately 2,500 students each semester, developing training, improving learning experiences, and managing the systems that support our student educators.
             </p>
           </div>
           <div class="intro-about-right">
@@ -854,54 +935,143 @@
       </div>
     </div>
 
-    <!-- ============== 02 INSTRUCTIONAL DESIGN - SECTION DIVIDER ============== -->
+
+    <!-- ============== WHAT GUIDES MY DESIGN ============== -->
+    <section class="card approach" id="approach" aria-labelledby="approach-title">
+      <div class="approach-head">
+        <h2 class="about-title" id="approach-title">What Guides My Design<span class="pd">.</span></h2>
+        <div class="approach-intro">
+          <p>I believe learning should be engaging, purposeful, and built to last. My goal isn’t simply to help someone complete a course or understand something in the moment. I want them to leave with knowledge and skills they can retrieve, apply, and continue developing.</p>
+          <p>That means paying attention to how people learn, where they get stuck, and what kinds of practice help them move from understanding a concept to using it independently.</p>
+        </div>
+      </div>
+      <ol class="principles">
+        <li>
+          <span class="pr-num">01</span>
+          <h3>Engagement With Purpose</h3>
+          <p>I want learners to actively work with the material, not just move through it. Whether I’m developing an interactive module, facilitating a workshop, or building a course, I look for opportunities that encourage curiosity, decision-making, and meaningful participation.</p>
+          <p>Engagement should serve the learning, not distract from it.</p>
+        </li>
+        <li>
+          <span class="pr-num">02</span>
+          <h3>Learning That Lasts</h3>
+          <p>Understanding something once isn’t the same as being able to use it later. I incorporate opportunities for retrieval, application, reflection, and repeated practice so learners can build confidence and proficiency over time.</p>
+          <p>My goal is to help learners become increasingly independent, rather than dependent on the training itself.</p>
+        </li>
+        <li>
+          <span class="pr-num">03</span>
+          <h3>Removing Barriers to Learning</h3>
+          <p>I pay attention to where learners lose momentum, become confused, or struggle to apply what they’ve learned. Those moments provide valuable information about what needs to change.</p>
+          <p>Sometimes the solution is clearer instruction. Other times, it’s a different activity, additional scaffolding, a more accessible format, or an opportunity to practice in a new context.</p>
+        </li>
+      </ol>
+    </section>
+
+    <!-- ============== FROM CONCEPT TO LEARNING EXPERIENCE ============== -->
+    <section class="card process-card" id="process" aria-labelledby="process-title">
+      <div class="process-head">
+        <h2 class="process-title" id="process-title">From Concept to Learning Experience<span class="pd">.</span></h2>
+        <div class="process-intro">
+          <p>Every project starts with a different challenge, but my process follows a consistent set of questions: Who am I designing for? What do they need to learn or accomplish? What might get in their way? And how will I know whether the experience is working?</p>
+          <p>I use those questions to guide my decisions from the initial concept through development, implementation, and revision.</p>
+        </div>
+      </div>
+      <ol class="stages">
+        <li class="stage">
+          <span class="stage-num">01</span>
+          <h3>Understand the Learner</h3>
+          <p>I begin by identifying the audience, their existing knowledge, and the skills they need to develop.</p>
+          <details>
+            <summary>Details &amp; key activities</summary>
+            <p>Depending on the project, that might involve reviewing performance data, speaking with stakeholders, gathering learner feedback, or examining existing materials.</p><p>I also look for practical barriers, including time, accessibility, unclear expectations, and gaps in foundational knowledge.</p>
+            <p class="acts"><span>Key activities</span>Learner analysis, stakeholder conversations, needs assessment, performance-gap identification, and review of existing materials.</p>
+          </details>
+        </li>
+        <li class="stage">
+          <span class="stage-num">02</span>
+          <h3>Establish Learning Goals</h3>
+          <p>Once I understand the audience and the challenge, I identify what learners should be able to do by the end of the experience.</p>
+          <details>
+            <summary>Details &amp; key activities</summary>
+            <p>I distinguish between information learners need to understand and skills they need to demonstrate. From there, I align objectives, instructional activities, and assessments.</p>
+            <p class="acts"><span>Key activities</span>Learning objectives, task analysis, curriculum mapping, content sequencing, and assessment planning.</p>
+          </details>
+        </li>
+        <li class="stage">
+          <span class="stage-num">03</span>
+          <h3>Design for Engagement &amp; Practice</h3>
+          <p>This is where I consider how learners will interact with the material. I select instructional strategies based on what learners need to practice.</p>
+          <details>
+            <summary>Details &amp; key activities</summary>
+            <p>That might involve scenarios, simulations, collaborative activities, guided reflection, interactive models, or opportunities to retrieve and apply information.</p><p>I consider the amount of support learners need initially and how that support can be reduced as they become more proficient.</p>
+            <p class="acts"><span>Key activities</span>Storyboarding, instructional strategy selection, scaffolding, authentic practice, interaction design, and formative assessment.</p>
+          </details>
+        </li>
+        <li class="stage">
+          <span class="stage-num">04</span>
+          <h3>Develop, Test &amp; Refine</h3>
+          <p>I build and refine learning materials through an iterative process.</p>
+          <details>
+            <summary>Details &amp; key activities</summary>
+            <p>I consider clarity, accessibility, navigation, cognitive load, and how effectively each activity supports its intended objective.</p><p>I use development tools, including AI-assisted workflows where appropriate, to prototype ideas and accelerate production while retaining responsibility for instructional accuracy and quality.</p>
+            <p class="acts"><span>Key activities</span>Prototyping, authoring, usability review, accessibility checks, quality assurance, and revision.</p>
+          </details>
+        </li>
+        <li class="stage">
+          <span class="stage-num">05</span>
+          <h3>Evaluate &amp; Improve</h3>
+          <p>I look beyond whether learners enjoyed or completed the experience. I want to understand what they learned, where they continued to struggle, and whether they can apply their knowledge independently.</p>
+          <details>
+            <summary>Details &amp; key activities</summary>
+            <p>Depending on the project, that might involve assessment results, learner feedback, observations, engagement data, or longer-term performance measures.</p><p>Findings inform future revisions and help identify where additional support may be needed.</p>
+            <p class="acts"><span>Key activities</span>Formative and summative evaluation, learner feedback, assessment analysis, performance review, and continuous improvement.</p>
+          </details>
+        </li>
+      </ol>
+      <p class="process-loop"><span aria-hidden="true">↺</span> These stages recur and overlap. Discovery, development, testing, and revision often happen together, and what I learn from evaluation feeds the next round of design.</p>
+    </section>
+
     <div class="card section-divider banner" id="work">
       <div class="banner-left">
-        <h2 class="banner-title">Instructional Design<span class="pd">.</span></h2>
+        <h2 class="banner-title">Learning Experience Design<span class="pd">.</span></h2>
       </div>
       <div class="banner-right">
         <p class="banner-about">
-          Learning experiences, interactive modules, workbooks, virtual trainings, and
-          cohort tools designed to make complex content easier to teach, apply, and
-          sustain. These projects combine <strong>evidence-based instructional design</strong>
-          with <strong>AI-augmented workflows</strong>.
+          I develop interactive learning experiences that give learners opportunities to explore, make decisions, and apply new knowledge. My work includes scenario-based simulations, self-paced training, interactive models, and performance assessments designed to move learners beyond passive content consumption.
         </p>
         <div class="banner-chips">
-          <span>Needs analysis</span>
-          <span>Learning objectives</span>
-          <span>Scenario-based practice</span>
-          <span>Performance support</span>
-          <span>Facilitator enablement</span>
-          <span>Cohort-based learning</span>
-          <span>AI-augmented workflows</span>
+          <span>Scenario-based simulations</span>
+          <span>Self-paced training</span>
+          <span>Interactive models</span>
+          <span>Performance assessment</span>
+          <span>AI-assisted development</span>
         </div>
       </div>
     </div>
-
     <div class="rail" data-rail>
-      <button class="rail-btn prev" type="button" aria-label="Scroll instructional design projects left" hidden>
+      <button class="rail-btn prev" type="button" aria-label="Scroll learning experience design projects left" hidden>
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
       </button>
-      <div class="rail-track" tabindex="0" role="region" aria-label="Instructional design projects, scrolls sideways">
+      <div class="rail-track" tabindex="0" role="region" aria-label="Learning experience design projects, scrolls sideways">
     <div class="rail-item">
     <article class="card project">
       <div class="p-kicker">
         <span class="cat-dot"></span>
-        <span class="cat">Instructional Design</span>
+        <span class="cat">Scenario-Based Learning</span>
         <span class="sep">·</span>
-        <span class="subtype">Scenario Simulation</span>
+        <span class="subtype">AI-Assisted Decision-Making</span>
       </div>
       <h3 class="p-title">Reviewing<br>with the<br>Co&#8209;Pilot<span class="num">.</span></h3>
       <div class="p-meta">
+        <div><strong>For</strong>Content-rating analysts · Trust &amp; Safety</div>
         <div><strong>Role</strong>Design, authoring &amp; build</div>
-        <div><strong>For</strong>Content rating analysts · Trust &amp; Safety</div>
         <div><strong>Status</strong><span class="p-status">Independent work sample</span></div>
       </div>
       <a class="p-shot" href="case-studies/reviewing-with-the-copilot.html" tabindex="-1" aria-hidden="true">
         <img src="assets/img/copilot.webp" width="1200" height="750" loading="lazy" alt="">
       </a>
-      <p class="p-body">A narrated simulation that teaches content-rating analysts to check an AI co-pilot's suggested age rating against the <strong>TV Parental Guidelines and MPA rules</strong>, then accept, modify, override, or escalate it and record the evidence behind the call.</p>
-      <p class="p-process"><span class="lbl">Process</span>Gap analysis from the role, a two-part objective with six enabling objectives, four verification checks taught one at a time, then a six-case scored queue where a missed publication hold fails the attempt. Revised over documented review rounds; evaluation plan proposed, not yet run.</p>
+      <p class="p-body">An interactive simulation designed to help content-rating analysts evaluate AI-generated recommendations rather than accept them at face value. Learners practice verifying evidence, applying rating guidelines, and making defensible decisions before completing a scored review queue.</p>
+      <p class="p-process"><span class="lbl">Design approach</span>I organized the experience around the decisions analysts need to make on the job. Individual verification skills are introduced and practiced before learners bring them together in more complex scenarios. The final assessment requires learners to apply those skills independently.</p>
       <div class="p-actions">
         <a class="p-btn primary" href="case-studies/reviewing-with-the-copilot.html">View case study</a>
         <a class="p-btn" href="reviewing-with-the-copilot/index.html#module" target="_blank" rel="noopener">Launch simulation<span class="sr-only"> (opens in a new tab)</span></a>
@@ -912,21 +1082,21 @@
     <article class="card project">
       <div class="p-kicker">
         <span class="cat-dot"></span>
-        <span class="cat">Instructional Design</span>
+        <span class="cat">Compliance Learning</span>
         <span class="sep">·</span>
-        <span class="subtype">Self-Paced Course</span>
+        <span class="subtype">Self-Paced Training</span>
       </div>
       <h3 class="p-title">Trust Services<br>Criteria for<br>GRC Staff<span class="num">.</span></h3>
       <div class="p-meta">
+        <div><strong>For</strong>GRC professionals · SOC 2</div>
         <div><strong>Role</strong>Design, authoring &amp; build</div>
-        <div><strong>For</strong>GRC staff · SOC 2</div>
         <div><strong>Status</strong><span class="p-status">Independent work sample</span></div>
       </div>
       <a class="p-shot" href="case-studies/trust-services-criteria.html" tabindex="-1" aria-hidden="true">
         <img src="assets/img/tsc.webp" width="1200" height="750" loading="lazy" alt="">
       </a>
-      <p class="p-body">A ten-module, self-paced course that teaches governance, risk, and compliance staff to read and apply the <strong>AICPA Trust Services Criteria</strong> behind SOC 2 reports, written from the 75-page standard and cited to it by paragraph.</p>
-      <p class="p-process"><span class="lbl">Process</span>A 12-section needs analysis separating training from non-training causes, seven terminal objectives with an alignment matrix, sequencing from structure to application, and two source-coverage audits. Kirkpatrick evaluation plan proposed.</p>
+      <p class="p-body">A ten-module course designed to help governance, risk, and compliance professionals understand and apply the AICPA Trust Services Criteria used in SOC 2 reporting.</p>
+      <p class="p-process"><span class="lbl">Design approach</span>I worked backward from the decisions and tasks learners need to perform, organizing a dense technical standard into a structured learning sequence. The course moves from foundational understanding toward practical application, with objectives and assessments aligned to the source material.</p>
       <div class="p-actions">
         <a class="p-btn primary" href="case-studies/trust-services-criteria.html">View case study</a>
         <a class="p-btn" href="tsc-grc-course.html#home" target="_blank" rel="noopener">Open the course<span class="sr-only"> (opens in a new tab)</span></a>
@@ -937,21 +1107,21 @@
     <article class="card project">
       <div class="p-kicker">
         <span class="cat-dot"></span>
-        <span class="cat">Instructional Design</span>
+        <span class="cat">Data Privacy</span>
         <span class="sep">·</span>
-        <span class="subtype">Compliance Training</span>
+        <span class="subtype">Applied Decision-Making</span>
       </div>
       <h3 class="p-title">Sharing Data,<br>Protecting<br>People<span class="num">.</span></h3>
       <div class="p-meta">
+        <div><strong>For</strong>Staff who prepare or approve data releases</div>
         <div><strong>Role</strong>Design &amp; authoring</div>
-        <div><strong>For</strong>Portfolio demonstration</div>
         <div><strong>Status</strong><span class="p-status wip">In revision</span></div>
       </div>
       <a class="p-shot" href="case-studies/sharing-data-protecting-people.html" tabindex="-1" aria-hidden="true">
         <img src="assets/img/sharing-data.webp" width="1200" height="750" loading="lazy" alt="">
       </a>
-      <p class="p-body">A <strong>self-paced data protection module</strong> for staff who prepare or approve data releases. It shows how data stripped of names can still identify people, and gives reviewers a structured way to decide whether a release should go ahead.</p>
-      <p class="p-process"><span class="lbl">Process</span>Documented re-identification cases, a live k-anonymity model on a 60-record synthetic dataset, and a release review scored against a five-criterion rubric. Module 01 of a planned four.</p>
+      <p class="p-body">An interactive learning experience exploring how apparently anonymous data can still expose individuals to re-identification risks. Learners examine a synthetic dataset, explore the effects of different privacy decisions, and practice evaluating whether information is appropriate for release.</p>
+      <p class="p-process"><span class="lbl">Design approach</span>I used an interactive model to make an abstract privacy concept observable. Rather than simply explaining re-identification risk, the experience allows learners to manipulate data conditions, observe the consequences, and apply what they learn to a realistic release decision.</p>
       <div class="p-actions">
         <a class="p-btn primary" href="case-studies/sharing-data-protecting-people.html">View case study</a>
         <a class="p-btn" href="Data_Training.html">Open the module</a>
@@ -962,21 +1132,80 @@
     <article class="card project">
       <div class="p-kicker">
         <span class="cat-dot"></span>
-        <span class="cat">Instructional Design</span>
+        <span class="cat">Interactive Prototype</span>
         <span class="sep">·</span>
-        <span class="subtype">Module + Workbook</span>
+        <span class="subtype">AI-Assisted Development</span>
       </div>
-      <h3 class="p-title">GEOL<br>1403<span class="num">.</span></h3>
+      <h3 class="p-title">Pixel Solar<br>System<span class="num">.</span></h3>
       <div class="p-meta">
+        <div><strong>For</strong>Educators</div>
+        <div><strong>Role</strong>Design &amp; build</div>
+        <div><strong>Status</strong><span class="p-status">Interactive prototype</span></div>
+      </div>
+      <a class="p-shot" href="Pixel-solar-system2.html" tabindex="-1" aria-hidden="true">
+        <img src="assets/img/pixel.webp" width="1200" height="750" loading="lazy" alt="">
+      </a>
+      <p class="p-body">An interactive solar system prototype that allows learners to explore orbital movement, distances, and travel times through direct manipulation.</p>
+      <p class="p-process"><span class="lbl">Design approach</span>This project demonstrates how I use AI-assisted development to prototype interactive educational tools. Its primary purpose is to explore rapid iteration and interaction design rather than serve as a fully developed instructional course.</p>
+      <div class="p-actions">
+        <a class="p-btn primary" href="Pixel-solar-system2.html">Open the prototype</a>
+      </div>
+    </article>
+    </div>
+      </div>
+      <div class="rail-progress" aria-hidden="true"><span></span></div>
+      <button class="rail-btn next" type="button" aria-label="Scroll learning experience design projects right">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>
+
+    <div class="card section-divider banner" id="curriculum">
+      <div class="banner-left">
+        <h2 class="banner-title">Curriculum Design &amp; Development<span class="pd">.</span></h2>
+      </div>
+      <div class="banner-right">
+        <p class="banner-about">
+          Curriculum design gives me the opportunity to think beyond a single lesson or learning experience. I consider how knowledge and skills develop over time, how individual activities connect to broader learning goals, and how to create a progression that helps learners become more independent.
+        </p>
+        <p class="banner-about">
+          My work includes course development, curriculum alignment, educator training, instructional workbooks, and programs that combine independent learning with facilitated practice.
+        </p>
+        <div class="banner-chips">
+          <span>Curriculum alignment</span>
+          <span>Sequencing &amp; scaffolding</span>
+          <span>Learning objectives</span>
+          <span>Instructional materials</span>
+          <span>Differentiation</span>
+          <span>Assessment</span>
+          <span>Reflection &amp; metacognition</span>
+        </div>
+      </div>
+    </div>
+    <div class="rail" data-rail>
+      <button class="rail-btn prev" type="button" aria-label="Scroll curriculum design projects left" hidden>
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <div class="rail-track" tabindex="0" role="region" aria-label="Curriculum design projects, scrolls sideways">
+    <div class="rail-item">
+    <article class="card project" id="geol-1403">
+      <div class="p-kicker">
+        <span class="cat-dot"></span>
+        <span class="cat">Higher Education</span>
+        <span class="sep">·</span>
+        <span class="subtype">Course &amp; Curriculum Development</span>
+      </div>
+      <h3 class="p-title">GEOL 1403:<br>Physical<br>Geology<span class="num">.</span></h3>
+      <div class="p-meta">
+        <div><strong>Client</strong>Dallas College, through iDesign</div>
+        <div><strong>For</strong>Future EC&#8209;6 teachers</div>
         <div><strong>Role</strong>Design &amp; authoring</div>
-        <div><strong>For</strong>Dallas College · iDesign</div>
         <div><strong>Status</strong><span class="p-status done">Professional project</span></div>
       </div>
       <a class="p-shot" href="case-studies/geol-1403.html" tabindex="-1" aria-hidden="true">
         <img src="assets/img/geol-1403.webp" width="1200" height="750" loading="lazy" alt="">
       </a>
-      <p class="p-body">A workbook and interactive notebook for <strong>GEOL 1403 (Physical Geology)</strong> at Dallas College, written for future EC&#8209;6 teachers preparing for the <strong>Texas Core Subjects EC&#8209;6 (391)</strong> certification.</p>
-      <p class="p-process"><span class="lbl">Process</span>Every activity is tagged to the EC&#8209;6 competency it builds, and every module runs the same plan, monitor, and evaluate cycle: metacognitive moment, readings with key questions, hands-on activity, quiz wrapper, wrap-up. The workbook was then translated into an interactive notebook (Modules 00 to 02 built).</p>
+      <p class="p-body">Curriculum materials developed for Physical Geology students preparing for careers in elementary education. The work connects geology content with the competencies future teachers need for the Texas Core Subjects EC&#8209;6 certification.</p>
+      <p class="p-process"><span class="lbl">Curriculum approach</span>I developed a consistent instructional structure that encourages learners to plan, monitor, and evaluate their understanding. Activities connect course content to certification competencies while incorporating metacognitive prompts, applied learning, and opportunities for reflection. The materials were developed as a workbook and subsequently translated into an interactive notebook format.</p>
       <div class="p-actions">
         <a class="p-btn primary" href="case-studies/geol-1403.html">View case study</a>
         <a class="p-btn" href="geol1403-module.html" target="_blank" rel="noopener">Open the notebook<span class="sr-only"> (opens in a new tab)</span></a>
@@ -987,24 +1216,24 @@
     <article class="card project">
       <div class="p-kicker">
         <span class="cat-dot"></span>
-        <span class="cat">Instructional Design</span>
+        <span class="cat">GEOL 1403</span>
         <span class="sep">·</span>
         <span class="subtype">Companion Workbook</span>
       </div>
       <h3 class="p-title">Activate<br>Your Core<span class="num">.</span></h3>
       <div class="p-meta">
-        <div><strong>Role</strong>Design &amp; authoring</div>
-        <div><strong>For</strong>Dallas College · iDesign</div>
-        <div><strong>Status</strong><span class="p-status wip">Pre-final draft</span></div>
+        <div><strong>Client</strong>Dallas College, through iDesign</div>
+        <div><strong>Part of</strong><a href="#geol-1403">GEOL 1403 curriculum</a></div>
+        <div><strong>Status</strong><span class="p-status wip">Pre-final development draft</span></div>
       </div>
       <a class="p-shot" href="activate-your-core-workbook.pdf" tabindex="-1" aria-hidden="true">
         <img src="assets/img/workbook-p1.webp" width="1200" height="750" loading="lazy" alt="">
       </a>
-      <p class="p-body">The printable <strong>Activate Your Core</strong> workbook for GEOL 1403, the companion to the interactive notebook above. Built around metacognitive prompts that help students monitor how they learn and connect each module to the EC&#8209;6 competencies.</p>
-      <p class="p-process"><span class="lbl">Process</span>Shared as a development draft: bracketed notes such as "[Overview icon]" mark where artwork is placed before final production. This draft develops the introduction and Modules 1 and 2.</p>
+      <p class="p-body">A companion workbook developed to support students’ engagement with Physical Geology content while strengthening their ability to monitor their own learning.</p>
+      <p class="p-process"><span class="lbl">Curriculum approach</span>The workbook incorporates reflection prompts, guided activities, and opportunities for learners to evaluate their understanding. It reinforces the connection between course content and the competencies students will need as future educators.</p>
       <div class="p-actions">
         <a class="p-btn primary" href="activate-your-core-workbook.pdf" target="_blank" rel="noopener">Open the workbook (PDF)<span class="sr-only"> (opens in a new tab)</span></a>
-        <a class="p-btn" href="case-studies/geol-1403.html#solution">How it fits</a>
+        <a class="p-btn" href="case-studies/geol-1403.html#solution">GEOL 1403 case study</a>
       </div>
     </article>
     </div>
@@ -1012,92 +1241,94 @@
     <article class="card project">
       <div class="p-kicker">
         <span class="cat-dot"></span>
-        <span class="cat">Instructional Design</span>
+        <span class="cat">Training Curriculum</span>
         <span class="sep">·</span>
-        <span class="subtype">Onboarding Module</span>
+        <span class="subtype">Peer Educator Development</span>
       </div>
       <h3 class="p-title">SI Leader<br>Onboarding<span class="num">.</span></h3>
       <div class="p-meta">
+        <div><strong>Org</strong>UT Austin, Sanger Learning Center</div>
+        <div><strong>For</strong>New Supplemental Instruction leaders</div>
         <div><strong>Role</strong>Design &amp; build</div>
-        <div><strong>For</strong>Sanger Learning Center · UT Austin</div>
         <div><strong>Status</strong><span class="p-status done">Professional project</span></div>
       </div>
       <a class="p-shot" href="si_onboarding_module.html" tabindex="-1" aria-hidden="true">
         <img src="assets/img/si-onboarding.webp" width="1200" height="750" loading="lazy" alt="">
       </a>
-      <p class="p-body">A four-hour, self-paced onboarding for new <strong>Supplemental Instruction (SI) leaders</strong>, completed over several days in four one-hour sittings: program foundations, facilitation scenarios, an 83-strategy library, and a worked lesson-plan example.</p>
-      <p class="p-process"><span class="lbl">Process</span>Built during the Fall 2025 redesign after SI Leader interviews showed foundational content could move out of live training. Leaders finish with a draft lesson plan, professor email, and class pitch to bring to in-person training.</p>
+      <p class="p-body">A four-hour, self-paced onboarding curriculum developed for new Supplemental Instruction leaders. The training introduces program foundations, facilitation strategies, lesson planning, and expectations before leaders participate in live training.</p>
+      <p class="p-process"><span class="lbl">Curriculum approach</span>Following feedback from SI leaders, foundational material was moved into a self-paced format so in-person training could focus more heavily on discussion, collaboration, and applied practice. The curriculum prepares leaders to arrive at live training with initial planning materials, including a draft lesson plan, professor communication, and class introduction.</p>
       <div class="p-actions">
         <a class="p-btn primary" href="si_onboarding_module.html" target="_blank" rel="noopener">Open the module<span class="sr-only"> (opens in a new tab)</span></a>
-        <a class="p-btn" href="case-studies/fall-2025-program-launch.html#solution">Role in the Fall 2025 launch</a>
+        <a class="p-btn" href="#fall-2025-launch">Part of the Fall 2025 launch</a>
       </div>
     </article>
     </div>
     <div class="rail-item">
-    <article class="card project">
+    <article class="card project" id="fall-2025-curriculum">
       <div class="p-kicker">
         <span class="cat-dot"></span>
-        <span class="cat">Instructional Design</span>
+        <span class="cat">Training Program</span>
         <span class="sep">·</span>
-        <span class="subtype">AI-Augmented Build</span>
+        <span class="subtype">Curriculum Redesign</span>
       </div>
-      <h3 class="p-title">Pixel Solar<br>System<span class="num">.</span></h3>
+      <h3 class="p-title">Fall 2025<br>SI Training<br>Redesign<span class="num">.</span></h3>
       <div class="p-meta">
-        <div><strong>Role</strong>Design &amp; build</div>
-        <div><strong>For</strong>Educational leaders</div>
-        <div><strong>Status</strong><span class="p-status">Interactive prototype</span></div>
+        <div><strong>Org</strong>UT Austin, Sanger Learning Center</div>
+        <div><strong>For</strong>New and returning SI leaders</div>
+        <div><strong>Role</strong>Program lead, curriculum</div>
+        <div><strong>Status</strong><span class="p-status done">Implemented</span></div>
       </div>
-      <a class="p-shot" href="Pixel-solar-system2.html" tabindex="-1" aria-hidden="true">
-        <img src="assets/img/pixel.webp" width="1200" height="750" loading="lazy" alt="">
+      <a class="p-shot" href="case-studies/fall-2025-program-launch.html#decisions" tabindex="-1" aria-hidden="true">
+        <img src="assets/img/fall-tracks.webp" width="1200" height="750" loading="lazy" alt="">
       </a>
-      <p class="p-body">An explorable solar system with adjustable orbit speed, distances, travel times, and links to NASA pages, built with <strong>Claude</strong> as a worked example of how educators can build their own instructional tools.</p>
-      <p class="p-process"><span class="lbl">Process</span>Prompted, built, and iterated with Claude end to end. The artifact is the worked example; the build process is the point. Included to show interaction prototyping rather than instructional depth.</p>
+      <p class="p-body">A redesign of the Supplemental Instruction training curriculum to better address differences in experience and developmental needs across new and returning peer educators.</p>
+      <p class="p-process"><span class="lbl">Curriculum approach</span>I used leader feedback and stakeholder input to identify which content could be completed independently and which skills would benefit from facilitated practice. The redesigned training used differentiated learning pathways to provide more relevant experiences for participants at different stages of their development.</p>
       <div class="p-actions">
-        <a class="p-btn primary" href="Pixel-solar-system2.html">Open the prototype</a>
+        <a class="p-btn primary" href="case-studies/fall-2025-program-launch.html#decisions">View case study</a>
+        <a class="p-btn" href="#fall-2025-launch">Operations side of the launch</a>
       </div>
     </article>
     </div>
       </div>
       <div class="rail-progress" aria-hidden="true"><span></span></div>
-      <button class="rail-btn next" type="button" aria-label="Scroll instructional design projects right">
+      <button class="rail-btn next" type="button" aria-label="Scroll curriculum design projects right">
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
       </button>
     </div>
 
-    <!-- ============== 11 PROJECT MANAGEMENT - SECTION DIVIDER ============== -->
     <div class="card section-divider banner" id="program-management">
       <div class="banner-left">
-        <h2 class="banner-title">Project Management<span class="pd">.</span></h2>
+        <h2 class="banner-title">Program &amp; Project Management<span class="pd">.</span></h2>
       </div>
       <div class="banner-right">
         <p class="banner-about">
-          <strong>End-to-end program rollouts and event operations</strong> spanning
-          curriculum, faculty coordination, registrar logistics, Canvas setup,
-          facilitator preparation, and venue planning.
+          My work in program and project management brings together planning, people, and implementation. I manage the operational details that allow learning programs to function, from coordinating stakeholders and resources to developing timelines, anticipating challenges, and evaluating outcomes.
+        </p>
+        <p class="banner-about">
+          I particularly enjoy projects where thoughtful planning creates more opportunities for meaningful learning.
         </p>
         <div class="banner-chips">
           <span>Multi-workstream rollout</span>
           <span>Stakeholder coordination</span>
           <span>Risk &amp; constraint navigation</span>
           <span>Event production</span>
-          <span>Operational scaffolding</span>
-          <span>Cross-functional execution</span>
+          <span>Timelines &amp; phased plans</span>
+          <span>Evaluation planning</span>
         </div>
       </div>
     </div>
-
     <div class="rail" data-rail>
-      <button class="rail-btn prev" type="button" aria-label="Scroll project management projects left" hidden>
+      <button class="rail-btn prev" type="button" aria-label="Scroll program and project management projects left" hidden>
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
       </button>
-      <div class="rail-track" tabindex="0" role="region" aria-label="Project management projects, scrolls sideways">
+      <div class="rail-track" tabindex="0" role="region" aria-label="Program and project management projects, scrolls sideways">
     <div class="rail-item">
     <article class="card project">
       <div class="p-kicker">
         <span class="cat-dot"></span>
-        <span class="cat">Project Management</span>
+        <span class="cat">Program Development</span>
         <span class="sep">·</span>
-        <span class="subtype">Program Proposal</span>
+        <span class="subtype">Project Planning</span>
       </div>
       <h3 class="p-title">MCAT<br>Practice<br>Series<span class="num">.</span></h3>
       <div class="p-meta">
@@ -1109,8 +1340,8 @@
       <a class="p-shot" href="mcat-practice-series.html" tabindex="-1" aria-hidden="true">
         <img src="assets/img/mcat.webp" width="1200" height="750" loading="lazy" alt="">
       </a>
-      <p class="p-body">A proposed <strong>28-session, peer-facilitated MCAT practice series</strong>, developed from an idea by two SI Supervisors, to make guided question-analysis practice available to students who can't afford commercial prep. The goal is to reach <strong>at least 200 students a week</strong>.</p>
-      <p class="p-process"><span class="lbl">Process</span>A charter, work breakdown structure, phased timeline with decision gates, stakeholder register and RACI, resource and risk plan, and an evaluation and closeout plan. Staffed by reallocating existing paid supervisor hours instead of adding payroll.</p>
+      <p class="p-body">A proposed peer-facilitated MCAT practice series designed to make structured preparation more accessible to students who may not be able to afford commercial resources. The proposed program aims to reach at least 200 individual students per week.</p>
+      <p class="p-process"><span class="lbl">Planning</span>Developed from an idea initiated by two SI Supervisors, the proposal includes a phased implementation plan, stakeholder responsibilities, staffing considerations, risk planning, and evaluation measures.</p>
       <div class="p-actions">
         <a class="p-btn primary" href="mcat-practice-series.html">View case study</a>
         <a class="p-btn" href="mcat-practice-series.html#documents">Schedule &amp; sample lessons</a>
@@ -1121,37 +1352,37 @@
     <article class="card project">
       <div class="p-kicker">
         <span class="cat-dot"></span>
-        <span class="cat">Project Management</span>
+        <span class="cat">Event Planning</span>
         <span class="sep">·</span>
-        <span class="subtype">Event Operations</span>
+        <span class="subtype">Program Operations</span>
       </div>
       <h3 class="p-title">Student<br>Educator<br>Forum<span class="num">.</span></h3>
       <div class="p-meta">
-        <div><strong>Role</strong>Operations Co-Lead</div>
+        <div><strong>Role</strong>Operations co-lead</div>
         <div><strong>For</strong>Sanger · UT Austin</div>
-        <div><strong>Status</strong><span class="p-status done">Held April 2026</span></div>
+        <div><strong>Status</strong><span class="p-status done">Implemented · April 2026</span></div>
       </div>
       <a class="p-shot" href="case-studies/student-educator-forum.html" tabindex="-1" aria-hidden="true">
         <img src="assets/img/sef.webp" width="1200" height="750" loading="lazy" alt="">
       </a>
-      <p class="p-body">Relaunched a peer-educator conference dormant since 2022 as a virtual soft launch. Attendance reached <strong>70 against a target of 40</strong>, with <strong>4.6 of 5</strong> average satisfaction.</p>
-      <p class="p-process"><span class="lbl">Process</span>A twelve-week build from a near-blank slate: run of show, moderator guide, presenter communications, a three-track session matrix, and a Qualtrics survey and debrief that set the changes for the next cycle.</p>
+      <p class="p-body">A relaunch of a peer educator conference that had been inactive since 2022. The April 2026 event drew <strong>70 attendees against a target of 40</strong> and received an average satisfaction rating of <strong>4.6 out of 5</strong>.</p>
+      <p class="p-process"><span class="lbl">Operations</span>The event was developed through coordinated presenter communications, scheduling, facilitator preparation, event operations, and post-event evaluation.</p>
       <div class="p-actions">
         <a class="p-btn primary" href="case-studies/student-educator-forum.html">View case study</a>
       </div>
     </article>
     </div>
     <div class="rail-item">
-    <article class="card project">
+    <article class="card project" id="fall-2025-launch">
       <div class="p-kicker">
         <span class="cat-dot"></span>
-        <span class="cat">Project Management</span>
+        <span class="cat">Program Implementation</span>
         <span class="sep">·</span>
-        <span class="subtype">Program Launch</span>
+        <span class="subtype">Cross-Functional Operations</span>
       </div>
-      <h3 class="p-title">Fall 2025<br>Launch<span class="num">.</span></h3>
+      <h3 class="p-title">Fall 2025<br>SI Program<br>Launch<span class="num">.</span></h3>
       <div class="p-meta">
-        <div><strong>Role</strong>Program Lead</div>
+        <div><strong>Role</strong>Program lead</div>
         <div><strong>For</strong>Sanger · UT Austin</div>
         <div><strong>Date</strong>May – Aug 2025</div>
         <div><strong>Status</strong><span class="p-status done">Implemented</span></div>
@@ -1159,17 +1390,17 @@
       <a class="p-shot" href="case-studies/fall-2025-program-launch.html" tabindex="-1" aria-hidden="true">
         <img src="assets/img/fall-2025.webp" width="1200" height="750" loading="lazy" alt="">
       </a>
-      <p class="p-body">A <strong>four-month, multi-workstream program rollout</strong> for the SI program: a redesigned three-track training curriculum, a self-paced onboarding module, and the operations behind <strong>70+ peer educators, 70+ faculty partnerships, and 140+ rooms</strong>, ready for week one.</p>
-      <p class="p-process"><span class="lbl">Process</span>Stakeholder interviews, then audience-segmented training tracks, then five operational workstreams (rooms, cohort times, assignments, Canvas, faculty pairing) sequenced around late-arriving registrar data.</p>
+      <p class="p-body">A multi-workstream launch involving redesigned training, onboarding, staffing coordination, faculty partnerships, learning management systems, and classroom logistics.</p>
+      <p class="p-process"><span class="lbl">Operations</span>The work required coordinating multiple operational dependencies while preparing <strong>more than 70 peer educators, more than 70 faculty partnerships, and more than 140 room reservations</strong> for the start of the semester.</p>
       <div class="p-actions">
         <a class="p-btn primary" href="case-studies/fall-2025-program-launch.html">View case study</a>
-        <a class="p-btn" href="si_onboarding_module.html" target="_blank" rel="noopener">Open the onboarding module<span class="sr-only"> (opens in a new tab)</span></a>
+        <a class="p-btn" href="#fall-2025-curriculum">Training redesign</a>
       </div>
     </article>
     </div>
       </div>
       <div class="rail-progress" aria-hidden="true"><span></span></div>
-      <button class="rail-btn next" type="button" aria-label="Scroll project management projects right">
+      <button class="rail-btn next" type="button" aria-label="Scroll program and project management projects right">
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
       </button>
     </div>
