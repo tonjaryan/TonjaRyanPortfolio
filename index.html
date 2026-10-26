@@ -955,6 +955,84 @@
     .p-thumb { height: 150px; }
     .p-title { font-size: 30px; }
   }
+
+  /* ====== ONE GROUND (Oct 26): page on cream; cards raised; type-led section headers ====== */
+  :root {
+    --ground: #F2EFE7;          /* base surface for the whole page */
+    --raised: #FBF9F4;          /* cards sit one level above */
+    --raised-hover: #ECE6D9;    /* darker tan on hover */
+    --hairline: #DDD6C6;
+  }
+  body { background: var(--ground); }
+
+  /* nav on the cream ground */
+  .site-top .top-bar { border-bottom: 1.5px solid var(--ink); color: var(--ink-2); }
+  .site-top .top-bar a { color: var(--ink-2); }
+  .site-top .top-bar a:hover { color: var(--ink); border-bottom-color: var(--accent); }
+
+  /* generic cards become the raised surface */
+  .card {
+    background: var(--raised);
+    border: 1px solid var(--hairline);
+    box-shadow: 0 1px 2px rgba(26, 26, 26, 0.04), 0 10px 28px rgba(26, 26, 26, 0.06);
+  }
+
+  /* sections that are part of the page itself, not cards */
+  .card.intro, .card.approach, .card.thanks {
+    background: transparent; border: 0; box-shadow: none; border-radius: 0;
+    padding-left: 0; padding-right: 0;
+  }
+  .card.intro { padding-top: 24px; }
+
+  /* type-led section headers (replace the green boxes) */
+  .card.section-divider.banner {
+    background: transparent; border: 0; box-shadow: none; border-radius: 0;
+    border-top: 1.5px solid var(--ink);
+    padding: 26px 0 6px; margin-top: 44px; color: var(--ink);
+    align-items: start;
+  }
+  .section-divider.banner .banner-title { color: var(--accent); }
+  .section-divider.banner .banner-title .pd { color: var(--ink); }
+  .section-divider.banner .banner-about { color: var(--ink-2); }
+  .section-divider.banner .banner-about strong { color: var(--ink); }
+  .section-divider.banner .banner-chips span { color: var(--accent); }
+  .section-divider.banner .banner-chips span:not(:last-child)::after { color: var(--ink-4); }
+
+  .sec-kicker {
+    display: flex; align-items: baseline; gap: 12px; margin: 0 0 14px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--ink-3);
+  }
+  .sec-kicker span { color: var(--accent); font-weight: 700; }
+  .approach-head .sec-kicker, .process-head .sec-kicker { grid-column: 1 / -1; margin-bottom: -18px; }
+  .sec-kicker--dark { color: rgba(242, 239, 231, 0.7); }
+  .sec-kicker--dark span { color: #8FB283; }
+
+  /* approach + contact read as sections on the ground, with the same top rule */
+  .card.approach { border-top: 1.5px solid var(--ink); padding-top: 26px; margin-top: 44px; }
+  .card.thanks { border-top: 1.5px solid var(--ink); padding-top: 28px; margin-top: 44px; }
+  .card.process-card { margin-top: 28px; border: 0; box-shadow: 0 10px 30px rgba(26, 26, 26, 0.18); }
+
+  /* carousels on the ground */
+  .rail-track { padding-top: 18px; }
+  .rail-item > .card.project { background: var(--raised); }
+  .rail-item:hover > .card.project, .rail-item:focus-within > .card.project {
+    background: var(--raised-hover);
+    box-shadow: 0 4px 10px rgba(26, 26, 26, 0.08), 0 18px 40px rgba(26, 26, 26, 0.12);
+  }
+  .rail-progress { background: rgba(26, 26, 26, 0.12); }
+  .rail-progress span { background: var(--accent); }
+  .rail-btn { border-color: var(--raised); box-shadow: 0 4px 12px rgba(26, 26, 26, 0.18); }
+
+  /* footer */
+  .colophon { border-top: 1px solid var(--hairline); color: var(--ink-3); }
+  .colophon .right { color: var(--ink-2); }
+
+  @media (max-width: 720px) {
+    .card.intro, .card.approach, .card.thanks { padding-left: 0; padding-right: 0; }
+    .card.section-divider.banner { padding: 22px 0 4px; margin-top: 36px; }
+    .section-divider.banner .banner-chips span::before { color: var(--ink-4); }
+  }
 </style>
 </head>
 <body>
@@ -1023,6 +1101,7 @@
 
     <div class="card section-divider banner" id="work">
       <div class="banner-left">
+        <p class="sec-kicker"><span>01</span>Selected work</p>
         <h2 class="banner-title">Learning Experience Design<span class="pd">.</span></h2>
       </div>
       <div class="banner-right">
@@ -1151,6 +1230,7 @@
 
     <div class="card section-divider banner" id="curriculum">
       <div class="banner-left">
+        <p class="sec-kicker"><span>02</span>Selected work</p>
         <h2 class="banner-title">Curriculum Design &amp; Development<span class="pd">.</span></h2>
       </div>
       <div class="banner-right">
@@ -1288,6 +1368,7 @@
 
     <div class="card section-divider banner" id="program-management">
       <div class="banner-left">
+        <p class="sec-kicker"><span>03</span>Selected work</p>
         <h2 class="banner-title">Program &amp; Project Management<span class="pd">.</span></h2>
       </div>
       <div class="banner-right">
@@ -1399,6 +1480,7 @@
     <!-- ============== WHAT GUIDES MY WORK ============== -->
     <section class="card approach" id="approach" aria-labelledby="approach-title">
       <div class="approach-head">
+        <p class="sec-kicker"><span>04</span>How I think</p>
         <h2 class="about-title" id="approach-title">What Guides My Work<span class="pd">.</span></h2>
         <p class="approach-lede">I design for the moment someone needs to use what they've learned, not just the moment they're introduced to it. Three priorities shape my decisions.</p>
       </div>
@@ -1424,6 +1506,7 @@
     <!-- ============== FROM CHALLENGE TO LEARNING EXPERIENCE ============== -->
     <section class="card process-card" id="process" aria-labelledby="process-title">
       <div class="process-head">
+        <p class="sec-kicker sec-kicker--dark"><span>05</span>How I work</p>
         <h2 class="process-title" id="process-title">From Challenge to Learning Experience<span class="pd">.</span></h2>
         <p class="process-lede">Before I build a module or choose a tool, I identify what learners need to do and what's getting in their way. That understanding shapes the learning goals, opportunities for practice, development, and evaluation.</p>
       </div>
