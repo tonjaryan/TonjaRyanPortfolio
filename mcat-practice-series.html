@@ -9,7 +9,7 @@
 <style>
   :root {
     --page: #EFEFEF; --paper: #FFFFFF; --paper-2: #FAFAFA; --paper-3: #F4F4F5;
-    --ink: #0A0A0A; --ink-2: #404040; --ink-3: #737373; --ink-4: #A3A3A3;
+    --ink: #0A0A0A; --ink-2: #404040; --ink-3: #4A4A4A; --ink-4: #6E6E6E;
     --rule: #E5E5E5; --rule-2: #EDEDED;
     --accent: #BF5700; --accent-soft: #FBEEE2; --accent-deep: #8C3F00; --accent-mute: #D89878;
   }
@@ -38,14 +38,14 @@
   .row-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
   .card { background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; padding: 20px; }
   .card-title { font-size: 11px; font-weight: 600; color: var(--ink-3); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-  .card-title .pill { background: var(--accent-soft); color: var(--accent-deep); font-weight: 600; padding: 2px 7px; border-radius: 3px; font-size: 10px; letter-spacing: 0.04em; }
+  .card-title .pill { background: var(--accent-soft); color: var(--accent-deep); font-weight: 600; padding: 2px 7px; border-radius: 3px; font-size: 11px; letter-spacing: 0.04em; }
   .proj-list { display: flex; flex-direction: column; }
   .proj-list-item { padding: 11px 0; border-bottom: 1px solid var(--rule-2); }
   .proj-list-item:last-child { border-bottom: none; }
   .proj-list-item .name { font-size: 13.5px; font-weight: 500; color: var(--ink); margin-bottom: 3px; }
   .proj-list-item .sub { font-size: 11.5px; color: var(--ink-3); }
   .stat-tile { background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; padding: 14px 16px; }
-  .stat-tile .label { font-size: 10.5px; font-weight: 600; color: var(--ink-3); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 8px; }
+  .stat-tile .label { font-size: 11px; font-weight: 600; color: var(--ink-3); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 8px; }
   .stat-tile .num { font-size: 28px; font-weight: 700; color: var(--ink); letter-spacing: -0.02em; line-height: 1; }
   .stat-tile .num .accent { color: var(--accent); }
   .stat-tile .sub { font-size: 11.5px; color: var(--ink-3); margin-top: 4px; }
@@ -65,12 +65,12 @@
   .phase .pd { font-size: 11px; font-family: 'JetBrains Mono', monospace; color: var(--ink-3); margin-bottom: 10px; letter-spacing: 0.02em; }
   .phase .pdesc { font-size: 12px; color: var(--ink-2); line-height: 1.5; }
   .track-card { background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; padding: 24px; position: relative; }
-  .track-card .badge { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent-deep); background: var(--accent-soft); padding: 3px 8px; border-radius: 3px; margin-bottom: 12px; font-weight: 600; }
+  .track-card .badge { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent-deep); background: var(--accent-soft); padding: 3px 8px; border-radius: 3px; margin-bottom: 12px; font-weight: 600; }
   .track-card h3 { font-size: 17px; font-weight: 600; color: var(--ink); margin-bottom: 6px; letter-spacing: -0.01em; }
   .track-card .audience { font-size: 12px; color: var(--ink-3); margin-bottom: 12px; font-style: italic; }
   .track-card p { font-size: 13px; color: var(--ink-2); line-height: 1.55; margin-bottom: 12px; }
   .track-card .topics { border-top: 1px solid var(--rule-2); padding-top: 12px; margin-top: 4px; }
-  .track-card .topics .topics-label { font-size: 10px; font-weight: 600; color: var(--ink-3); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 8px; }
+  .track-card .topics .topics-label { font-size: 11px; font-weight: 600; color: var(--ink-3); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 8px; }
   .track-card .topics ul { list-style: none; padding: 0; margin: 0; }
   .track-card .topics li { font-size: 12.5px; color: var(--ink-2); padding: 4px 0; display: flex; gap: 8px; line-height: 1.4; }
   .track-card .topics li::before { content: '→'; color: var(--accent); flex-shrink: 0; }
@@ -80,10 +80,10 @@
   .ops-row.head { background: var(--paper-2); border-bottom: 1px solid var(--rule); }
   .ops-row.head > div { font-size: 11px; font-weight: 500; color: var(--ink-3); letter-spacing: 0.02em; text-transform: uppercase; }
   .ops-row .workstream { font-size: 14px; font-weight: 600; color: var(--ink); letter-spacing: -0.005em; }
-  .ops-row .workstream .when { display: block; font-size: 10.5px; font-weight: 500; color: var(--ink-3); letter-spacing: 0.04em; margin-top: 4px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; }
+  .ops-row .workstream .when { display: block; font-size: 11px; font-weight: 500; color: var(--ink-3); letter-spacing: 0.04em; margin-top: 4px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; }
   .ops-row .what { font-size: 13px; color: var(--ink-2); line-height: 1.55; }
   .ops-row .scale { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--accent-deep); font-weight: 600; text-align: right; letter-spacing: -0.005em; }
-  .ops-row .scale .unit { display: block; font-size: 10px; font-weight: 500; color: var(--ink-3); letter-spacing: 0.04em; margin-top: 2px; text-transform: uppercase; }
+  .ops-row .scale .unit { display: block; font-size: 11px; font-weight: 500; color: var(--ink-3); letter-spacing: 0.04em; margin-top: 2px; text-transform: uppercase; }
   .curr-table { background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; margin-bottom: 20px; }
   .curr-row { display: grid; grid-template-columns: 150px 1fr 100px; gap: 16px; padding: 14px 20px; border-bottom: 1px solid var(--rule-2); align-items: center; }
   .curr-row:last-child { border-bottom: none; }
@@ -92,13 +92,13 @@
   .curr-row .name { font-weight: 500; font-size: 13.5px; color: var(--ink); }
   .curr-row .desc { font-size: 12.5px; color: var(--ink-2); line-height: 1.45; }
   .curr-row .scope { font-size: 11px; font-family: 'JetBrains Mono', monospace; color: var(--ink-3); letter-spacing: 0.02em; }
-  .curr-row.new .name::after { content: 'NEW'; display: inline-block; margin-left: 8px; font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.08em; background: var(--accent); color: white; padding: 1px 5px; border-radius: 2px; vertical-align: 2px; font-weight: 600; }
+  .curr-row.new .name::after { content: 'NEW'; display: inline-block; margin-left: 8px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.08em; background: var(--accent); color: white; padding: 1px 5px; border-radius: 2px; vertical-align: 2px; font-weight: 600; }
   .module-preview { background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; padding: 24px; margin-bottom: 20px; }
   .module-preview .head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; gap: 24px; }
   .module-preview .head h3 { font-size: 17px; font-weight: 600; color: var(--ink); margin-bottom: 6px; letter-spacing: -0.01em; }
   .module-preview .head p { font-size: 13px; color: var(--ink-2); line-height: 1.55; max-width: 520px; }
   .module-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--rule-2); }
-  .module-stat .label { font-size: 10px; font-weight: 600; color: var(--ink-3); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 4px; }
+  .module-stat .label { font-size: 11px; font-weight: 600; color: var(--ink-3); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 4px; }
   .module-stat .num { font-size: 22px; font-weight: 700; color: var(--ink); letter-spacing: -0.02em; line-height: 1; }
   .module-stat .num .accent { color: var(--accent); }
   .module-features { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px 24px; }
@@ -107,7 +107,7 @@
   .feature strong { color: var(--ink); font-weight: 600; }
   .app-footer { background: var(--paper); padding: 18px 56px; border-top: 1px solid var(--rule); font-size: 11px; color: var(--ink-3); display: flex; justify-content: space-between; }
   .gantt { margin-top: 8px; }
-  .gantt-head { display: grid; grid-template-columns: 170px repeat(8, 1fr); font-size: 10px; font-weight: 500; color: var(--ink-3); letter-spacing: 0.04em; text-transform: uppercase; padding-bottom: 8px; border-bottom: 1px solid var(--rule); margin-bottom: 4px; }
+  .gantt-head { display: grid; grid-template-columns: 170px repeat(8, 1fr); font-size: 11px; font-weight: 500; color: var(--ink-3); letter-spacing: 0.04em; text-transform: uppercase; padding-bottom: 8px; border-bottom: 1px solid var(--rule); margin-bottom: 4px; }
   .gantt-head > div { text-align: center; border-left: 1px solid var(--rule-2); padding: 4px 4px; }
   .gantt-head > div:first-child { text-align: left; border-left: none; padding-left: 0; }
   .gantt-row { display: grid; grid-template-columns: 170px repeat(8, 1fr); padding: 8px 0; border-bottom: 1px solid var(--rule-2); align-items: center; position: relative; }
@@ -131,7 +131,7 @@
     .curr-row.head, .ops-row.head { display: none; }
     .ops-row .scale { text-align: left; }
     .gantt-head, .gantt-row { grid-template-columns: 110px repeat(8, 1fr); }
-    .gantt-head { font-size: 8.5px; }
+    .gantt-head { font-size: 11px; }
     .gantt-head > div { padding: 4px 2px; }
     .gantt-label { font-size: 11px; padding-right: 6px; }
     h1.title { font-size: 36px; }
@@ -141,7 +141,7 @@
   :root { --s-cars:#BF5700; --s-bio:#8C3F00; --s-chem:#404040; --s-psy:#D89878; --ok:#3F6B3A; --ok-soft:#E7F0E4; }
   a { color: var(--accent-deep); }
   a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
-  .tag { display:inline-block; font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:0.08em; text-transform:uppercase; font-weight:600; padding:2px 6px; border-radius:3px; vertical-align:2px; white-space:nowrap; }
+  .tag { display:inline-block; font-family:'JetBrains Mono',monospace; font-size: 11px; letter-spacing:0.08em; text-transform:uppercase; font-weight:600; padding:2px 6px; border-radius:3px; vertical-align:2px; white-space:nowrap; }
   .tag.planned, .tag.proposed { background:var(--accent-soft); color:var(--accent-deep); }
   .tag.assumption { background:#F1ECE4; color:#6B4A2B; border:1px dashed #C9A27E; }
   .tag.target { background:#EEF0F6; color:#34405C; }
@@ -163,7 +163,7 @@
   .compare { display:grid; grid-template-columns:repeat(3,1fr); gap:0; background:var(--paper); border:1px solid var(--rule); border-radius:6px; overflow:hidden; margin-bottom:12px; }
   .compare > div { padding:20px; border-right:1px solid var(--rule-2); }
   .compare > div:last-child { border-right:none; background:var(--accent-soft); }
-  .compare .k { font-size:10.5px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-3); margin-bottom:10px; }
+  .compare .k { font-size: 11px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-3); margin-bottom:10px; }
   .compare .v { font-size:24px; font-weight:700; letter-spacing:-0.02em; color:var(--ink); line-height:1.1; margin-bottom:8px; }
   .compare p { font-size:12.5px; color:var(--ink-2); line-height:1.5; margin-bottom:8px; }
   .compare .src { font-size:11px; color:var(--ink-3); font-family:'JetBrains Mono',monospace; letter-spacing:0.01em; line-height:1.5; }
@@ -172,7 +172,7 @@
   .origin .side { background:var(--paper); border:1px solid var(--rule); border-radius:6px; padding:22px; }
   .origin .side.coord { border-top:3px solid var(--accent); }
   .origin .side.sup { border-top:3px solid var(--ink); }
-  .origin .who { font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-3); margin-bottom:8px; }
+  .origin .who { font-family:'JetBrains Mono',monospace; font-size: 11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-3); margin-bottom:8px; }
   .origin h3 { font-size:17px; font-weight:600; letter-spacing:-0.01em; margin-bottom:10px; }
   .origin p { font-size:13px; color:var(--ink-2); line-height:1.6; }
   .origin .arrow { display:flex; align-items:center; justify-content:center; color:var(--accent); font-size:22px; }
@@ -181,12 +181,12 @@
   .filters button { font:inherit; font-size:12px; font-weight:500; border:1px solid var(--rule); background:var(--paper); color:var(--ink-2); border-radius:999px; padding:6px 12px; cursor:pointer; display:inline-flex; align-items:center; gap:7px; }
   .filters button[aria-pressed="true"] { background:var(--ink); color:#fff; border-color:var(--ink); }
   .weeks { display:grid; grid-template-columns:62px 1fr 1fr; gap:0; border:1px solid var(--rule); border-radius:6px; overflow:hidden; background:var(--paper); }
-  .weeks .wh { background:var(--paper-2); font-size:10.5px; font-weight:600; color:var(--ink-3); letter-spacing:0.06em; text-transform:uppercase; padding:9px 12px; border-bottom:1px solid var(--rule); }
+  .weeks .wh { background:var(--paper-2); font-size: 11px; font-weight:600; color:var(--ink-3); letter-spacing:0.06em; text-transform:uppercase; padding:9px 12px; border-bottom:1px solid var(--rule); }
   .weeks .wk { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--ink-3); padding:12px; border-bottom:1px solid var(--rule-2); border-right:1px solid var(--rule-2); }
   .sess { padding:10px 12px 11px; border-bottom:1px solid var(--rule-2); border-left:3px solid transparent; transition:opacity .15s; }
   .sess + .sess { border-left-width:3px; }
   .sess.cars{border-left-color:var(--s-cars)} .sess.bio{border-left-color:var(--s-bio)} .sess.chem{border-left-color:var(--s-chem)} .sess.psy{border-left-color:var(--s-psy)}
-  .sess .d { font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--ink-3); letter-spacing:0.02em; }
+  .sess .d { font-family:'JetBrains Mono',monospace; font-size: 11px; color:var(--ink-3); letter-spacing:0.02em; }
   .sess .t { font-size:13px; font-weight:600; color:var(--ink); margin:2px 0 3px; letter-spacing:-0.005em; }
   .sess .o { font-size:11.5px; color:var(--ink-2); line-height:1.45; }
   .sess .a { font-size:11px; color:var(--accent-deep); margin-top:4px; }
@@ -194,14 +194,14 @@
   .weeks .break { grid-column:1 / -1; background:repeating-linear-gradient(135deg,var(--paper-3) 0 8px,var(--paper) 8px 16px); padding:11px 12px; font-size:12px; font-weight:600; color:var(--ink-2); border-bottom:1px solid var(--rule-2); text-align:center; letter-spacing:0.02em; }
   /* 120-minute timeline */
   .t120 { display:flex; height:46px; border-radius:4px; overflow:hidden; border:1px solid var(--rule); margin:6px 0 8px; }
-  .t120 > div { display:flex; align-items:center; justify-content:center; font-size:10.5px; font-weight:600; color:#fff; padding:0 4px; text-align:center; line-height:1.15; border-right:1px solid rgba(255,255,255,.35); overflow:hidden; }
+  .t120 > div { display:flex; align-items:center; justify-content:center; font-size: 11px; font-weight:600; color:#fff; padding:0 4px; text-align:center; line-height:1.15; border-right:1px solid rgba(255,255,255,.35); overflow:hidden; }
   .t120 > div:last-child { border-right:none; }
-  .t120-axis { position:relative; height:16px; font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--ink-3); margin-bottom:14px; }
+  .t120-axis { position:relative; height:16px; font-family:'JetBrains Mono',monospace; font-size: 11px; color:var(--ink-3); margin-bottom:14px; }
   .t120-axis span { position:absolute; transform:translateX(-50%); }
   .lesson-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; margin-bottom:12px; }
   .lesson { background:var(--paper); border:1px solid var(--rule); border-radius:6px; padding:20px; border-top:3px solid var(--ink); }
   .lesson.cars{border-top-color:var(--s-cars)} .lesson.bio{border-top-color:var(--s-bio)} .lesson.chem{border-top-color:var(--s-chem)} .lesson.psy{border-top-color:var(--s-psy)}
-  .lesson .n { font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-3); margin-bottom:6px; }
+  .lesson .n { font-family:'JetBrains Mono',monospace; font-size: 11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-3); margin-bottom:6px; }
   .lesson h3 { font-size:15px; font-weight:600; letter-spacing:-0.01em; margin-bottom:8px; line-height:1.3; }
   .lesson p { font-size:12.5px; color:var(--ink-2); line-height:1.5; margin-bottom:8px; }
   .lesson dl { display:grid; grid-template-columns:96px 1fr; gap:4px 10px; font-size:12px; border-top:1px solid var(--rule-2); padding-top:10px; }
@@ -211,12 +211,12 @@
   .appt .who { font-size:12.5px; font-weight:600; margin-bottom:6px; display:flex; justify-content:space-between; }
   .appt .who span { font-weight:400; color:var(--ink-3); font-size:11.5px; }
   .blocks { display:grid; grid-template-columns:repeat(10,1fr); gap:3px; }
-  .blocks div { height:30px; border-radius:2px; background:var(--paper-3); border:1px solid var(--rule); font-size:10px; display:flex; align-items:center; justify-content:center; color:var(--ink-3); font-family:'JetBrains Mono',monospace; }
+  .blocks div { height:30px; border-radius:2px; background:var(--paper-3); border:1px solid var(--rule); font-size: 11px; display:flex; align-items:center; justify-content:center; color:var(--ink-3); font-family:'JetBrains Mono',monospace; }
   .blocks .fac { background:var(--accent); border-color:var(--accent); color:#fff; }
   .blocks .prep { background:var(--accent-deep); border-color:var(--accent-deep); color:#fff; }
   .eq { display:grid; grid-template-columns:repeat(5,auto); gap:10px; align-items:center; justify-content:start; font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--ink-2); margin:6px 0 4px; flex-wrap:wrap; }
   .eq b { font-family:'Inter',sans-serif; font-size:22px; color:var(--ink); letter-spacing:-0.02em; }
-  .eq small { display:block; font-size:10px; color:var(--ink-3); text-transform:uppercase; letter-spacing:.06em; }
+  .eq small { display:block; font-size: 11px; color:var(--ink-3); text-transform:uppercase; letter-spacing:.06em; }
   .callout { background:var(--accent-soft); border-radius:6px; padding:14px 16px; font-size:12.5px; color:var(--accent-deep); line-height:1.55; }
   .callout strong { color:var(--accent-deep); }
   /* charts */
@@ -226,12 +226,12 @@
   .tbl-wrap { overflow-x:auto; border:1px solid var(--rule); border-radius:6px; background:var(--paper); margin-bottom:16px; }
   table.tbl { border-collapse:collapse; width:100%; font-size:12.5px; }
   table.tbl th, table.tbl td { text-align:left; padding:10px 12px; border-bottom:1px solid var(--rule-2); vertical-align:top; line-height:1.45; }
-  table.tbl thead th { background:var(--paper-2); font-size:10.5px; font-weight:600; letter-spacing:0.05em; text-transform:uppercase; color:var(--ink-3); border-bottom:1px solid var(--rule); white-space:nowrap; }
+  table.tbl thead th { background:var(--paper-2); font-size: 11px; font-weight:600; letter-spacing:0.05em; text-transform:uppercase; color:var(--ink-3); border-bottom:1px solid var(--rule); white-space:nowrap; }
   table.tbl tbody th { font-weight:600; color:var(--ink); }
   table.tbl td { color:var(--ink-2); }
   table.tbl tr:last-child > * { border-bottom:none; }
   table.tbl .num { text-align:right; font-family:'JetBrains Mono',monospace; font-size:12px; white-space:nowrap; }
-  table.tbl tr.group th { background:var(--paper-3); font-size:10.5px; letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-3); padding:7px 12px; }
+  table.tbl tr.group th { background:var(--paper-3); font-size: 11px; letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-3); padding:7px 12px; }
   table.tbl tr.hl td, table.tbl tr.hl th { background:#FFF8F1; }
   /* artifacts */
   .artifact { background:var(--paper); border:1px solid var(--rule); border-radius:6px; margin-bottom:22px; overflow:hidden; }
@@ -263,7 +263,7 @@
   ul.checks li::before { content:''; position:absolute; left:0; top:8px; width:11px; height:11px; border:1.5px solid var(--ink-3); border-radius:2px; }
   .obj-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:10px; }
   .obj { border:1px solid var(--rule); border-radius:6px; padding:14px; background:var(--paper-2); }
-  .obj .k { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--accent); letter-spacing:.06em; text-transform:uppercase; margin-bottom:6px; font-weight:600; }
+  .obj .k { font-family:'JetBrains Mono',monospace; font-size: 11px; color:var(--accent); letter-spacing:.06em; text-transform:uppercase; margin-bottom:6px; font-weight:600; }
   .obj p { font-size:12px; color:var(--ink-2); line-height:1.45; }
   /* WBS tree */
   .wbs-root { text-align:center; margin:0 auto 0; width:max-content; max-width:100%; background:var(--ink); color:#fff; font-size:13px; font-weight:600; padding:10px 18px; border-radius:4px; }
@@ -271,23 +271,23 @@
   .wbs-lvl { display:grid; grid-template-columns:repeat(5,1fr); gap:10px; border-top:1px solid var(--rule); padding-top:16px; position:relative; margin-bottom:10px; }
   .wbs-node { border:1px solid var(--rule); border-radius:5px; background:var(--paper); padding:11px 12px; position:relative; }
   .wbs-node::before { content:''; position:absolute; top:-17px; left:50%; width:1px; height:16px; background:var(--rule); }
-  .wbs-node .id { font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--accent); font-weight:600; }
+  .wbs-node .id { font-family:'JetBrains Mono',monospace; font-size: 11px; color:var(--accent); font-weight:600; }
   .wbs-node .nm { font-size:12.5px; font-weight:600; color:var(--ink); margin:2px 0 4px; }
-  .wbs-node .rl { font-size:10.5px; color:var(--ink-3); line-height:1.35; }
-  .wbs-node .pk { font-size:10.5px; color:var(--ink-3); margin-top:6px; font-family:'JetBrains Mono',monospace; }
+  .wbs-node .rl { font-size: 11px; color:var(--ink-3); line-height:1.35; }
+  .wbs-node .pk { font-size: 11px; color:var(--ink-3); margin-top:6px; font-family:'JetBrains Mono',monospace; }
   /* Gantt (date-accurate) */
   .gx { overflow-x:auto; }
   .gx-inner { min-width:760px; }
   .gx-head, .gx-row { display:grid; grid-template-columns:230px 1fr; align-items:center; }
   .gx-head { border-bottom:1px solid var(--rule); padding-bottom:6px; }
   .gx-months { position:relative; height:18px; }
-  .gx-months span { position:absolute; top:0; font-size:10px; font-weight:600; color:var(--ink-3); letter-spacing:0.05em; text-transform:uppercase; padding-left:5px; border-left:1px solid var(--rule-2); height:18px; }
+  .gx-months span { position:absolute; top:0; font-size: 11px; font-weight:600; color:var(--ink-3); letter-spacing:0.05em; text-transform:uppercase; padding-left:5px; border-left:1px solid var(--rule-2); height:18px; }
   .gx-row { border-bottom:1px solid var(--rule-2); min-height:38px; }
   .gx-row.ph { min-height:28px; background:var(--paper-2); }
-  .gx-row.ph .gx-label { font-size:10px; font-weight:600; letter-spacing:0.07em; text-transform:uppercase; color:var(--ink-3); }
+  .gx-row.ph .gx-label { font-size: 11px; font-weight:600; letter-spacing:0.07em; text-transform:uppercase; color:var(--ink-3); }
   .gx-label { font-size:12px; background:var(--paper); position:sticky; left:0; z-index:5; color:var(--ink-2); padding:6px 12px 6px 0; line-height:1.3; }
   .gx-label b { color:var(--ink); font-weight:600; display:block; }
-  .gx-label .id { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--accent); margin-right:4px; }
+  .gx-label .id { font-family:'JetBrains Mono',monospace; font-size: 11px; color:var(--accent); margin-right:4px; }
   .gx-track { position:relative; height:100%; min-height:38px; }
   .gx-row.ph .gx-track { min-height:28px; }
   .gx-grid { position:absolute; top:0; bottom:0; width:1px; background:var(--rule-2); }
@@ -301,9 +301,9 @@
   .gx-break { position:absolute; top:3px; bottom:3px; background:repeating-linear-gradient(135deg,var(--paper-3) 0 4px,transparent 4px 8px); border:1px dashed var(--ink-4); border-radius:2px; }
   .gx-gate { position:absolute; top:50%; width:12px; height:12px; background:var(--ink); transform:translate(-50%,-50%) rotate(45deg); z-index:2; }
   .gx-gate.final { background:var(--accent); }
-  .gx-gatelbl { position:absolute; top:50%; transform:translateY(-50%); font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:600; color:var(--ink); white-space:nowrap; }
+  .gx-gatelbl { position:absolute; top:50%; transform:translateY(-50%); font-family:'JetBrains Mono',monospace; font-size: 11px; font-weight:600; color:var(--ink); white-space:nowrap; }
   .gx-today { position:absolute; top:0; bottom:0; width:0; border-left:2px dotted var(--ink); z-index:3; }
-  .gx-todaylbl { position:absolute; top:-1px; font-size:9.5px; font-family:'JetBrains Mono',monospace; background:var(--ink); color:#fff; padding:1px 4px; border-radius:2px; transform:translateX(-50%); white-space:nowrap; z-index:4; }
+  .gx-todaylbl { position:absolute; top:-1px; font-size: 11px; font-family:'JetBrains Mono',monospace; background:var(--ink); color:#fff; padding:1px 4px; border-radius:2px; transform:translateX(-50%); white-space:nowrap; z-index:4; }
   .gx-legend { display:flex; flex-wrap:wrap; gap:8px 18px; font-size:11.5px; color:var(--ink-2); margin-top:12px; }
   .gx-legend i { display:inline-block; vertical-align:-1px; margin-right:6px; }
   /* RACI */
@@ -315,10 +315,10 @@
   /* dashboard */
   .dash { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
   .dtile { border:1px dashed var(--ink-4); border-radius:6px; padding:12px 14px; background:var(--paper-2); }
-  .dtile .cat { font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--accent); font-weight:600; }
+  .dtile .cat { font-family:'JetBrains Mono',monospace; font-size: 11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--accent); font-weight:600; }
   .dtile .lbl { font-size:12px; font-weight:500; color:var(--ink); line-height:1.35; margin:4px 0 8px; min-height:32px; }
   .dtile .val { font-size:22px; font-weight:700; color:var(--ink-4); letter-spacing:-0.02em; line-height:1; }
-  .dtile .st { font-size:10.5px; color:var(--ink-3); margin-top:4px; }
+  .dtile .st { font-size: 11px; color:var(--ink-3); margin-top:4px; }
   .decide { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; }
   .decide div { border:1px solid var(--rule); border-radius:5px; padding:12px; background:var(--paper); font-size:12px; color:var(--ink-2); line-height:1.4; }
   .decide div b { display:block; font-size:12.5px; color:var(--ink); margin-bottom:4px; }
@@ -326,9 +326,9 @@
   .flow > div { flex:1 1 0; min-width:120px; border:1px solid var(--rule); background:var(--paper-2); padding:10px 12px; font-size:11.5px; color:var(--ink-2); line-height:1.4; position:relative; }
   .flow > div + div { border-left:none; }
   .flow > div b { display:block; color:var(--ink); font-size:12px; margin-bottom:3px; }
-  .flow > div .w { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--accent); }
+  .flow > div .w { font-family:'JetBrains Mono',monospace; font-size: 11px; color:var(--accent); }
   .decision-card { background:var(--paper); border:1px solid var(--rule); border-radius:6px; padding:20px; }
-  .decision-card .dn { font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--accent); letter-spacing:0.08em; text-transform:uppercase; font-weight:600; margin-bottom:6px; }
+  .decision-card .dn { font-family:'JetBrains Mono',monospace; font-size: 11px; color:var(--accent); letter-spacing:0.08em; text-transform:uppercase; font-weight:600; margin-bottom:6px; }
   .decision-card h3 { font-size:15px; font-weight:600; letter-spacing:-0.01em; margin-bottom:10px; line-height:1.3; }
   .decision-card p { font-size:12.5px; color:var(--ink-2); line-height:1.55; margin-bottom:8px; }
   .decision-card p:last-child { margin-bottom:0; }
@@ -343,7 +343,7 @@
   .comms { display:grid; grid-template-columns:repeat(7,1fr); gap:0; border:1px solid var(--rule); border-radius:6px; overflow:hidden; background:var(--paper); margin-bottom:12px; }
   .comms > div { border-right:1px solid var(--rule-2); padding:12px 10px; min-height:150px; }
   .comms > div:last-child { border-right:none; }
-  .comms .m { font-size:10.5px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-3); margin-bottom:10px; }
+  .comms .m { font-size: 11px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-3); margin-bottom:10px; }
   .comms .it { font-size:11px; line-height:1.35; color:var(--ink-2); background:var(--paper-2); border-left:2px solid var(--accent); padding:5px 7px; margin-bottom:6px; border-radius:2px; }
   .comms .it.rec { border-left-color:var(--ink-3); }
   .comms .it.gate { border-left-color:var(--ink); background:var(--paper-3); font-weight:600; }
@@ -356,7 +356,7 @@
   .st.drafted::before { background:var(--ok); } .st.proposed::before { background:var(--accent); }
   .hero-facts { display:grid; grid-template-columns:1fr 1fr; gap:0 16px; margin-top:14px; border-top:1px solid var(--rule-2); padding-top:6px; }
   .hero-facts div { font-size:12px; color:var(--ink-2); padding:7px 0; border-bottom:1px solid var(--rule-2); }
-  .hero-facts b { display:block; font-size:10px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-3); font-weight:600; margin-bottom:2px; }
+  .hero-facts b { display:block; font-size: 11px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-3); font-weight:600; margin-bottom:2px; }
   @media (max-width: 980px) {
     .obj-grid, .wbs-lvl { grid-template-columns:repeat(2,1fr); }
     .dash { grid-template-columns:repeat(2,1fr); }
@@ -423,7 +423,7 @@
     --sun-tint:#F1EDE6; --clay-tint:#F1EDE6; --coral-tint:#F1EDE6; --slate-tint:#F1EDE6;
     --sun-deep:#1F2A33; --clay-deep:#1F2A33; --coral-deep:#1F2A33; --slate-deep:#426682;
     --page:#F3F0EA; --paper:#FFFFFF; --paper-2:#FAF8F4; --paper-3:#F1EDE6;
-    --ink:#1F2A33; --ink-2:#44505B; --ink-3:#5F6872; --ink-4:#A7ADB3; --rule:#E4DFD6; --rule-2:#EEEAE3;
+    --ink:#1F2A33; --ink-2:#44505B; --ink-3:#4A5560; --ink-4:#6F7780; --rule:#E4DFD6; --rule-2:#EEEAE3;
     --accent:var(--slate); --accent-deep:var(--slate-deep); --accent-soft:var(--slate-tint); --accent-mute:var(--sun);
     --s-cars:var(--sun); --s-bio:var(--clay); --s-chem:var(--coral); --s-psy:var(--slate);
     --ok:var(--slate); --ok-soft:var(--slate-tint);
@@ -495,7 +495,7 @@
   .tiers { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:20px; }
   .tier { background:var(--paper); border:1px solid var(--rule); border-radius:var(--r); padding:18px; border-top:5px solid var(--sun); }
   .tier.t2 { border-top-color:var(--clay); } .tier.t3 { border-top-color:var(--slate); background:var(--slate-tint); }
-  .tier .k { font-size:10.5px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-3); margin-bottom:8px; }
+  .tier .k { font-size: 11px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-3); margin-bottom:8px; }
   .tier .v { font-size:26px; font-weight:800; letter-spacing:-0.02em; margin-bottom:6px; }
   .tier p { font-size:12.5px; color:var(--ink-2); line-height:1.5; }
   .pains { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-bottom:12px; }
@@ -529,7 +529,7 @@
   .tabbar [role=tab]:hover { background:var(--slate-tint); color:var(--slate-deep); }
   .tabbar [role=tab][aria-selected=true] { background:var(--slate); color:#fff; border-color:var(--slate); font-weight:600; padding:12px 18px 10px; margin-top:0; box-shadow:0 -3px 10px -4px rgba(31,42,51,.35); position:relative; }
   .tabbar [role=tab][aria-selected=true]::after { content:''; position:absolute; left:0; right:0; bottom:-3px; height:3px; background:var(--slate); }
-  .tabbar [role=tab] .n { font-family:'JetBrains Mono',monospace; font-size:10px; opacity:.7; margin-right:6px; }
+  .tabbar [role=tab] .n { font-family:'JetBrains Mono',monospace; font-size: 11px; opacity:.7; margin-right:6px; }
   [role=tabpanel][hidden] { display:none; }
   [role=tabpanel] { animation:fadein .2s ease; }
   @keyframes fadein { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:none; } }
@@ -572,7 +572,7 @@
   .abstract .kw span { font-size:11.5px; font-weight:600; padding:4px 10px; border-radius:999px; background:var(--paper-3); color:var(--ink-2); }
   @media (max-width: 820px) {
     .row-5 { grid-template-columns:repeat(5,1fr) !important; gap:8px; }
-    .row-5 .stat-tile { padding:12px 10px 14px; } .row-5 .stat-tile .label { font-size:9.5px; }
+    .row-5 .stat-tile { padding:12px 10px 14px; } .row-5 .stat-tile .label { font-size: 11px; }
     .row-5 .stat-tile .num { font-size:24px; }
     .row-5 .stat-tile .sub { font-size:11px; }
     .artnav { grid-template-columns:repeat(3,1fr); }
@@ -597,28 +597,28 @@
   .chev { clip-path:polygon(0 0, calc(100% - 14px) 0, 100% 50%, calc(100% - 14px) 100%, 0 100%, 10px 50%); padding:12px 22px 12px 20px; min-height:84px; display:flex; flex-direction:column; justify-content:center; color:var(--ink); }
   .ph-col:first-child .chev { clip-path:polygon(0 0, calc(100% - 14px) 0, 100% 50%, calc(100% - 14px) 100%, 0 100%); border-radius:var(--r-sm) 0 0 var(--r-sm); }
   .chev.p0 { background:var(--slate); color:#fff; } .chev.p1 { background:var(--sun); } .chev.p2 { background:var(--clay); } .chev.p3 { background:var(--coral); } .chev.p4 { background:var(--slate-deep); color:#fff; }
-  .chev .pn { font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.08em; text-transform:uppercase; opacity:.85; }
+  .chev .pn { font-family:'JetBrains Mono',monospace; font-size: 11px; letter-spacing:.08em; text-transform:uppercase; opacity:.85; }
   .chev .pt { font-size:14px; font-weight:700; line-height:1.2; margin:2px 0; }
   .chev .pw { font-size:11px; opacity:.9; }
   .stp { display:flex; gap:8px; align-items:flex-start; font-size:11.5px; line-height:1.35; color:var(--ink-2); background:var(--paper); border:1px solid var(--rule); border-radius:var(--r-sm); padding:8px 10px; }
-  .stp b { flex-shrink:0; width:18px; height:18px; border-radius:50%; background:var(--ink); color:#fff; font-size:10px; display:inline-flex; align-items:center; justify-content:center; }
+  .stp b { flex-shrink:0; width:18px; height:18px; border-radius:50%; background:var(--ink); color:#fff; font-size: 11px; display:inline-flex; align-items:center; justify-content:center; }
   .method .band { border-radius:999px; padding:8px 16px; font-size:12px; font-weight:600; margin-top:6px; }
   .method .band.b1 { background:var(--slate); color:#fff; } .method .band.b2 { background:var(--sun); color:var(--ink); }
   .wp-inner { min-width:780px; }
   .wp-row { display:grid; grid-template-columns:190px repeat(var(--nw), 1fr); align-items:center; min-height:34px; border-bottom:1px solid var(--rule-2); position:relative; }
   .wp-row > * { grid-row:1; }
   .wp-row .wl { grid-column:1; font-size:12px; color:var(--ink-2); padding:6px 10px 6px 0; line-height:1.3; position:sticky; left:0; background:var(--paper); z-index:3; }
-  .wp-row .wl b { display:inline-flex; width:18px; height:18px; border-radius:50%; background:var(--ink); color:#fff; font-size:10px; align-items:center; justify-content:center; margin-right:6px; }
-  .wp-row.head { min-height:22px; border-bottom:none; } .wp-row.head .wl { font-size:10px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-3); }
-  .wm { font-size:10px; font-weight:600; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-3); border-left:1px solid var(--rule); padding-left:4px; }
-  .wp-row.head2 { min-height:20px; border-bottom:1px solid var(--rule); } .wd { font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--ink-3); text-align:center; }
-  .wp-row.ph { min-height:26px; background:var(--paper-2); } .wp-row.ph .wl { background:var(--paper-2); font-size:10px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--ink-3); grid-column:1 / -1; }
+  .wp-row .wl b { display:inline-flex; width:18px; height:18px; border-radius:50%; background:var(--ink); color:#fff; font-size: 11px; align-items:center; justify-content:center; margin-right:6px; }
+  .wp-row.head { min-height:22px; border-bottom:none; } .wp-row.head .wl { font-size: 11px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-3); }
+  .wm { font-size: 11px; font-weight:600; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-3); border-left:1px solid var(--rule); padding-left:4px; }
+  .wp-row.head2 { min-height:20px; border-bottom:1px solid var(--rule); } .wd { font-family:'JetBrains Mono',monospace; font-size: 11px; color:var(--ink-3); text-align:center; }
+  .wp-row.ph { min-height:26px; background:var(--paper-2); } .wp-row.ph .wl { background:var(--paper-2); font-size: 11px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--ink-3); grid-column:1 / -1; }
   .wbar { height:12px; border-radius:999px; } .wbar.p1{background:var(--sun)} .wbar.p2{background:var(--clay)} .wbar.p3{background:var(--coral)} .wbar.p4{background:var(--slate)}
-  .iw { height:20px; margin:0 1px; border-radius:4px; font-family:'JetBrains Mono',monospace; font-size:9.5px; font-weight:600; display:flex; align-items:center; justify-content:center; color:var(--ink); background:var(--coral); }
-  .brk { height:20px; margin:0 1px; border-radius:4px; font-size:8.5px; font-weight:700; color:var(--ink-3); display:flex; align-items:center; justify-content:center; background:repeating-linear-gradient(135deg,var(--paper-3) 0 4px,var(--paper) 4px 8px); border:1px dashed var(--ink-4); }
+  .iw { height:20px; margin:0 1px; border-radius:4px; font-family:'JetBrains Mono',monospace; font-size: 11px; font-weight:600; display:flex; align-items:center; justify-content:center; color:var(--ink); background:var(--coral); }
+  .brk { height:20px; margin:0 1px; border-radius:4px; font-size: 11px; font-weight:700; color:var(--ink-3); display:flex; align-items:center; justify-content:center; background:repeating-linear-gradient(135deg,var(--paper-3) 0 4px,var(--paper) 4px 8px); border:1px dashed var(--ink-4); }
   .wp-row .dl { justify-self:end; width:10px; height:10px; background:var(--ink); transform:translateX(5px) rotate(45deg); z-index:2; }
   .wp-row .dl.gate { background:var(--coral); outline:2px solid var(--paper); }
-  .wp-row .dlt { font-size:10.5px; color:var(--ink-2); white-space:nowrap; padding-left:10px; overflow:hidden; text-overflow:ellipsis; }
+  .wp-row .dlt { font-size: 11px; color:var(--ink-2); white-space:nowrap; padding-left:10px; overflow:hidden; text-overflow:ellipsis; }
   .wp-row .dlt.left { text-align:right; padding:0 12px 0 0; }
   .wp-row.band { min-height:30px; } .wp-row .bandbar { height:14px; border-radius:999px; }
   .wp-row.b1 .bandbar { background:var(--paper-3); box-shadow:inset 0 0 0 1px var(--slate); } .wp-row.b2 .bandbar { background:var(--paper-3); box-shadow:inset 0 0 0 1px var(--sun); }
@@ -649,7 +649,7 @@
   .sl-h dt { color:var(--ink-3); font-weight:600; } .sl-h dd { color:var(--ink-2); }
   .siflow { display:grid; grid-template-columns:repeat(8,1fr); gap:4px; margin-bottom:16px; }
   .siflow div { border-radius:var(--r-sm); padding:8px 8px; font-size:11px; line-height:1.25; }
-  .siflow span { display:block; font-family:'JetBrains Mono',monospace; font-size:9.5px; opacity:.8; margin-bottom:2px; }
+  .siflow span { display:block; font-family:'JetBrains Mono',monospace; font-size: 11px; opacity:.8; margin-bottom:2px; }
   .siflow .f0,.siflow .f1 { background:var(--sun); } .siflow .f2,.siflow .f3,.siflow .f4 { background:var(--clay); }
   .siflow .f5 { background:var(--coral); } .siflow .f6,.siflow .f7 { background:var(--slate); color:#fff; }
   .box p.lead { font-size:13px; color:var(--ink-2); line-height:1.55; }
@@ -662,7 +662,7 @@
   .cyc { padding:14px 16px; border-right:1px solid var(--rule-2); }
   .cyc:last-child { border-right:none; }
   .cyc .ch { display:flex; justify-content:space-between; align-items:center; margin:-14px -16px 12px; padding:9px 16px; font-size:12px; font-weight:700; }
-  .cyc .ch i { font-style:normal; font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:600; }
+  .cyc .ch i { font-style:normal; font-family:'JetBrains Mono',monospace; font-size: 11px; font-weight:600; }
   .cyc.c1 .ch { background:var(--sun); } .cyc.c2 .ch { background:var(--clay); } .cyc.c3 .ch { background:var(--coral); }
   .cyc p { font-size:12.5px; color:var(--ink-2); line-height:1.5; margin-bottom:6px; }
   .cyc p.tech { font-size:12.5px; font-weight:700; color:var(--ink); }
@@ -678,6 +678,14 @@
     .techs, .cycles { grid-template-columns:1fr; } .cyc { border-right:none; border-bottom:1px solid var(--rule-2); }
     .siflow { grid-template-columns:repeat(4,1fr); } .si-lesson { padding:16px; } .sl-h dl { grid-template-columns:1fr; }
   }
+
+  /* Readability (Oct 2026): the rotation chart renders its smallest label at 11px or larger.
+     It spans the full snapshot card and scrolls sideways inside its own box when the screen is narrower. */
+  .row-2:has(.hero-diagram) { grid-template-columns: minmax(0, 1fr); }
+  .row-2:has(.hero-diagram) .proj-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 32px; }
+  @media (max-width: 760px) { .row-2:has(.hero-diagram) .proj-list { grid-template-columns: minmax(0, 1fr); } }
+  .hero-diagram { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .hero-diagram svg { min-width: 760px; width: 100%; height: auto; }
 </style>
 </head>
 <body>
@@ -720,103 +728,103 @@
 <text x="62.0" y="20" font-size="9.5" text-anchor="middle" fill="#5F6872" font-family="JetBrains Mono, monospace">W1</text>
 <rect x="44" y="30" width="36" height="40" rx="7" fill="#E9A646"><title>Tue Jan 12 · CARS</title></rect>
 <text x="62.0" y="49.0" font-size="10" font-weight="700" text-anchor="middle" fill="#1F2A33" font-family="Inter, sans-serif">CA</text>
-<text x="62.0" y="60.0" font-size="7.5" text-anchor="middle" fill="#1F2A33" opacity=".85" font-family="JetBrains Mono, monospace">1/12</text>
+<text x="62.0" y="60.0" font-size="9.5" text-anchor="middle" fill="#1F2A33" opacity=".85" font-family="JetBrains Mono, monospace">1/12</text>
 <rect x="44" y="76" width="36" height="40" rx="7" fill="#DC7F52"><title>Thu Jan 14 · Bio/Biochem</title></rect>
 <text x="62.0" y="95.0" font-size="10" font-weight="700" text-anchor="middle" fill="#1F2A33" font-family="Inter, sans-serif">BB</text>
-<text x="62.0" y="106.0" font-size="7.5" text-anchor="middle" fill="#1F2A33" opacity=".85" font-family="JetBrains Mono, monospace">1/14</text>
+<text x="62.0" y="106.0" font-size="9.5" text-anchor="middle" fill="#1F2A33" opacity=".85" font-family="JetBrains Mono, monospace">1/14</text>
 <text x="104.0" y="20" font-size="9.5" text-anchor="middle" fill="#5F6872" font-family="JetBrains Mono, monospace">W2</text>
 <rect x="86" y="30" width="36" height="40" rx="7" fill="#D36C62"><title>Tue Jan 19 · Chem/Physics</title></rect>
 <text x="104.0" y="49.0" font-size="10" font-weight="700" text-anchor="middle" fill="#1F2A33" font-family="Inter, sans-serif">CP</text>
-<text x="104.0" y="60.0" font-size="7.5" text-anchor="middle" fill="#1F2A33" opacity=".85" font-family="JetBrains Mono, monospace">1/19</text>
+<text x="104.0" y="60.0" font-size="9.5" text-anchor="middle" fill="#1F2A33" opacity=".85" font-family="JetBrains Mono, monospace">1/19</text>
 <rect x="86" y="76" width="36" height="40" rx="7" fill="#426682"><title>Thu Jan 21 · Psych/Soc</title></rect>
 <text x="104.0" y="95.0" font-size="10" font-weight="700" text-anchor="middle" fill="#fff" font-family="Inter, sans-serif">PS</text>
-<text x="104.0" y="106.0" font-size="7.5" text-anchor="middle" fill="#fff" opacity=".85" font-family="JetBrains Mono, monospace">1/21</text>
+<text x="104.0" y="106.0" font-size="9.5" text-anchor="middle" fill="#fff" opacity=".85" font-family="JetBrains Mono, monospace">1/21</text>
 <text x="146.0" y="20" font-size="9.5" text-anchor="middle" fill="#5F6872" font-family="JetBrains Mono, monospace">W3</text>
 <rect x="128" y="30" width="36" height="40" rx="7" fill="#E9A646"><title>Tue Jan 26 · CARS</title></rect>
 <text x="146.0" y="49.0" font-size="10" font-weight="700" text-anchor="middle" fill="#1F2A33" font-family="Inter, sans-serif">CA</text>
-<text x="146.0" y="60.0" font-size="7.5" text-anchor="middle" fill="#1F2A33" opacity=".85" font-family="JetBrains Mono, monospace">1/26</text>
+<text x="146.0" y="60.0" font-size="9.5" text-anchor="middle" fill="#1F2A33" opacity=".85" font-family="JetBrains Mono, monospace">1/26</text>
 <rect x="128" y="76" width="36" height="40" rx="7" fill="#DC7F52"><title>Thu Jan 28 · Bio/Biochem</title></rect>
 <text x="146.0" y="95.0" font-size="10" font-weight="700" text-anchor="middle" fill="#1F2A33" font-family="Inter, sans-serif">BB</text>
-<text x="146.0" y="106.0" font-size="7.5" text-anchor="middle" fill="#1F2A33" opacity=".85" font-family="JetBrains Mono, monospace">1/28</text>
+<text x="146.0" y="106.0" font-size="9.5" text-anchor="middle" fill="#1F2A33" opacity=".85" font-family="JetBrains Mono, monospace">1/28</text>
 <text x="188.0" y="20" font-size="9.5" text-anchor="middle" fill="#5F6872" font-family="JetBrains Mono, monospace">W4</text>
 <rect x="170" y="30" width="36" height="40" rx="7" fill="#D36C62"><title>Tue Feb 2 · Chem/Physics</title></rect>
 <text x="188.0" y="49.0" font-size="10" font-weight="700" text-anchor="middle" fill="#1F2A33" font-family="Inter, sans-serif">CP</text>
-<text x="188.0" y="60.0" font-size="7.5" text-anchor="middle" fill="#1F2A33" opacity=".85" font-family="JetBrains Mono, monospace">2/2</text>
+<text x="188.0" y="60.0" font-size="9.5" text-anchor="middle" fill="#1F2A33" opacity=".85" font-family="JetBrains Mono, monospace">2/2</text>
 <rect x="170" y="76" width="36" height="40" rx="7" fill="#426682"><title>Thu Feb 4 · Psych/Soc</title></rect>
 <text x="188.0" y="95.0" font-size="10" font-weight="700" text-anchor="middle" fill="#fff" font-family="Inter, sans-serif">PS</text>
-<text x="188.0" y="106.0" font-size="7.5" text-anchor="middle" fill="#fff" opacity=".85" font-family="JetBrains Mono, monospace">2/4</text>
+<text x="188.0" y="106.0" font-size="9.5" text-anchor="middle" fill="#fff" opacity=".85" font-family="JetBrains Mono, monospace">2/4</text>
 <text x="230.0" y="20" font-size="9.5" text-anchor="middle" fill="#5F6872" font-family="JetBrains Mono, monospace">W5</text>
 <rect x="212" y="30" width="36" height="40" rx="7" fill="#E9A646"><title>Tue Feb 9 · CARS</title></rect>
 <text x="230.0" y="49.0" font-size="10" font-weight="700" text-anchor="middle" fill="#1F2A33" font-family="Inter, sans-serif">CA</text>
-<text x="230.0" y="60.0" font-size="7.5" text-anchor="middle" fill="#1F2A33" opacity=".85" font-family="JetBrains Mono, monospace">2/9</text>
+<text x="230.0" y="60.0" font-size="9.5" text-anchor="middle" fill="#1F2A33" opacity=".85" font-family="JetBrains Mono, monospace">2/9</text>
 <rect x="212" y="76" width="36" height="40" rx="7" fill="#DC7F52"><title>Thu Feb 11 · Bio/Biochem</title></rect>
 <text x="230.0" y="95.0" font-size="10" font-weight="700" text-anchor="middle" fill="#1F2A33" font-family="Inter, sans-serif">BB</text>
-<text x="230.0" y="106.0" font-size="7.5" text-anchor="middle" fill="#1F2A33" opacity=".85" font-family="JetBrains Mono, monospace">2/11</text>
+<text x="230.0" y="106.0" font-size="9.5" text-anchor="middle" fill="#1F2A33" opacity=".85" font-family="JetBrains Mono, monospace">2/11</text>
 <text x="272.0" y="20" font-size="9.5" text-anchor="middle" fill="#5F6872" font-family="JetBrains Mono, monospace">W6</text>
 <rect x="254" y="30" width="36" height="40" rx="7" fill="#D36C62"><title>Tue Feb 16 · Chem/Physics</title></rect>
 <text x="272.0" y="49.0" font-size="10" font-weight="700" text-anchor="middle" fill="#1F2A33" font-family="Inter, sans-serif">CP</text>
-<text x="272.0" y="60.0" font-size="7.5" text-anchor="middle" fill="#1F2A33" opacity=".85" font-family="JetBrains Mono, monospace">2/16</text>
+<text x="272.0" y="60.0" font-size="9.5" text-anchor="middle" fill="#1F2A33" opacity=".85" font-family="JetBrains Mono, monospace">2/16</text>
 <rect x="254" y="76" width="36" height="40" rx="7" fill="#426682"><title>Thu Feb 18 · Psych/Soc</title></rect>
 <text x="272.0" y="95.0" font-size="10" font-weight="700" text-anchor="middle" fill="#fff" font-family="Inter, sans-serif">PS</text>
-<text x="272.0" y="106.0" font-size="7.5" text-anchor="middle" fill="#fff" opacity=".85" font-family="JetBrains Mono, monospace">2/18</text>
+<text x="272.0" y="106.0" font-size="9.5" text-anchor="middle" fill="#fff" opacity=".85" font-family="JetBrains Mono, monospace">2/18</text>
 <text x="314.0" y="20" font-size="9.5" text-anchor="middle" fill="#5F6872" font-family="JetBrains Mono, monospace">W7</text>
 <rect x="296" y="30" width="36" height="40" rx="7" fill="#E9A646"><title>Tue Feb 23 · CARS</title></rect>
 <text x="314.0" y="49.0" font-size="10" font-weight="700" text-anchor="middle" fill="#1F2A33" font-family="Inter, sans-serif">CA</text>
-<text x="314.0" y="60.0" font-size="7.5" text-anchor="middle" fill="#1F2A33" opacity=".85" font-family="JetBrains Mono, monospace">2/23</text>
+<text x="314.0" y="60.0" font-size="9.5" text-anchor="middle" fill="#1F2A33" opacity=".85" font-family="JetBrains Mono, monospace">2/23</text>
 <rect x="296" y="76" width="36" height="40" rx="7" fill="#DC7F52"><title>Thu Feb 25 · Bio/Biochem</title></rect>
 <text x="314.0" y="95.0" font-size="10" font-weight="700" text-anchor="middle" fill="#1F2A33" font-family="Inter, sans-serif">BB</text>
-<text x="314.0" y="106.0" font-size="7.5" text-anchor="middle" fill="#1F2A33" opacity=".85" font-family="JetBrains Mono, monospace">2/25</text>
+<text x="314.0" y="106.0" font-size="9.5" text-anchor="middle" fill="#1F2A33" opacity=".85" font-family="JetBrains Mono, monospace">2/25</text>
 <text x="356.0" y="20" font-size="9.5" text-anchor="middle" fill="#5F6872" font-family="JetBrains Mono, monospace">W8</text>
 <rect x="338" y="30" width="36" height="40" rx="7" fill="#D36C62"><title>Tue Mar 2 · Chem/Physics</title></rect>
 <text x="356.0" y="49.0" font-size="10" font-weight="700" text-anchor="middle" fill="#1F2A33" font-family="Inter, sans-serif">CP</text>
-<text x="356.0" y="60.0" font-size="7.5" text-anchor="middle" fill="#1F2A33" opacity=".85" font-family="JetBrains Mono, monospace">3/2</text>
+<text x="356.0" y="60.0" font-size="9.5" text-anchor="middle" fill="#1F2A33" opacity=".85" font-family="JetBrains Mono, monospace">3/2</text>
 <rect x="338" y="76" width="36" height="40" rx="7" fill="#426682"><title>Thu Mar 4 · Psych/Soc</title></rect>
 <text x="356.0" y="95.0" font-size="10" font-weight="700" text-anchor="middle" fill="#fff" font-family="Inter, sans-serif">PS</text>
-<text x="356.0" y="106.0" font-size="7.5" text-anchor="middle" fill="#fff" opacity=".85" font-family="JetBrains Mono, monospace">3/4</text>
+<text x="356.0" y="106.0" font-size="9.5" text-anchor="middle" fill="#fff" opacity=".85" font-family="JetBrains Mono, monospace">3/4</text>
 <text x="398.0" y="20" font-size="9.5" text-anchor="middle" fill="#5F6872" font-family="JetBrains Mono, monospace">W9</text>
 <rect x="380" y="30" width="36" height="40" rx="7" fill="#E9A646"><title>Tue Mar 9 · CARS</title></rect>
 <text x="398.0" y="49.0" font-size="10" font-weight="700" text-anchor="middle" fill="#1F2A33" font-family="Inter, sans-serif">CA</text>
-<text x="398.0" y="60.0" font-size="7.5" text-anchor="middle" fill="#1F2A33" opacity=".85" font-family="JetBrains Mono, monospace">3/9</text>
+<text x="398.0" y="60.0" font-size="9.5" text-anchor="middle" fill="#1F2A33" opacity=".85" font-family="JetBrains Mono, monospace">3/9</text>
 <rect x="380" y="76" width="36" height="40" rx="7" fill="#DC7F52"><title>Thu Mar 11 · Bio/Biochem</title></rect>
 <text x="398.0" y="95.0" font-size="10" font-weight="700" text-anchor="middle" fill="#1F2A33" font-family="Inter, sans-serif">BB</text>
-<text x="398.0" y="106.0" font-size="7.5" text-anchor="middle" fill="#1F2A33" opacity=".85" font-family="JetBrains Mono, monospace">3/11</text>
+<text x="398.0" y="106.0" font-size="9.5" text-anchor="middle" fill="#1F2A33" opacity=".85" font-family="JetBrains Mono, monospace">3/11</text>
 <rect x="422" y="30" width="20" height="86" fill="#F1EDE6" stroke="#A7ADB3" stroke-dasharray="3 3" rx="6"/>
-<text x="432" y="73.0" font-size="8.5" fill="#1F2A33" text-anchor="middle" transform="rotate(-90 432 73.0)" font-family="Inter, sans-serif" font-weight="600">SPRING BREAK</text>
+<text x="432" y="73.0" font-size="9.5" fill="#1F2A33" text-anchor="middle" transform="rotate(-90 432 73.0)" font-family="Inter, sans-serif" font-weight="600">SPRING BREAK</text>
 <text x="466.0" y="20" font-size="9.5" text-anchor="middle" fill="#5F6872" font-family="JetBrains Mono, monospace">W10</text>
 <rect x="448" y="30" width="36" height="40" rx="7" fill="#D36C62"><title>Tue Mar 23 · Chem/Physics</title></rect>
 <text x="466.0" y="49.0" font-size="10" font-weight="700" text-anchor="middle" fill="#1F2A33" font-family="Inter, sans-serif">CP</text>
-<text x="466.0" y="60.0" font-size="7.5" text-anchor="middle" fill="#1F2A33" opacity=".85" font-family="JetBrains Mono, monospace">3/23</text>
+<text x="466.0" y="60.0" font-size="9.5" text-anchor="middle" fill="#1F2A33" opacity=".85" font-family="JetBrains Mono, monospace">3/23</text>
 <rect x="448" y="76" width="36" height="40" rx="7" fill="#426682"><title>Thu Mar 25 · Psych/Soc</title></rect>
 <text x="466.0" y="95.0" font-size="10" font-weight="700" text-anchor="middle" fill="#fff" font-family="Inter, sans-serif">PS</text>
-<text x="466.0" y="106.0" font-size="7.5" text-anchor="middle" fill="#fff" opacity=".85" font-family="JetBrains Mono, monospace">3/25</text>
+<text x="466.0" y="106.0" font-size="9.5" text-anchor="middle" fill="#fff" opacity=".85" font-family="JetBrains Mono, monospace">3/25</text>
 <text x="508.0" y="20" font-size="9.5" text-anchor="middle" fill="#5F6872" font-family="JetBrains Mono, monospace">W11</text>
 <rect x="490" y="30" width="36" height="40" rx="7" fill="#E9A646"><title>Tue Mar 30 · CARS</title></rect>
 <text x="508.0" y="49.0" font-size="10" font-weight="700" text-anchor="middle" fill="#1F2A33" font-family="Inter, sans-serif">CA</text>
-<text x="508.0" y="60.0" font-size="7.5" text-anchor="middle" fill="#1F2A33" opacity=".85" font-family="JetBrains Mono, monospace">3/30</text>
+<text x="508.0" y="60.0" font-size="9.5" text-anchor="middle" fill="#1F2A33" opacity=".85" font-family="JetBrains Mono, monospace">3/30</text>
 <rect x="490" y="76" width="36" height="40" rx="7" fill="#DC7F52"><title>Thu Apr 1 · Bio/Biochem</title></rect>
 <text x="508.0" y="95.0" font-size="10" font-weight="700" text-anchor="middle" fill="#1F2A33" font-family="Inter, sans-serif">BB</text>
-<text x="508.0" y="106.0" font-size="7.5" text-anchor="middle" fill="#1F2A33" opacity=".85" font-family="JetBrains Mono, monospace">4/1</text>
+<text x="508.0" y="106.0" font-size="9.5" text-anchor="middle" fill="#1F2A33" opacity=".85" font-family="JetBrains Mono, monospace">4/1</text>
 <text x="550.0" y="20" font-size="9.5" text-anchor="middle" fill="#5F6872" font-family="JetBrains Mono, monospace">W12</text>
 <rect x="532" y="30" width="36" height="40" rx="7" fill="#D36C62"><title>Tue Apr 6 · Chem/Physics</title></rect>
 <text x="550.0" y="49.0" font-size="10" font-weight="700" text-anchor="middle" fill="#1F2A33" font-family="Inter, sans-serif">CP</text>
-<text x="550.0" y="60.0" font-size="7.5" text-anchor="middle" fill="#1F2A33" opacity=".85" font-family="JetBrains Mono, monospace">4/6</text>
+<text x="550.0" y="60.0" font-size="9.5" text-anchor="middle" fill="#1F2A33" opacity=".85" font-family="JetBrains Mono, monospace">4/6</text>
 <rect x="532" y="76" width="36" height="40" rx="7" fill="#426682"><title>Thu Apr 8 · Psych/Soc</title></rect>
 <text x="550.0" y="95.0" font-size="10" font-weight="700" text-anchor="middle" fill="#fff" font-family="Inter, sans-serif">PS</text>
-<text x="550.0" y="106.0" font-size="7.5" text-anchor="middle" fill="#fff" opacity=".85" font-family="JetBrains Mono, monospace">4/8</text>
+<text x="550.0" y="106.0" font-size="9.5" text-anchor="middle" fill="#fff" opacity=".85" font-family="JetBrains Mono, monospace">4/8</text>
 <text x="592.0" y="20" font-size="9.5" text-anchor="middle" fill="#5F6872" font-family="JetBrains Mono, monospace">W13</text>
 <rect x="574" y="30" width="36" height="40" rx="7" fill="#E9A646"><title>Tue Apr 13 · CARS</title></rect>
 <text x="592.0" y="49.0" font-size="10" font-weight="700" text-anchor="middle" fill="#1F2A33" font-family="Inter, sans-serif">CA</text>
-<text x="592.0" y="60.0" font-size="7.5" text-anchor="middle" fill="#1F2A33" opacity=".85" font-family="JetBrains Mono, monospace">4/13</text>
+<text x="592.0" y="60.0" font-size="9.5" text-anchor="middle" fill="#1F2A33" opacity=".85" font-family="JetBrains Mono, monospace">4/13</text>
 <rect x="574" y="76" width="36" height="40" rx="7" fill="#DC7F52"><title>Thu Apr 15 · Bio/Biochem</title></rect>
 <text x="592.0" y="95.0" font-size="10" font-weight="700" text-anchor="middle" fill="#1F2A33" font-family="Inter, sans-serif">BB</text>
-<text x="592.0" y="106.0" font-size="7.5" text-anchor="middle" fill="#1F2A33" opacity=".85" font-family="JetBrains Mono, monospace">4/15</text>
+<text x="592.0" y="106.0" font-size="9.5" text-anchor="middle" fill="#1F2A33" opacity=".85" font-family="JetBrains Mono, monospace">4/15</text>
 <text x="634.0" y="20" font-size="9.5" text-anchor="middle" fill="#5F6872" font-family="JetBrains Mono, monospace">W14</text>
 <rect x="616" y="30" width="36" height="40" rx="7" fill="#D36C62"><title>Tue Apr 20 · Chem/Physics</title></rect>
 <text x="634.0" y="49.0" font-size="10" font-weight="700" text-anchor="middle" fill="#1F2A33" font-family="Inter, sans-serif">CP</text>
-<text x="634.0" y="60.0" font-size="7.5" text-anchor="middle" fill="#1F2A33" opacity=".85" font-family="JetBrains Mono, monospace">4/20</text>
+<text x="634.0" y="60.0" font-size="9.5" text-anchor="middle" fill="#1F2A33" opacity=".85" font-family="JetBrains Mono, monospace">4/20</text>
 <rect x="616" y="76" width="36" height="40" rx="7" fill="#426682"><title>Thu Apr 22 · Psych/Soc</title></rect>
 <text x="634.0" y="95.0" font-size="10" font-weight="700" text-anchor="middle" fill="#fff" font-family="Inter, sans-serif">PS</text>
-<text x="634.0" y="106.0" font-size="7.5" text-anchor="middle" fill="#fff" opacity=".85" font-family="JetBrains Mono, monospace">4/22</text>
+<text x="634.0" y="106.0" font-size="9.5" text-anchor="middle" fill="#fff" opacity=".85" font-family="JetBrains Mono, monospace">4/22</text>
 <text x="44" y="158" font-size="10" fill="#5F6872" font-family="Inter, sans-serif">Jan 12 → Apr 22, 2027 · 120 minutes each · Tuesdays and Thursdays</text>
 </svg><div class="legend"><span><i class="sw cars"></i>CARS <span style="color:var(--ink-3)">(CA)</span></span><span><i class="sw bio"></i>Bio/Biochem <span style="color:var(--ink-3)">(BB)</span></span><span><i class="sw chem"></i>Chem/Physics <span style="color:var(--ink-3)">(CP)</span></span><span><i class="sw psy"></i>Psych/Soc <span style="color:var(--ink-3)">(PS)</span></span></div>
         <div class="hero-facts"><div><b>Meetings</b>Tue &amp; Thu · 120 minutes</div><div><b>Per session</b>3–5 substantial questions</div><div><b>Facilitation</b>One SI Supervisor per session</div><div><b>Session cap</b>100 attendees</div><div><b>Attendance</b>One or both sessions a week; RSVP each</div><div><b>Cost to students</b>Free with financial aid; sliding scale for others</div></div></figure>
