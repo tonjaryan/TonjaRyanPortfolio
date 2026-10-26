@@ -3335,9 +3335,10 @@ body {
 }
 .bloom-ex {
   display: flex;
+  flex-direction: column;     /* subject tag sits above its example, both left-aligned */
   align-items: flex-start;
-  gap: 10px;
-  margin-bottom: 8px;
+  gap: 6px;
+  margin-bottom: 14px;
 }
 .bloom-ex:last-child { margin-bottom: 0; }
 .bex-tag {
@@ -3351,8 +3352,9 @@ body {
   border-radius: 4px;
   flex-shrink: 0;
   font-family: var(--ff-body);
-  margin-top: 2px;
+  margin-top: 0;
 }
+.bloom-ex p { margin: 0; text-align: left; }
 .bloom-card:nth-child(2) .bex-tag { background: rgba(194, 79, 10, 0.14); color: #C24F0A; }
 .bloom-card:nth-child(3) .bex-tag { background: var(--terra-mist); color: var(--terra); }
 .bloom-card:nth-child(4) .bex-tag { background: rgba(174, 67, 30, 0.14); color: var(--clay); }
