@@ -686,6 +686,24 @@
   @media (max-width: 760px) { .row-2:has(.hero-diagram) .proj-list { grid-template-columns: minmax(0, 1fr); } }
   .hero-diagram { overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .hero-diagram svg { min-width: 760px; width: 100%; height: auto; }
+
+  /* Phones (Oct 2026): stack the remaining two-column rows */
+  @media (max-width: 600px) {
+    .row-2, .row-2[style] { grid-template-columns: minmax(0, 1fr) !important; }
+    .lesson-grid, .cols-2, .tiers, .pains, .techs, .cycles, .module-features, .hero-facts { grid-template-columns: minmax(0, 1fr) !important; }
+    .lesson dl { grid-template-columns: minmax(0, 1fr); }
+  }
+
+  /* Phones: tables with a header row become labeled blocks */
+  @media (max-width: 600px) {
+    table.stackable, table.stackable tbody, table.stackable tr, table.stackable th, table.stackable td { display: block; width: 100% !important; min-width: 0 !important; }
+    table.stackable { min-width: 0 !important; }
+    table.stackable thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+    table.stackable tr { border: 1px solid var(--rule, #E4DFD6); border-radius: 8px; padding: 10px 12px; margin-bottom: 10px; background: var(--paper, #fff); }
+    table.stackable th, table.stackable td { border: 0 !important; padding: 3px 0 !important; text-align: left !important; }
+    table.stackable [data-label]::before { content: attr(data-label); display: block; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3, #4A5560); margin-bottom: 1px; }
+    .stack-scroll-off { overflow: visible !important; }
+  }
 </style>
 </head>
 <body>
@@ -1333,6 +1351,19 @@ document.querySelectorAll('[data-lessonpane]').forEach(function(p){p.hidden=p.da
   function fromHash(){var h=(location.hash||'').slice(1).split('/'); if(h[0]) show(h[0], h[1], null, false);}
   window.addEventListener('hashchange', fromHash); fromHash();
 })();
+</script>
+
+<script>
+/* Phones: label each table cell with its column header so rows can stack (Oct 2026) */
+document.querySelectorAll('table').forEach(t => {
+  const heads = [...t.querySelectorAll('thead th')].map(th => th.textContent.trim());
+  if (!heads.length) return;
+  t.classList.add('stackable');
+  t.querySelectorAll('tbody tr').forEach(tr => {
+    [...tr.children].forEach((cell, i) => { if (heads[i] && !cell.hasAttribute('data-label')) cell.setAttribute('data-label', heads[i]); });
+  });
+  const wrap = t.parentElement; if (wrap && getComputedStyle(wrap).overflowX !== 'visible') wrap.classList.add('stack-scroll-off');
+});
 </script>
 </body>
 </html>

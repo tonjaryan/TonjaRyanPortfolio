@@ -691,7 +691,7 @@
   .rail-item > .card.project { flex: 1; position: relative; z-index: 1; transition: transform .28s cubic-bezier(.2,.7,.2,1), box-shadow .28s ease; }
   .rail-item:hover > .card.project, .rail-item:focus-within > .card.project {
     transform: translateY(-5px);
-    background: #DFE5D4;                  /* light sage tint while hovered */
+    background: #E9E4D8;                  /* slightly darker tan while hovered */
     box-shadow: 0 10px 22px rgba(0,0,0,.24), 0 26px 60px rgba(0,0,0,.26);
   }
   .rail-item > .card.project { transition: transform .28s cubic-bezier(.2,.7,.2,1), box-shadow .28s ease, background-color .2s ease; }
@@ -747,6 +747,32 @@
     .card.intro .intro-title { font-size: clamp(38px, 12.5vw, 56px); white-space: normal; }
   }
 
+
+  /* ====== MOBILE (Oct 2026): same design, arranged for phones ====== */
+  @media (max-width: 720px) {
+    /* practice areas: stacked, no stray separators */
+    .practices-bar { flex-direction: column; gap: 2px; padding-bottom: 24px; margin-bottom: 24px; }
+    .practices-bar .sep { display: none; }
+    .practices-bar .practice { padding: 3px 0; }
+    /* photo sits above "About Me" */
+    .intro-about-grid { display: flex; flex-direction: column-reverse; gap: 24px; }
+    .intro-about-right { justify-content: flex-start; }
+    /* banner keywords: one per line with a small marker, no trailing slashes */
+    .section-divider.banner .banner-chips { flex-direction: column; gap: 2px; }
+    .section-divider.banner .banner-chips span::after { content: none !important; }
+    .section-divider.banner .banner-chips span::before { content: '\2014'; margin-right: 8px; color: rgba(242, 239, 231, 0.8); }
+    /* scroll arrows move under the cards, beside the progress line, so they never cover text */
+    .rail-btn { top: auto; bottom: -15px; margin-top: 0; width: 40px; height: 40px; }
+    .rail-btn.next { right: 0; }
+    .rail-btn.prev { left: auto; right: 48px; }
+    .rail-progress { margin-right: 104px; margin-top: 16px; }
+    .rail { padding-bottom: 6px; }
+    /* contact card */
+    .thanks-right { align-items: flex-start; }
+    .thanks-title, .thanks-right .sub { text-align: left; }
+    .colophon { flex-wrap: wrap; gap: 8px; }
+  }
+
   /* ====== RESPONSIVE ====== */
   @media (max-width: 720px) {
     .frame { padding: 28px 16px 48px; }
@@ -772,10 +798,6 @@
 </style>
 </head>
 <body>
-
-<div class="mobile-notice">
-  <strong>Optimized for desktop.</strong> Best viewed at 1024px width and above.
-</div>
 
 <main class="frame" id="main">
 

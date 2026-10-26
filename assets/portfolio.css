@@ -397,3 +397,19 @@ figure figcaption { margin-top: 8px; font-size: 12.5px; color: var(--ink-3); max
 
 /* related-work block at the end of a case study: unnumbered */
 .cs-related h2::after { content: none; }
+
+/* Phones: each table row becomes a labeled block instead of narrow columns */
+@media (max-width: 600px) {
+  .table-wrap { overflow: visible; background: none; border: 0; }
+  .table-wrap table, .table-wrap tbody, .table-wrap tr, .table-wrap th, .table-wrap td { display: block; width: 100%; }
+  .table-wrap thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+  .table-wrap caption { display: block; padding: 0 0 8px; }
+  .table-wrap tr { background: var(--paper); border: 1px solid var(--rule); border-radius: 3px; padding: 10px 14px; margin-bottom: 10px; }
+  .table-wrap th, .table-wrap td { border: 0; padding: 4px 0; }
+  .table-wrap [data-label]::before {
+    content: attr(data-label); display: block; margin-bottom: 1px;
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    font-weight: 700; color: var(--accent);
+  }
+  .table-wrap tbody th { font-size: 15px; }
+}
