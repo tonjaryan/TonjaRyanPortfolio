@@ -90,15 +90,14 @@ Branch: `portfolio-revamp` · October 26, 2026
 
 ## 6. Design system summary
 
-- **Typography:** Inter (variable, 400–900) for everything; JetBrains Mono only for decision and stage numerals. Scale: 13 / 16 / 19 / 24 / 32 px, case-study titles `clamp(36–52px)`, name wordmark `clamp(52–104px)` in 900 uppercase. Body line-height 1.6, prose capped at 68ch.
-- **Color:** canvas `#2F3130`, sheet `#F2EFE7`, recessed `#E8E3D6`, ink `#1A1A1A` / `#3F3F3F` / `#5A5A5A`, rule `#CFC7B4`, green `#4A6741` (links, primary buttons) / `#36502F` hover / `#DCE4D3` tint, amber tint for in-progress status, focus ring `#1F5FBF`. All text pairings pass WCAG AA; tertiary text is 6.1:1.
-- **Spacing:** 4 / 8 / 12 / 16 / 24 / 32 / 48 / 72 px; sheet padding `clamp(22px, 4vw, 48px)`; page width 1180px with a 16–40px gutter.
-- **Surfaces:** cream sheets on the charcoal canvas (kept from the original), 4px radius, one shared shadow.
-- **Cards:** featured = 16:10 screenshot left, text right (stacked under 860px). Supporting = 16:10 thumbnail, status chip, title, 1–3 sentences, text links. Case-study decision blocks use a green top rule and a label/answer grid.
-- **Navigation:** sticky top bar with wordmark and four links; sticky pill nav for case-study sections; "← All work" crumb on every case study.
-- **Buttons:** primary (green fill) for the case study, secondary (outline) for launching the artifact. External launches open in a new tab and say so to screen readers.
-- **Images:** real screenshots only, 1200×750 WebP, 1px ink border, top-left crop. Homepage thumbnails are decorative duplicates of the adjacent link (`aria-hidden`, `tabindex="-1"`); case-study figures have descriptive alt text.
-- **Responsive:** breakpoints at 1024, 860, and 600px. Process grid goes 5 → 3 → 1 columns; tiles 3 → 2 → 1; tables scroll horizontally inside a focusable region.
+Revised after review: the original portfolio's identity is restored around the new screenshot cards.
+
+- **Typography:** Inter 900 uppercase for display (name, banner titles, card and case-study titles, with the original ink or cream period), Inter 400–700 for body, JetBrains Mono uppercase tracked for kickers, labels, nav, and metadata terms.
+- **Color:** original tokens: canvas `#353535`, cream card `#F2EFE7` / `#E8E3D6`, ink `#1A1A1A`, rule `#C9C2B0`, forest green `#4A6741` / `#36502F`. Lighter green `#7A9C6E` on the ink banner for contrast. Tertiary text darkened to `#616161` for AA.
+- **Composition:** restored intro card (PORTFOLIO tag, name, practices bar, About Me with offset-shadow photo), green section banners with chips, the ink divider for How I Work, the Thank You contact card, mono colophon.
+- **Project cards (kept from the redesign):** 16:10 screenshot left, text right on featured cards; supporting work as individual cream cards in a 3-column grid grouped under mono labels on the canvas. Hover is a 1.5% image zoom; buttons are ink-filled primary and outline secondary with a small offset shadow on hover; focus is a 3px blue ring.
+- **Case studies:** one continuous cream document with numbered sections (01, 02…) instead of separate stacked cards; decisions as left-ruled panels with mono labels.
+- **Responsive:** breakpoints at 1024, 860, 600px; featured cards stack, tiles go 3 → 2 → 1, practices bar stacks on phones.
 
 ## 7. Quality assurance summary
 
