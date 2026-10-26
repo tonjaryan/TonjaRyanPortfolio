@@ -1,320 +1,1089 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Tonja Ryan · Portfolio</title>
-<meta name="description" content="Portfolio of Tonja Ryan: learning experience design, training systems, and program management. Case studies covering analysis, design decisions, implementation, and evaluation.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/portfolio.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --canvas: #353535;
+    --canvas-deep: #1F2E2F;
+    --card: #F2EFE7;
+    --card-2: #E8E3D6;
+    --ink: #1A1A1A;
+    --ink-2: #3F3F3F;
+    --ink-3: #6B6B6B;
+    --ink-4: #9F9F9F;
+    --rule: #C9C2B0;
+    --rule-2: #D9D2C0;
+    --accent: #4A6741;
+    --accent-deep: #36502F;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--canvas);
+    color: var(--ink);
+    line-height: 1.5;
+    font-size: 14px;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .frame { max-width: 1180px; margin: 0 auto; padding: 56px 40px 80px; }
+
+  /* Mobile-only viewing notice */
+  .mobile-notice { display: none; }
+  @media (max-width: 720px) {
+    .mobile-notice {
+      display: block;
+      background: var(--accent);
+      color: var(--card);
+      padding: 14px 18px;
+      text-align: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      letter-spacing: 0.12em;
+      line-height: 1.6;
+      text-transform: uppercase;
+    }
+    .mobile-notice strong { color: var(--card); font-weight: 700; }
+  }
+
+  .top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 28px;
+    margin-bottom: 36px;
+    border-bottom: 1.5px solid rgba(242, 239, 231, 0.18);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(242, 239, 231, 0.7);
+  }
+  .top-bar .left { color: var(--card); font-weight: 700; display: flex; gap: 10px; align-items: center; }
+  .top-bar .left .dot { width: 7px; height: 7px; background: var(--accent); border-radius: 50%; }
+  .top-bar .right { display: flex; gap: 28px; }
+
+  .deck { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+
+  /* ====== CARD BASE ====== */
+  .card {
+    background: var(--card);
+    border-radius: 4px;
+    padding: 28px 30px;
+    position: relative;
+    min-height: 320px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.18), 0 14px 40px rgba(0,0,0,0.18);
+    overflow: hidden;
+    color: var(--ink);
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.18s, box-shadow 0.18s, background 0.18s;
+  }
+  a.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.22), 0 22px 56px rgba(0,0,0,0.22);
+    background: var(--card-2);
+  }
+
+  .pg-mark {
+    position: absolute;
+    bottom: 14px; right: 28px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-3);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .pg-mark .num { color: var(--accent); font-weight: 700; margin-left: 6px; }
+
+  /* ====== INTRO CARD (combined Cover + About) ====== */
+  .card.intro {
+    grid-column: 1 / -1;
+    min-height: 0;
+    padding: 36px 40px 44px;
+    display: block;
+  }
+  .intro-header {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 24px;
+  }
+  .practices-bar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink);
+    padding-bottom: 32px;
+    margin-bottom: 32px;
+    border-bottom: 1.5px solid var(--ink);
+  }
+  .practices-bar .practice { white-space: nowrap; padding: 4px 14px; }
+  .practices-bar .sep { color: var(--ink-4); font-weight: 300; }
+  .intro-header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+  .info-block {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink);
+    line-height: 1.75;
+  }
+  .info-block .label {
+    color: var(--ink-3);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+  .info-block a {
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px solid var(--ink-4);
+  }
+  .info-block a:hover { color: var(--accent); border-color: var(--accent); }
+  .info-block .item-list { display: flex; flex-direction: column; gap: 2px; }
+
+  .intro-header-right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .intro-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.22em;
+    color: var(--ink);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .intro-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 14px;
+  }
+  .intro-title {
+    font-family: 'Inter', sans-serif;
+    font-weight: 900;
+    font-size: clamp(48px, 7vw, 84px);
+    color: var(--accent);
+    letter-spacing: -0.045em;
+    line-height: 0.88;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .intro-title .pd { color: var(--ink); }
+
+  .intro-about { display: block; }
+  .intro-about-grid {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 48px;
+    align-items: start;
+    margin-top: 8px;
+  }
+  .intro-about-left { display: flex; flex-direction: column; min-width: 0; }
+  .intro-about-right { display: flex; justify-content: flex-end; }
+  .about-title {
+    font-family: 'Inter', sans-serif;
+    font-weight: 900;
+    font-size: clamp(34px, 4.6vw, 58px);
+    color: var(--accent);
+    letter-spacing: -0.04em;
+    line-height: 0.88;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .about-rule { width: 80px; height: 2px; background: var(--accent); margin-bottom: 20px; }
+  .about-body {
+    font-size: 13.5px;
+    line-height: 1.7;
+    color: var(--ink-2);
+  }
+  .about-body + .about-body { margin-top: 14px; }
+  .about-body strong { color: var(--ink); font-weight: 700; }
+  .about-photo {
+    width: 220px;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border-radius: 3px;
+    background: #FFFFFF;
+    border: 1.5px solid var(--ink);
+    box-shadow: 5px 5px 0 var(--ink);
+  }
+  .about-photo img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center 25%;
+    display: block;
+  }
+
+  /* ====== SECTION DIVIDER CARDS ====== */
+  .card.section-divider {
+    grid-column: 1 / -1;
+    min-height: 300px;
+    padding: 32px 36px;
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 40px;
+    background: var(--ink);
+    color: var(--card);
+  }
+  .card.section-divider .sd-left { display: flex; flex-direction: column; justify-content: space-between; }
+  .card.section-divider .sd-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: rgba(242, 239, 231, 0.6);
+    margin-bottom: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .card.section-divider .sd-tag strong { color: var(--accent); font-weight: 700; }
+  .card.section-divider .sd-title {
+    font-family: 'Inter', sans-serif;
+    font-weight: 900;
+    font-size: clamp(46px, 7vw, 88px);
+    color: var(--accent);
+    letter-spacing: -0.045em;
+    line-height: 0.84;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .card.section-divider .sd-title .pd { color: var(--card); }
+  .card.section-divider .sd-rule { width: 80px; height: 2px; background: var(--accent); }
+  .card.section-divider .sd-right { display: flex; flex-direction: column; justify-content: center; }
+  .card.section-divider .sd-intro-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(242, 239, 231, 0.55);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card.section-divider .sd-intro-label::before {
+    content: '';
+    width: 18px;
+    height: 2px;
+    background: var(--accent);
+  }
+  .card.section-divider .sd-intro {
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--card);
+    margin-bottom: 20px;
+  }
+  .card.section-divider .sd-intro strong { font-weight: 700; }
+  .card.section-divider .sd-approaches .lbl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(242, 239, 231, 0.55);
+    margin-bottom: 8px;
+  }
+  .card.section-divider .sd-approaches .list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .card.section-divider .sd-approaches .list span {
+    display: inline-flex;
+    padding: 5px 11px;
+    background: rgba(242, 239, 231, 0.06);
+    border: 1px solid rgba(242, 239, 231, 0.18);
+    border-radius: 20px;
+    font-size: 10.5px;
+    color: var(--card);
+    letter-spacing: 0.02em;
+  }
+  .card.section-divider .pg-mark { color: rgba(242, 239, 231, 0.5); }
+  .card.section-divider .pg-mark .num { color: var(--accent); }
+
+  /* --- BANNER MODIFIER for Section dividers ----------------- */
+  .card.section-divider.banner {
+    background: var(--accent);          /* burnt orange box */
+    color: var(--ink);                  /* black text by default */
+    min-height: auto;
+    padding: 28px 36px 36px;
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: 36px;
+    align-items: center;
+  }
+  .section-divider.banner .banner-left {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .section-divider.banner .banner-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: rgba(26, 26, 26, 0.55);      /* muted black for "PROJECTS" */
+  }
+  .section-divider.banner .banner-tag strong {
+    color: var(--card);                 /* cream "04" / "02" */
+    font-weight: 700;
+  }
+  .section-divider.banner .banner-title {
+    font-family: 'Inter', sans-serif;
+    font-weight: 900;
+    font-size: clamp(34px, 4.6vw, 58px);
+    color: var(--card);                 /* cream title */
+    letter-spacing: -0.04em;
+    line-height: 0.88;
+    text-transform: uppercase;
+  }
+  .section-divider.banner .banner-title .pd {
+    color: var(--card);                 /* cream period (same as title) */
+  }
+  .section-divider.banner .banner-right {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .section-divider.banner .banner-about {
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--card);                 /* cream paragraph */
+    margin: 0;
+  }
+  .section-divider.banner .banner-about strong {
+    font-weight: 700;
+    color: var(--card);
+  }
+  .section-divider.banner .banner-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  .section-divider.banner .banner-chips span {
+    display: inline-flex;
+    padding: 4px 10px;
+    background: var(--card);            /* cream chip background */
+    border: 1px solid rgba(26, 26, 26, 0.4);
+    border-radius: 20px;
+    font-size: 10px;
+    color: var(--ink);                  /* black chip text */
+    letter-spacing: 0.02em;
+  }
+  /* override page-mark colors for inverted banner */
+  .card.section-divider.banner .pg-mark {
+    color: rgba(26, 26, 26, 0.55);
+  }
+  .card.section-divider.banner .pg-mark .num {
+    color: var(--card);                 /* cream number on orange */
+  }
+
+  /* ====== STANDARDIZED PROJECT CARDS - vertical stack ====== */
+  .card.project {
+    padding: 26px 28px 32px;
+    min-height: 580px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .p-kicker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .p-kicker .cat-dot {
+    width: 7px; height: 7px;
+    background: var(--accent);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .p-kicker .cat {
+    color: var(--accent);
+    font-weight: 700;
+    letter-spacing: 0.2em;
+  }
+  .p-kicker .sep { color: var(--ink-4); }
+  .p-kicker .subtype { color: var(--ink-3); letter-spacing: 0.18em; }
+
+  .p-title {
+    font-family: 'Inter', sans-serif;
+    font-weight: 900;
+    font-size: clamp(32px, 4.4vw, 48px);
+    color: var(--accent);
+    letter-spacing: -0.038em;
+    line-height: 0.9;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .p-title .num { color: var(--ink); }
+
+  .p-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    line-height: 1.65;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin-bottom: 18px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .p-meta strong {
+    color: var(--accent);
+    font-weight: 700;
+    margin-right: 10px;
+    display: inline-block;
+    min-width: 42px;
+  }
+
+  /* Architecture / structured list block (used under thumb on select cards) */
+  .p-arch {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    line-height: 1.65;
+    margin-bottom: 18px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .p-arch-label {
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--ink-3);
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .p-arch-list {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 14px;
+    row-gap: 3px;
+  }
+  .p-arch-list .n {
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* THUMBNAIL - now full-width landscape */
+  .p-thumb {
+    width: 100%;
+    height: 175px;
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--ink);
+    margin-bottom: 18px;
+    background: var(--card-2);
+    background-image:
+      radial-gradient(circle at 20% 20%, rgba(26, 26, 26, 0.04) 1px, transparent 1px),
+      radial-gradient(circle at 70% 65%, rgba(26, 26, 26, 0.04) 1px, transparent 1px);
+    background-size: 18px 18px;
+  }
+  .p-thumb svg.icon,
+  .p-thumb img.icon {
+    width: auto;
+    max-height: 100px;
+    max-width: 150px;
+    height: 100px;
+    display: block;
+    position: relative;
+    z-index: 1;
+    object-fit: contain;
+  }
+  .p-thumb .thumb-label {
+    position: absolute;
+    bottom: 10px;
+    left: 0; right: 0;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    font-weight: 600;
+  }
+  .p-thumb .thumb-num {
+    position: absolute;
+    top: 10px;
+    left: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.18em;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .p-body {
+    font-size: 12.5px;
+    line-height: 1.65;
+    color: var(--ink-2);
+    padding-top: 18px;
+    border-top: 1px solid var(--rule);
+    margin-top: auto;
+  }
+  .p-body strong { color: var(--ink); font-weight: 700; }
+
+  /* ====== THANK YOU CARD ====== */
+  .card.thanks {
+    grid-column: 1 / -1;
+    min-height: 320px;
+    padding: 32px 36px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .thanks-left { display: flex; flex-direction: column; justify-content: space-between; }
+  .thanks-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    color: var(--ink);
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .thanks-corner {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink);
+    line-height: 1.7;
+  }
+  .thanks-corner .label {
+    color: var(--ink-3);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    margin-bottom: 4px;
+    display: block;
+  }
+  .thanks-corner a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--ink-4); }
+  .thanks-corner a:hover { color: var(--accent); border-color: var(--accent); }
+  .thanks-right { display: flex; flex-direction: column; align-items: flex-end; justify-content: flex-end; }
+  .thanks-title {
+    font-family: 'Inter', sans-serif;
+    font-weight: 900;
+    font-size: clamp(54px, 8vw, 96px);
+    color: var(--accent);
+    letter-spacing: -0.045em;
+    line-height: 0.88;
+    text-transform: uppercase;
+    text-align: right;
+  }
+  .thanks-title .pd { color: var(--ink); }
+  .thanks-right .sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 14px;
+    text-align: right;
+  }
+
+  .colophon {
+    margin-top: 36px;
+    padding-top: 22px;
+    border-top: 1px solid rgba(242, 239, 231, 0.18);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: rgba(242, 239, 231, 0.55);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .colophon .right { color: rgba(242, 239, 231, 0.85); }
+  .colophon .right .accent { color: var(--accent); }
+
+
+  /* ====== ADDITIONS (Oct 2026): screenshot thumbnails, process line, case-study + launch links ====== */
+  .card.project { min-height: 0; }
+  .p-shot {
+    display: block; width: 100%; aspect-ratio: 16 / 10; overflow: hidden;
+    border: 1px solid var(--ink); border-radius: 2px; margin-bottom: 18px; background: var(--card-2);
+  }
+  .p-shot img { width: 100%; height: 100%; object-fit: cover; object-position: top left; display: block; transition: transform .35s ease; }
+  .card.project:hover .p-shot img { transform: scale(1.015); }
+  .card.project .p-body { margin-top: 0; }
+  .p-process {
+    font-size: 12.5px; line-height: 1.65; color: var(--ink-2);
+    margin-top: 12px;
+  }
+  .p-process .lbl {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--accent); margin-right: 8px;
+  }
+  .p-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: auto; padding-top: 20px; }
+  .p-btn {
+    display: inline-flex; align-items: center; padding: 9px 14px; border-radius: 3px;
+    border: 1.5px solid var(--ink); color: var(--ink); text-decoration: none;
+    font-size: 12.5px; font-weight: 600; transition: background .15s, color .15s, box-shadow .15s, transform .15s;
+  }
+  .p-btn.primary { background: var(--ink); color: var(--card); }
+  .p-btn.primary:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .p-btn:not(.primary):hover { background: var(--card-2); box-shadow: 3px 3px 0 var(--ink); transform: translate(-1px,-1px); }
+  .p-status {
+    display: inline-block; padding: 1px 8px; border-radius: 20px; background: var(--card-2);
+    border: 1px solid var(--rule); color: var(--ink-2); font-weight: 500; letter-spacing: 0.08em;
+  }
+  .p-status.done { background: #DCE4D3; border-color: #C3D1B8; color: var(--accent-deep); }
+  .p-status.wip { background: #EFE0C2; border-color: #E0CC9F; color: #6B4A12; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+  a:focus-visible, .p-btn:focus-visible { outline: 3px solid #1F5FBF; outline-offset: 3px; }
+  @media (prefers-reduced-motion: reduce) { .p-shot img, .p-btn { transition: none; } }
+  @media (max-width: 720px) {
+    .p-actions .p-btn { flex: 1 1 100%; justify-content: center; }
+  }
+
+
+  /* structural fixes: real headings keep original look; banner stacks on mobile; contrast; tap targets */
+  h1.intro-title, h2.about-title, h2.banner-title, h2.thanks-title { margin: 0; }
+  h2.about-title { margin-bottom: 14px; }
+  .colophon { color: rgba(242, 239, 231, 0.75); }
+  .thanks-corner a { display: inline-block; padding: 3px 0; }
+  @media (max-width: 720px) {
+    .card.section-divider.banner { grid-template-columns: 1fr; }
+    .card.intro .intro-title { font-size: clamp(38px, 12.5vw, 56px); white-space: normal; }
+  }
+
+  /* ====== RESPONSIVE ====== */
+  @media (max-width: 720px) {
+    .frame { padding: 28px 16px 48px; }
+    .top-bar { flex-wrap: wrap; gap: 14px; font-size: 9.5px; padding-bottom: 18px; margin-bottom: 22px; }
+    .top-bar .right { gap: 14px; }
+    .deck { grid-template-columns: 1fr; gap: 18px; }
+    .card { padding: 22px 22px; min-height: 0; }
+    .card.intro { padding: 24px 22px 28px; }
+    .intro-header { justify-content: center; }
+    .intro-header-right { align-items: center; text-align: center; }
+    .intro-title { font-size: 56px; }
+    .intro-about-grid { grid-template-columns: 1fr; gap: 24px; }
+    .about-title { font-size: 40px; }
+    .about-photo { width: 180px; }
+    .card.section-divider, .card.thanks { grid-template-columns: 1fr; gap: 22px; }
+    .card.section-divider .sd-title, .thanks-title { font-size: 44px; }
+    .card.section-divider.banner { padding: 22px 22px 28px; gap: 18px; }
+    .section-divider.banner .banner-title { font-size: 36px; }
+    .card.project { min-height: 0; padding: 22px 22px 28px; }
+    .p-thumb { height: 150px; }
+    .p-title { font-size: 30px; }
+  }
+</style>
 </head>
 <body>
-<a class="skip-link" href="#main">Skip to content</a>
 
-<header class="site-header">
-  <div class="inner">
-    <a class="wordmark" href="index.html">Tonja Ryan</a>
-    <nav class="site-nav" aria-label="Primary">
-      <ul>
-        <li><a href="#work">Work</a></li>
-        <li><a href="#approach">Approach</a></li>
-        <li><a href="#about">About</a></li>
-        <li><a href="#contact">Contact</a></li>
-        <!-- When a resume PDF exists, add it to the repo as resume.pdf and uncomment:
-        <li><a href="resume.pdf">Resume</a></li> -->
-      </ul>
-    </nav>
-  </div>
-</header>
+<div class="mobile-notice">
+  <strong>Optimized for desktop.</strong> Best viewed at 1024px width and above.
+</div>
 
-<main id="main" class="frame">
+<main class="frame" id="main">
 
-  <!-- ===================== Intro (restored composition) ===================== -->
-  <section class="card intro" id="about" aria-labelledby="intro-title" style="margin-top: 36px;">
-    <div class="intro-head">
-      <p class="intro-tag">Portfolio</p>
-      <p class="intro-sub">Selected work · Learning design &amp; operations</p>
-      <h1 id="intro-title" class="intro-title">Tonja Ryan</h1>
-    </div>
-    <ul class="practices" aria-label="Practice areas">
-      <li>Learning Experience Design</li>
-      <li>Training Systems</li>
-      <li>Program Management</li>
-    </ul>
-    <div class="about-grid">
-      <div>
-        <h2 class="about-title">About Me</h2>
-        <div class="about-rule" aria-hidden="true"></div>
-        <p class="about-lead">I design training and the systems that support it, from analyzing performance needs and developing practical learning experiences to coordinating implementation and evaluating results. My work spans technical training, higher education, and large-scale program operations.</p>
-        <p class="about-body">As <strong>Supplemental Instruction Coordinator</strong> at the Sanger Learning Center at UT Austin, I oversee the Biology and Physical Sciences cohorts and manage the training and scheduling of 50 to 70+ peer educators across 13 undergraduate colleges, serving more than 2,500 students a semester. I also design course materials as a contract instructional designer with <strong>iDesign</strong>.</p>
-        <p class="about-body">Before UT, I was a lead science teacher in Austin ISD and a camp director at Lavner Education. I hold a master's degree in Educational Psychology.</p>
-        <div class="actions">
-          <a class="btn btn-primary" href="#work">See selected work</a>
-          <a class="btn btn-secondary" href="https://www.linkedin.com/in/tonja-ryan" target="_blank" rel="noopener">LinkedIn<span class="sr-only"> (opens in a new tab)</span></a>
-          <a class="btn btn-secondary" href="mailto:tonjaryan@gmail.com">Email</a>
+  <div class="deck">
+
+    <!-- ============== 01 INTRO (merged Cover + About) ============== -->
+    <div class="card intro" id="about">
+
+      <div class="intro-header">
+        <div class="intro-header-right">
+          <div class="intro-tag">Portfolio</div>
+          <div class="intro-sub">Selected Work · Learning Design &amp; Operations</div>
+          <h1 class="intro-title">Tonja Ryan</h1>
         </div>
       </div>
-      <img class="about-photo" src="assets/img/headshot.webp" width="480" height="600" alt="Portrait of Tonja Ryan">
-    </div>
-  </section>
 
-  <!-- ===================== Selected work ===================== -->
-  <section class="banner" id="work" aria-labelledby="work-title">
-    <h2 id="work-title">Selected Work<span class="pd">.</span></h2>
-    <div>
-      <p>Four projects, each with a case study that covers the problem, the analysis, the design decisions, and how the work was or would be evaluated. Every project is labeled as professional work or an independent work sample.</p>
-      <ul class="chips" aria-label="Capabilities shown">
-        <li>Needs analysis</li>
-        <li>Objectives &amp; alignment</li>
-        <li>Scenario-based practice</li>
-        <li>Assessment design</li>
-        <li>Program operations</li>
-        <li>AI-assisted development</li>
-      </ul>
-    </div>
-  </section>
+      <div class="practices-bar">
+        <span class="practice">Learning Experience Design</span>
+        <span class="sep">|</span>
+        <span class="practice">Training &amp; Enablement</span>
+        <span class="sep">|</span>
+        <span class="practice">Learning Operations</span>
+        <span class="sep">|</span>
+        <span class="practice">Program Management</span>
+        <span class="sep">|</span>
+        <span class="practice">Project Management</span>
+      </div>
 
-  <div class="stack">
-    <article class="card feature" aria-labelledby="f-copilot">
-      <a class="shot" href="case-studies/reviewing-with-the-copilot.html" tabindex="-1" aria-hidden="true">
+      <div class="intro-about">
+        <div class="intro-about-grid">
+          <div class="intro-about-left">
+            <h2 class="about-title">About Me</h2>
+            <p class="about-body">
+              I design learning systems that help people build skill, confidence, and
+              consistency in complex roles. My work combines <strong>instructional
+              design, program management, and learning operations</strong> to turn
+              training needs into usable materials, scalable workflows, and measurable
+              program improvements.
+            </p>
+            <p class="about-body">
+              At the Sanger Learning Center at UT Austin, I support a
+              peer educator program serving approximately 2,500 students each semester.
+              I manage training systems, coordinate cross-functional logistics, and
+              develop AI-augmented learning tools that make peer
+              education more consistent, scalable, and effective.
+            </p>
+          </div>
+          <div class="intro-about-right">
+            <div class="about-photo">
+            <img src="assets/img/headshot.webp" width="480" height="600" alt="Tonja Ryan" />
+          </div>
+        </div>
+      </div>
+      </div>
+    </div>
+
+    <!-- ============== 02 INSTRUCTIONAL DESIGN - SECTION DIVIDER ============== -->
+    <div class="card section-divider banner" id="work">
+      <div class="banner-left">
+        <h2 class="banner-title">Instructional Design<span class="pd">.</span></h2>
+      </div>
+      <div class="banner-right">
+        <p class="banner-about">
+          Learning experiences, interactive modules, workbooks, virtual trainings, and
+          cohort tools designed to make complex content easier to teach, apply, and
+          sustain. These projects combine <strong>evidence-based instructional design</strong>
+          with <strong>AI-augmented workflows</strong>.
+        </p>
+        <div class="banner-chips">
+          <span>Needs analysis</span>
+          <span>Learning objectives</span>
+          <span>Scenario-based practice</span>
+          <span>Performance support</span>
+          <span>Facilitator enablement</span>
+          <span>Cohort-based learning</span>
+          <span>AI-augmented workflows</span>
+        </div>
+      </div>
+    </div>
+
+    <article class="card project">
+      <div class="p-kicker">
+        <span class="cat-dot"></span>
+        <span class="cat">Instructional Design</span>
+        <span class="sep">·</span>
+        <span class="subtype">Scenario Simulation</span>
+      </div>
+      <h3 class="p-title">Reviewing<br>with the<br>Co&#8209;Pilot<span class="num">.</span></h3>
+      <div class="p-meta">
+        <div><strong>Role</strong>Design, authoring &amp; build</div>
+        <div><strong>For</strong>Content rating analysts · Trust &amp; Safety</div>
+        <div><strong>Status</strong><span class="p-status">Independent work sample</span></div>
+      </div>
+      <a class="p-shot" href="case-studies/reviewing-with-the-copilot.html" tabindex="-1" aria-hidden="true">
         <img src="assets/img/copilot.webp" width="1200" height="750" loading="lazy" alt="">
       </a>
-      <div>
-        <p class="kicker"><span class="cat">Scenario-based training</span><span class="sep">·</span><span>Independent work sample</span></p>
-        <h3 id="f-copilot">Reviewing with the Co&#8209;Pilot</h3>
-        <p class="feature-desc">A narrated simulation in which content-rating analysts check an AI co-pilot's suggested age ratings against the TV Parental Guidelines and MPA rules, then accept, modify, override, or escalate each one and record the evidence behind the call.</p>
-        <dl class="meta">
-          <dt>For</dt><dd>Content-rating analysts, new and tenured</dd>
-          <dt>Format</dt><dd>12-screen narrated module, six-case scored queue, job aid</dd>
-          <dt>Role</dt><dd>Analysis, objectives, scripting, assessment design, build</dd>
-          <dt>Status</dt><dd>Complete demonstration module; not piloted</dd>
-        </dl>
-        <div class="actions">
-          <a class="btn btn-primary" href="case-studies/reviewing-with-the-copilot.html">Read the case study</a>
-          <a class="btn btn-secondary" href="reviewing-with-the-copilot/index.html#module" target="_blank" rel="noopener">Launch the simulation<span class="sr-only"> (opens in a new tab)</span></a>
-        </div>
+      <p class="p-body">A narrated simulation that teaches content-rating analysts to check an AI co-pilot's suggested age rating against the <strong>TV Parental Guidelines and MPA rules</strong>, then accept, modify, override, or escalate it and record the evidence behind the call.</p>
+      <p class="p-process"><span class="lbl">Process</span>Gap analysis from the role, a two-part objective with six enabling objectives, four verification checks taught one at a time, then a six-case scored queue where a missed publication hold fails the attempt. Revised over documented review rounds; evaluation plan proposed, not yet run.</p>
+      <div class="p-actions">
+        <a class="p-btn primary" href="case-studies/reviewing-with-the-copilot.html">View case study</a>
+        <a class="p-btn" href="reviewing-with-the-copilot/index.html#module" target="_blank" rel="noopener">Launch simulation<span class="sr-only"> (opens in a new tab)</span></a>
       </div>
     </article>
 
-    <article class="card feature" aria-labelledby="f-tsc">
-      <a class="shot" href="case-studies/trust-services-criteria.html" tabindex="-1" aria-hidden="true">
+    <article class="card project">
+      <div class="p-kicker">
+        <span class="cat-dot"></span>
+        <span class="cat">Instructional Design</span>
+        <span class="sep">·</span>
+        <span class="subtype">Self-Paced Course</span>
+      </div>
+      <h3 class="p-title">Trust Services<br>Criteria for<br>GRC Staff<span class="num">.</span></h3>
+      <div class="p-meta">
+        <div><strong>Role</strong>Design, authoring &amp; build</div>
+        <div><strong>For</strong>GRC staff · SOC 2</div>
+        <div><strong>Status</strong><span class="p-status">Independent work sample</span></div>
+      </div>
+      <a class="p-shot" href="case-studies/trust-services-criteria.html" tabindex="-1" aria-hidden="true">
         <img src="assets/img/tsc.webp" width="1200" height="750" loading="lazy" alt="">
       </a>
-      <div>
-        <p class="kicker"><span class="cat">Compliance learning</span><span class="sep">·</span><span>Independent work sample</span></p>
-        <h3 id="f-tsc">Trust Services Criteria for GRC Staff</h3>
-        <p class="feature-desc">A ten-module self-paced course that teaches GRC staff to read and apply the AICPA Trust Services Criteria behind SOC 2 reports, written from the 75-page standard and cited to it by paragraph.</p>
-        <dl class="meta">
-          <dt>For</dt><dd>GRC staff and control owners at SaaS service organizations</dd>
-          <dt>Format</dt><dd>Self-paced web course, about 10 hours, optional capstone</dd>
-          <dt>Role</dt><dd>Needs analysis, course architecture, writing, UI, build</dd>
-          <dt>Status</dt><dd>Complete; not deployed</dd>
-        </dl>
-        <div class="actions">
-          <a class="btn btn-primary" href="case-studies/trust-services-criteria.html">Read the case study</a>
-          <a class="btn btn-secondary" href="tsc-grc-course.html#home" target="_blank" rel="noopener">Open the course<span class="sr-only"> (opens in a new tab)</span></a>
-        </div>
+      <p class="p-body">A ten-module, self-paced course that teaches governance, risk, and compliance staff to read and apply the <strong>AICPA Trust Services Criteria</strong> behind SOC 2 reports, written from the 75-page standard and cited to it by paragraph.</p>
+      <p class="p-process"><span class="lbl">Process</span>A 12-section needs analysis separating training from non-training causes, seven terminal objectives with an alignment matrix, sequencing from structure to application, and two source-coverage audits. Kirkpatrick evaluation plan proposed.</p>
+      <div class="p-actions">
+        <a class="p-btn primary" href="case-studies/trust-services-criteria.html">View case study</a>
+        <a class="p-btn" href="tsc-grc-course.html#home" target="_blank" rel="noopener">Open the course<span class="sr-only"> (opens in a new tab)</span></a>
       </div>
     </article>
 
-    <article class="card feature" aria-labelledby="f-launch">
-      <a class="shot" href="case-studies/fall-2025-program-launch.html" tabindex="-1" aria-hidden="true">
-        <img src="assets/img/fall-2025.webp" width="1200" height="750" loading="lazy" alt="">
+    <article class="card project">
+      <div class="p-kicker">
+        <span class="cat-dot"></span>
+        <span class="cat">Instructional Design</span>
+        <span class="sep">·</span>
+        <span class="subtype">Compliance Training</span>
+      </div>
+      <h3 class="p-title">Sharing Data,<br>Protecting<br>People<span class="num">.</span></h3>
+      <div class="p-meta">
+        <div><strong>Role</strong>Design &amp; authoring</div>
+        <div><strong>For</strong>Portfolio demonstration</div>
+        <div><strong>Status</strong><span class="p-status wip">In revision</span></div>
+      </div>
+      <a class="p-shot" href="case-studies/sharing-data-protecting-people.html" tabindex="-1" aria-hidden="true">
+        <img src="assets/img/sharing-data.webp" width="1200" height="750" loading="lazy" alt="">
       </a>
-      <div>
-        <p class="kicker"><span class="cat">Program management</span><span class="sep">·</span><span>Professional project</span></p>
-        <h3 id="f-launch">Fall 2025 SI Program Launch</h3>
-        <p class="feature-desc">A four-month rollout for UT Austin's Supplemental Instruction program: a redesigned three-track training curriculum, a self-paced onboarding module, and the room, Canvas, and faculty logistics behind 70+ SI Leaders.</p>
-        <dl class="meta">
-          <dt>For</dt><dd>70+ peer educators across 13 undergraduate colleges</dd>
-          <dt>Format</dt><dd>Three training tracks, onboarding module, five operational workstreams</dd>
-          <dt>Role</dt><dd>Program lead, curriculum and operations</dd>
-          <dt>Status</dt><dd>Implemented, August 2025</dd>
-        </dl>
-        <div class="actions">
-          <a class="btn btn-primary" href="case-studies/fall-2025-program-launch.html">Read the case study</a>
-          <a class="btn btn-secondary" href="si_onboarding_module.html" target="_blank" rel="noopener">Open the onboarding module<span class="sr-only"> (opens in a new tab)</span></a>
-        </div>
+      <p class="p-body">A <strong>self-paced data protection module</strong> for staff who prepare or approve data releases. It shows how data stripped of names can still identify people, and gives reviewers a structured way to decide whether a release should go ahead.</p>
+      <p class="p-process"><span class="lbl">Process</span>Documented re-identification cases, a live k-anonymity model on a 60-record synthetic dataset, and a release review scored against a five-criterion rubric. Module 01 of a planned four.</p>
+      <div class="p-actions">
+        <a class="p-btn primary" href="case-studies/sharing-data-protecting-people.html">View case study</a>
+        <a class="p-btn" href="Data_Training.html">Open the module</a>
       </div>
     </article>
 
-    <article class="card feature" aria-labelledby="f-geol">
-      <a class="shot" href="case-studies/geol-1403.html" tabindex="-1" aria-hidden="true">
+    <article class="card project">
+      <div class="p-kicker">
+        <span class="cat-dot"></span>
+        <span class="cat">Instructional Design</span>
+        <span class="sep">·</span>
+        <span class="subtype">Module + Workbook</span>
+      </div>
+      <h3 class="p-title">GEOL<br>1403<span class="num">.</span></h3>
+      <div class="p-meta">
+        <div><strong>Role</strong>Design &amp; authoring</div>
+        <div><strong>For</strong>Dallas College · iDesign</div>
+        <div><strong>Status</strong><span class="p-status done">Professional project</span></div>
+      </div>
+      <a class="p-shot" href="case-studies/geol-1403.html" tabindex="-1" aria-hidden="true">
         <img src="assets/img/geol-1403.webp" width="1200" height="750" loading="lazy" alt="">
       </a>
-      <div>
-        <p class="kicker"><span class="cat">Curriculum design</span><span class="sep">·</span><span>Professional project</span></p>
-        <h3 id="f-geol">GEOL 1403: Activate Your Core</h3>
-        <p class="feature-desc">A workbook and interactive notebook for Physical Geology at Dallas College, written for future EC&#8209;6 teachers. Each module ties readings and activities to Texas certification competencies and wraps them in plan, monitor, and evaluate prompts.</p>
-        <dl class="meta">
-          <dt>For</dt><dd>Students preparing for the Texas Core Subjects EC&#8209;6 (391) exam</dd>
-          <dt>Format</dt><dd>Printable workbook and interactive notebook, introduction and Modules 1–2</dd>
-          <dt>Role</dt><dd>Instructional design and writing, iDesign contract</dd>
-          <dt>Status</dt><dd>Workbook shown as a pre-final draft</dd>
-        </dl>
-        <div class="actions">
-          <a class="btn btn-primary" href="case-studies/geol-1403.html">Read the case study</a>
-          <a class="btn btn-secondary" href="geol1403-module.html" target="_blank" rel="noopener">Open the notebook<span class="sr-only"> (opens in a new tab)</span></a>
-        </div>
+      <p class="p-body">A workbook and interactive notebook for <strong>GEOL 1403 (Physical Geology)</strong> at Dallas College, written for future EC&#8209;6 teachers preparing for the <strong>Texas Core Subjects EC&#8209;6 (391)</strong> certification.</p>
+      <p class="p-process"><span class="lbl">Process</span>Every activity is tagged to the EC&#8209;6 competency it builds, and every module runs the same plan, monitor, and evaluate cycle: metacognitive moment, readings with key questions, hands-on activity, quiz wrapper, wrap-up. The workbook was then translated into an interactive notebook (Modules 00 to 02 built).</p>
+      <div class="p-actions">
+        <a class="p-btn primary" href="case-studies/geol-1403.html">View case study</a>
+        <a class="p-btn" href="geol1403-module.html" target="_blank" rel="noopener">Open the notebook<span class="sr-only"> (opens in a new tab)</span></a>
       </div>
     </article>
-  </div>
 
-  <!-- ===================== Additional work ===================== -->
-  <section class="banner" id="more-work" aria-labelledby="more-title">
-    <h2 id="more-title">Additional Work<span class="pd">.</span></h2>
-    <p>Supporting projects, grouped by the kind of work they show. Some are training tools in active use; others are prototypes or drafts, and each one is marked.</p>
-  </section>
-
-  <div class="stack">
-    <div class="tile-group">
-      <h3 class="tile-group-label">Instructional design <span>Modules and course materials</span></h3>
-      <ul class="tiles">
-        <li class="card tile">
-          <a class="shot" href="case-studies/sharing-data-protecting-people.html" tabindex="-1" aria-hidden="true"><img src="assets/img/sharing-data.webp" width="1200" height="750" loading="lazy" alt=""></a>
-          <p class="kicker"><span class="cat">Technical training</span><span class="sep">·</span><span class="status is-progress">In revision</span></p>
-          <h4>Sharing Data, Protecting People</h4>
-          <p>A self-paced module on re-identification risk for staff who approve data releases, with documented cases, a live k-anonymity model, and a scored release review. Independent work sample.</p>
-          <div class="tile-links">
-            <a href="case-studies/sharing-data-protecting-people.html">Case study</a>
-            <a href="Data_Training.html">Open the module</a>
-          </div>
-        </li>
-        <li class="card tile">
-          <a class="shot" href="activate-your-core-workbook.pdf" tabindex="-1" aria-hidden="true"><img src="assets/img/workbook-p1.webp" width="980" height="1268" loading="lazy" alt="" style="object-position: top center;"></a>
-          <p class="kicker"><span class="cat">Course workbook</span><span class="sep">·</span><span class="status is-progress">Pre-final draft</span></p>
-          <h4>Activate Your Core Workbook</h4>
-          <p>The printable workbook behind the GEOL 1403 notebook, written for iDesign and Dallas College. Bracketed notes mark where artwork goes before final production.</p>
-          <div class="tile-links">
-            <a href="activate-your-core-workbook.pdf">Open the PDF</a>
-            <a href="case-studies/geol-1403.html#solution">How it fits</a>
-          </div>
-        </li>
-        <li class="card tile">
-          <a class="shot" href="Pixel-solar-system2.html" tabindex="-1" aria-hidden="true"><img src="assets/img/pixel.webp" width="1200" height="750" loading="lazy" alt=""></a>
-          <p class="kicker"><span class="cat">Prototype</span><span class="sep">·</span><span class="status is-sample">Concept demo</span></p>
-          <h4>Pixel Solar System</h4>
-          <p>An explorable solar system with adjustable orbit speed, distances, travel times, and NASA links, built with Claude as a worked example of AI-assisted tool building for educators.</p>
-          <div class="tile-links">
-            <a href="Pixel-solar-system2.html">Open the prototype</a>
-          </div>
-        </li>
-      </ul>
-    </div>
-
-    <div class="tile-group">
-      <h3 class="tile-group-label">Training &amp; performance support <span>Tools used by the UT Austin SI program</span></h3>
-      <ul class="tiles">
-        <li class="card tile">
-          <a class="shot" href="si_onboarding_module.html" tabindex="-1" aria-hidden="true"><img src="assets/img/si-onboarding.webp" width="1200" height="750" loading="lazy" alt=""></a>
-          <p class="kicker"><span class="cat">Onboarding</span><span class="sep">·</span><span class="status">Professional</span></p>
-          <h4>SI Leader Onboarding</h4>
-          <p>Self-paced onboarding for new SI Leaders, with builders that produce a draft lesson plan, a professor email, and a class pitch before in-person training.</p>
-          <div class="tile-links">
-            <a href="si_onboarding_module.html">Open the module</a>
-            <a href="case-studies/fall-2025-program-launch.html#solution">Its role in the launch</a>
-          </div>
-        </li>
-        <li class="card tile">
-          <a class="shot" href="biology-cohort-hub.html" tabindex="-1" aria-hidden="true"><img src="assets/img/biology-hub.webp" width="1200" height="750" loading="lazy" alt=""></a>
-          <p class="kicker"><span class="cat">Cohort tooling</span><span class="sep">·</span><span class="status">Professional</span></p>
-          <h4>Biology Cohort Hub</h4>
-          <p>A planning hub for the Spring 2026 Biology cohort: a lesson-plan builder, 118 strategy cards adapted from UMKC, DePaul, and Sanger sources, deadlines, and after-dark safety resources.</p>
-          <div class="tile-links">
-            <a href="biology-cohort-hub.html">Open the hub</a>
-          </div>
-        </li>
-      </ul>
-    </div>
-
-    <div class="tile-group">
-      <h3 class="tile-group-label">Program management <span>Operations at the Sanger Learning Center, alongside the Fall 2025 launch</span></h3>
-      <ul class="tiles tiles-single">
-        <li class="card tile tile-wide">
-          <a class="shot" href="case-studies/student-educator-forum.html" tabindex="-1" aria-hidden="true"><img src="assets/img/sef.webp" width="1200" height="750" loading="lazy" alt=""></a>
-          <p class="kicker"><span class="cat">Event operations</span><span class="sep">·</span><span class="status">Professional</span></p>
-          <h4>Student Educator Forum</h4>
-          <p>Co-led operations to relaunch a peer-educator conference dormant since 2022: a twelve-week build, a virtual three-track program, and the day's run of show. 70 attendees against a target of 40, and 4.6 of 5 average satisfaction.</p>
-          <div class="tile-links">
-            <a href="case-studies/student-educator-forum.html">Case study</a>
-          </div>
-        </li>
-      </ul>
-    </div>
-  </div>
-
-  <!-- ===================== Approach (restored ink divider) ===================== -->
-  <section class="banner ink" id="approach" aria-labelledby="approach-title">
-    <div class="banner-head">
-      <h2 id="approach-title">How I Work<span class="pd">.</span></h2>
-      <p>The stages I move through on a project, each linked to the case study where you can see it. Not every project went through every stage; each case study says which ones did.</p>
-    </div>
-    <ol class="process">
-      <li>
-        <span class="stage-num">01</span>
-        <h3>Analyze</h3>
-        <p>Identify the performance problem, audience, conditions, and constraints, and separate what training can fix from what it can't.</p>
-        <p class="example"><span>Example</span><a href="case-studies/trust-services-criteria.html#analysis">TSC needs and task analysis</a></p>
-      </li>
-      <li>
-        <span class="stage-num">02</span>
-        <h3>Design</h3>
-        <p>Write observable objectives, choose the instructional strategy, and set assessment criteria before building.</p>
-        <p class="example"><span>Example</span><a href="case-studies/reviewing-with-the-copilot.html#decisions">Co-Pilot design decisions</a></p>
-      </li>
-      <li>
-        <span class="stage-num">03</span>
-        <h3>Develop</h3>
-        <p>Build and revise content, interactions, job aids, and references, with review rounds documented.</p>
-        <p class="example"><span>Example</span><a href="case-studies/geol-1403.html#process">From workbook to notebook</a></p>
-      </li>
-      <li>
-        <span class="stage-num">04</span>
-        <h3>Implement</h3>
-        <p>Coordinate delivery: schedules, rooms, platforms, stakeholder communication, and onboarding.</p>
-        <p class="example"><span>Example</span><a href="case-studies/fall-2025-program-launch.html#process">Fall 2025 rollout</a></p>
-      </li>
-      <li>
-        <span class="stage-num">05</span>
-        <h3>Evaluate</h3>
-        <p>Review evidence, find the gaps, and revise the training or the program around it.</p>
-        <p class="example"><span>Example</span><a href="case-studies/student-educator-forum.html#evaluation">Forum survey and debrief</a></p>
-      </li>
-    </ol>
-  </section>
-
-  <!-- ===================== Thank you / contact (restored) ===================== -->
-  <section class="card thanks" id="contact" aria-labelledby="thanks-title">
-    <div class="thanks-left">
-      <div>
-        <p class="thanks-tag">Get in touch</p>
-        <p class="thanks-note" style="margin-top: 12px;">I'm open to roles in learning experience design, instructional design, and learning program management. Email is the fastest way to reach me, and I'm glad to share a resume or walk through any project in more depth.</p>
+    <article class="card project">
+      <div class="p-kicker">
+        <span class="cat-dot"></span>
+        <span class="cat">Instructional Design</span>
+        <span class="sep">·</span>
+        <span class="subtype">Companion Workbook</span>
       </div>
-      <div class="contact-block">
-        <span class="label">Contact</span>
-        <div>Tonja Ryan</div>
-        <div>Austin, Texas</div>
-        <div><a href="tel:+15124669914">(512) 466-9914</a></div>
-        <div><a href="mailto:tonjaryan@gmail.com">tonjaryan@gmail.com</a></div>
-        <div style="margin-top: 10px;"><a href="https://www.linkedin.com/in/tonja-ryan" target="_blank" rel="noopener">linkedin.com/in/tonja-ryan<span class="sr-only"> (opens in a new tab)</span></a></div>
+      <h3 class="p-title">Activate<br>Your Core<span class="num">.</span></h3>
+      <div class="p-meta">
+        <div><strong>Role</strong>Design &amp; authoring</div>
+        <div><strong>For</strong>Dallas College · iDesign</div>
+        <div><strong>Status</strong><span class="p-status wip">Pre-final draft</span></div>
+      </div>
+      <a class="p-shot" href="activate-your-core-workbook.pdf" tabindex="-1" aria-hidden="true">
+        <img src="assets/img/workbook-p1.webp" width="1200" height="750" loading="lazy" alt="">
+      </a>
+      <p class="p-body">The printable <strong>Activate Your Core</strong> workbook for GEOL 1403, the companion to the interactive notebook above. Built around metacognitive prompts that help students monitor how they learn and connect each module to the EC&#8209;6 competencies.</p>
+      <p class="p-process"><span class="lbl">Process</span>Shared as a development draft: bracketed notes such as "[Overview icon]" mark where artwork is placed before final production. This draft develops the introduction and Modules 1 and 2.</p>
+      <div class="p-actions">
+        <a class="p-btn primary" href="activate-your-core-workbook.pdf" target="_blank" rel="noopener">Open the workbook (PDF)<span class="sr-only"> (opens in a new tab)</span></a>
+        <a class="p-btn" href="case-studies/geol-1403.html#solution">How it fits</a>
+      </div>
+    </article>
+
+    <article class="card project">
+      <div class="p-kicker">
+        <span class="cat-dot"></span>
+        <span class="cat">Instructional Design</span>
+        <span class="sep">·</span>
+        <span class="subtype">Cohort Tooling</span>
+      </div>
+      <h3 class="p-title">Biology<br>Cohort<span class="num">.</span></h3>
+      <div class="p-meta">
+        <div><strong>Role</strong>Design &amp; build</div>
+        <div><strong>For</strong>SI Leaders · Biology cohort</div>
+        <div><strong>Status</strong><span class="p-status done">Professional project</span></div>
+      </div>
+      <a class="p-shot" href="biology-cohort-hub.html" tabindex="-1" aria-hidden="true">
+        <img src="assets/img/biology-hub.webp" width="1200" height="750" loading="lazy" alt="">
+      </a>
+      <p class="p-body">A planning hub for the Spring 2026 Biology SI cohort, used by peer educators preparing their weekly study sessions.</p>
+      <p class="p-process"><span class="lbl">Process</span>Pairs a step-by-step <strong>lesson-plan builder</strong> with a searchable library of <strong>118 strategy cards</strong> adapted from UMKC, DePaul, and Sanger Learning Center sources, alongside cohort deadlines and after-dark safety resources leaders can share with students.</p>
+      <div class="p-actions">
+        <a class="p-btn primary" href="biology-cohort-hub.html">Open the hub</a>
+      </div>
+    </article>
+
+    <article class="card project">
+      <div class="p-kicker">
+        <span class="cat-dot"></span>
+        <span class="cat">Instructional Design</span>
+        <span class="sep">·</span>
+        <span class="subtype">Onboarding Module</span>
+      </div>
+      <h3 class="p-title">SI Leader<br>Onboarding<span class="num">.</span></h3>
+      <div class="p-meta">
+        <div><strong>Role</strong>Design &amp; build</div>
+        <div><strong>For</strong>Sanger Learning Center · UT Austin</div>
+        <div><strong>Status</strong><span class="p-status done">Professional project</span></div>
+      </div>
+      <a class="p-shot" href="si_onboarding_module.html" tabindex="-1" aria-hidden="true">
+        <img src="assets/img/si-onboarding.webp" width="1200" height="750" loading="lazy" alt="">
+      </a>
+      <p class="p-body">Self-paced onboarding for new <strong>Supplemental Instruction (SI) leaders</strong>: program foundations, facilitation scenarios, an 83-strategy library, and a worked lesson-plan example.</p>
+      <p class="p-process"><span class="lbl">Process</span>Built during the Fall 2025 redesign after SI Leader interviews showed foundational content could move out of live training. Leaders finish with a draft lesson plan, professor email, and class pitch to bring to in-person training.</p>
+      <div class="p-actions">
+        <a class="p-btn primary" href="si_onboarding_module.html" target="_blank" rel="noopener">Open the module<span class="sr-only"> (opens in a new tab)</span></a>
+        <a class="p-btn" href="case-studies/fall-2025-program-launch.html#solution">Role in the Fall 2025 launch</a>
+      </div>
+    </article>
+
+    <article class="card project">
+      <div class="p-kicker">
+        <span class="cat-dot"></span>
+        <span class="cat">Instructional Design</span>
+        <span class="sep">·</span>
+        <span class="subtype">AI-Augmented Build</span>
+      </div>
+      <h3 class="p-title">Pixel Solar<br>System<span class="num">.</span></h3>
+      <div class="p-meta">
+        <div><strong>Role</strong>Design &amp; build</div>
+        <div><strong>For</strong>Educational leaders</div>
+        <div><strong>Status</strong><span class="p-status">Interactive prototype</span></div>
+      </div>
+      <a class="p-shot" href="Pixel-solar-system2.html" tabindex="-1" aria-hidden="true">
+        <img src="assets/img/pixel.webp" width="1200" height="750" loading="lazy" alt="">
+      </a>
+      <p class="p-body">An explorable solar system with adjustable orbit speed, distances, travel times, and links to NASA pages, built with <strong>Claude</strong> as a worked example of how educators can build their own instructional tools.</p>
+      <p class="p-process"><span class="lbl">Process</span>Prompted, built, and iterated with Claude end to end. The artifact is the worked example; the build process is the point. Included to show interaction prototyping rather than instructional depth.</p>
+      <div class="p-actions">
+        <a class="p-btn primary" href="Pixel-solar-system2.html">Open the prototype</a>
+      </div>
+    </article>
+
+    <!-- ============== 11 PROJECT MANAGEMENT - SECTION DIVIDER ============== -->
+    <div class="card section-divider banner" id="program-management">
+      <div class="banner-left">
+        <h2 class="banner-title">Project Management<span class="pd">.</span></h2>
+      </div>
+      <div class="banner-right">
+        <p class="banner-about">
+          <strong>End-to-end program rollouts and event operations</strong> spanning
+          curriculum, faculty coordination, registrar logistics, Canvas setup,
+          facilitator preparation, and venue planning.
+        </p>
+        <div class="banner-chips">
+          <span>Multi-workstream rollout</span>
+          <span>Stakeholder coordination</span>
+          <span>Risk &amp; constraint navigation</span>
+          <span>Event production</span>
+          <span>Operational scaffolding</span>
+          <span>Cross-functional execution</span>
+        </div>
       </div>
     </div>
-    <div class="thanks-right">
-      <p class="sub">Selected work</p>
-      <h2 id="thanks-title" class="thanks-title">Thank<br>You<span class="pd">.</span></h2>
+
+    <article class="card project">
+      <div class="p-kicker">
+        <span class="cat-dot"></span>
+        <span class="cat">Project Management</span>
+        <span class="sep">·</span>
+        <span class="subtype">Program Launch</span>
+      </div>
+      <h3 class="p-title">Fall 2025<br>Launch<span class="num">.</span></h3>
+      <div class="p-meta">
+        <div><strong>Role</strong>Program Lead</div>
+        <div><strong>For</strong>Sanger · UT Austin</div>
+        <div><strong>Date</strong>May – Aug 2025</div>
+        <div><strong>Status</strong><span class="p-status done">Implemented</span></div>
+      </div>
+      <a class="p-shot" href="case-studies/fall-2025-program-launch.html" tabindex="-1" aria-hidden="true">
+        <img src="assets/img/fall-2025.webp" width="1200" height="750" loading="lazy" alt="">
+      </a>
+      <p class="p-body">A <strong>four-month, multi-workstream program rollout</strong> for the SI program: a redesigned three-track training curriculum, a self-paced onboarding module, and the operations behind <strong>70+ peer educators, 70+ faculty partnerships, and 140+ rooms</strong>, ready for week one.</p>
+      <p class="p-process"><span class="lbl">Process</span>Stakeholder interviews, then audience-segmented training tracks, then five operational workstreams (rooms, cohort times, assignments, Canvas, faculty pairing) sequenced around late-arriving registrar data.</p>
+      <div class="p-actions">
+        <a class="p-btn primary" href="case-studies/fall-2025-program-launch.html">View case study</a>
+        <a class="p-btn" href="si_onboarding_module.html" target="_blank" rel="noopener">Open the onboarding module<span class="sr-only"> (opens in a new tab)</span></a>
+      </div>
+    </article>
+
+    <article class="card project">
+      <div class="p-kicker">
+        <span class="cat-dot"></span>
+        <span class="cat">Project Management</span>
+        <span class="sep">·</span>
+        <span class="subtype">Event Operations</span>
+      </div>
+      <h3 class="p-title">Student<br>Educator<br>Forum<span class="num">.</span></h3>
+      <div class="p-meta">
+        <div><strong>Role</strong>Operations Co-Lead</div>
+        <div><strong>For</strong>Sanger · UT Austin</div>
+        <div><strong>Status</strong><span class="p-status done">Held April 2026</span></div>
+      </div>
+      <a class="p-shot" href="case-studies/student-educator-forum.html" tabindex="-1" aria-hidden="true">
+        <img src="assets/img/sef.webp" width="1200" height="750" loading="lazy" alt="">
+      </a>
+      <p class="p-body">Relaunched a peer-educator conference dormant since 2022 as a virtual soft launch. Attendance reached <strong>70 against a target of 40</strong>, with <strong>4.6 of 5</strong> average satisfaction.</p>
+      <p class="p-process"><span class="lbl">Process</span>A twelve-week build from a near-blank slate: run of show, moderator guide, presenter communications, a three-track session matrix, and a Qualtrics survey and debrief that set the changes for the next cycle.</p>
+      <div class="p-actions">
+        <a class="p-btn primary" href="case-studies/student-educator-forum.html">View case study</a>
+      </div>
+    </article>
+
+    <!-- ============== 14 THANK YOU ============== -->
+    <div class="card thanks" id="contact">
+      <div class="thanks-left">
+        <div class="thanks-tag">Get in touch</div>
+        <div class="thanks-corner">
+          <div class="label">Contact</div>
+          <div>Tonja Ryan</div>
+          <div>Austin, Texas</div>
+          <div><a href="tel:+15124669914">(512) 466-9914</a></div>
+          <div><a href="mailto:tonjaryan@gmail.com">tonjaryan@gmail.com</a></div>
+          <div style="margin-top: 12px;"><a href="https://www.linkedin.com/in/tonja-ryan" target="_blank" rel="noopener">linkedin.com/in/tonja-ryan</a></div>
+        </div>
+      </div>
+      <div class="thanks-right">
+        <div class="sub">Selected Work</div>
+        <h2 class="thanks-title">Thank<br>You<span class="pd">.</span></h2>
+      </div>
     </div>
-  </section>
+
+  </div>
+
+  <div class="colophon">
+    <span>Sanger Learning Center · UT Austin</span>
+    <span class="right"><span class="accent">✦</span> Portfolio</span>
+  </div>
 
 </main>
 
-<footer class="site-footer">
-  <div class="colophon">
-    <span>Sanger Learning Center · UT Austin · iDesign</span>
-    <span>Independent work samples were not commissioned by any organization</span>
-    <span><span class="accent">✦</span> Portfolio</span>
-  </div>
-</footer>
 </body>
 </html>
