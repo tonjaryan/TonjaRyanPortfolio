@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Verification Job Aid</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700&family=Public+Sans:wght@400;600;700&family=JetBrains+Mono:wght@500;600&display=swap">
+<style>
+:root {
+  --primary: #1A56DB; --primary-container: #E6EFFD; --ink: #0B0D10; --muted: #4A5260; --rule: #DADFE6; --soft: #F3F6FA; --console: #0B0D10; --console-ink: #F2F4F7; --console-amber: #8DB8FF;
+  --font-display: "Barlow Semi Condensed", "Arial Narrow", Arial, sans-serif;
+  --font-body: "Public Sans", -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: #fff; color: var(--ink); font-family: var(--font-body); font-size: 13.5px; line-height: 1.42; }
+.page { max-width: 1000px; margin: 0 auto; padding: 22px 16px 32px; display: grid; gap: 12px; }
+header { display: flex; justify-content: space-between; align-items: end; gap: 12px; flex-wrap: wrap; border-bottom: 2px solid var(--ink); padding-bottom: 8px; }
+.eyebrow { font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+h1 { font-family: var(--font-display); font-weight: 700; font-size: 30px; line-height: 1; margin: 2px 0 0; }
+h2 { font-family: var(--font-display); font-weight: 700; font-size: 17px; margin: 0 0 6px; letter-spacing: .01em; }
+.tools { display: flex; gap: 8px; }
+.btn { border: 1px solid var(--primary); background: var(--primary); color: #fff; padding: 7px 16px; border-radius: 999px; font-weight: 600; font-size: 13.5px; cursor: pointer; font-family: inherit; text-decoration: none; }
+.btn.ghost { background: #fff; color: var(--primary); border-color: var(--rule); }
+.btn { box-shadow: 0 1px 2px rgba(11,13,16,.10), 0 2px 6px rgba(11,13,16,.08); transition: transform .12s ease, box-shadow .12s ease; }
+.btn:hover { transform: translateY(-2px); box-shadow: 0 6px 14px rgba(26,86,219,.20), 0 2px 4px rgba(11,13,16,.10); }
+.btn:active { transform: none; }
+@media (prefers-reduced-motion: reduce) { .btn:hover { transform: none; } }
+:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 720px) { .grid { grid-template-columns: minmax(0, 1fr); } }
+.box { border: 1px solid var(--rule); border-radius: 10px; padding: 12px 14px; }
+.box.dark { background: var(--console); color: var(--console-ink); border-color: var(--console); }
+.box.dark h2 { color: var(--console-amber); }
+.box.dashed { border-style: dashed; border-color: var(--ink); background: var(--soft); }
+ol, ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+.check { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 8px; align-items: start; }
+.num { width: 24px; height: 24px; border-radius: 50%; background: var(--primary); color: #fff; display: grid; place-items: center; font-weight: 700; font-size: 12.5px; }
+.checks { display: grid; gap: 8px; }
+.q { font-weight: 700; }
+.lab { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.box.dark .lab { color: #A3ACB9; }
+table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+th, td { text-align: left; padding: 4px 6px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.band { display: inline-block; min-width: 46px; text-align: center; padding: 1px 6px; border-radius: 4px; font-family: var(--font-display); font-weight: 700; font-size: 13px; background: var(--primary-container); color: #1A3F99; border: 1px solid #A9C7F7; }
+.mono { font-family: var(--font-mono); }
+.illus { font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .06em; text-transform: uppercase; border: 1px dashed currentColor; border-radius: 4px; padding: 0 5px; color: var(--muted); font-weight: 600; }
+.box.dark .illus { color: #A3ACB9; }
+.foot { font-size: 11px; color: var(--muted); border-top: 1px solid var(--rule); padding-top: 8px; display: grid; gap: 4px; }
+.foot a { color: var(--primary); }
+.boxes { list-style: none; padding-left: 0; }
+.boxes li::before { content: "☐  "; font-family: var(--font-mono); }
+@page { size: letter; margin: 0.4in; }
+@media print {
+  body { font-size: 10.4px; line-height: 1.32; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .tools { display: none; }
+  .page { padding: 0; gap: 7px; max-width: none; }
+  h1 { font-size: 22px; } h2 { font-size: 13.5px; margin-bottom: 3px; }
+  .grid { grid-template-columns: 1fr 1fr !important; gap: 7px; }
+  .box { padding: 7px 9px; break-inside: avoid; }
+  .checks { gap: 4px; } .num { width: 18px; height: 18px; font-size: 10px; } .check { grid-template-columns: 20px 1fr; gap: 6px; }
+  table { font-size: 9.6px; } th, td { padding: 2px 4px; }
+  .foot { font-size: 8.6px; }
+  a { color: inherit; }
+}
+</style>
+</head>
+<body>
+<main class="page">
+  <header>
+    <div><div class="eyebrow">Reviewing with the Co-Pilot · demonstration module · keep beside your queue</div><h1>Verification Job Aid</h1></div>
+    <div class="tools"><button class="btn" onclick="window.print()">Print this page</button><a class="btn ghost" href="index.html#module">Back to the module</a></div>
+  </header>
+
+  <div class="grid">
+    <section class="box" aria-labelledby="h-checks">
+      <h2 id="h-checks">The four checks</h2>
+      <div class="checks">
+        <div class="check"><span class="num">1</span><div><span class="q">Evidence.</span> What supports the AI suggestion? Open every cited timestamp. Does the moment support both the descriptor and its level? Remove or lower anything unsupported; a descriptor with no matching moment stays unsupported until you find one.</div></div>
+        <div class="check"><span class="num">2</span><div><span class="q">Context.</span> How does presentation change interpretation? Tone, genre, realism, injury detail, and how long the camera stays. The TV guidelines name the levels; place a scene with your team's approved classification.</div></div>
+        <div class="check"><span class="num">3</span><div><span class="q">Count.</span> What do frequency, duration, or persistence change? Look at moments together. A cluster can be one sustained sequence. Some MPA rules turn on how many times, or in what context, something appears.</div></div>
+        <div class="check"><span class="num">4</span><div><span class="q">System and policy.</span> Which approved rating system does the title's metadata name? Is the version the one that was rated? Does an additional review rule, such as a market-specific policy, apply?</div></div>
+      </div>
+    </section>
+
+    <section class="box dark" aria-labelledby="h-actions">
+      <h2 id="h-actions">Four possible actions <span class="illus">Illustrative workflow</span></h2>
+      <table aria-describedby="h-actions">
+        <tr><th scope="col" style="color:#A3ACB9">Action</th><th scope="col" style="color:#A3ACB9">When</th><th scope="col" style="color:#A3ACB9">Record</th></tr>
+        <tr><td><b>Accept</b></td><td>The suggestion passes all four checks</td><td>None, or a short rationale if sampled</td></tr>
+        <tr><td><b>Modify</b></td><td>Too high, or a descriptor is wrong</td><td>Short note</td></tr>
+        <tr><td><b>Override</b></td><td>Too low</td><td>Full rationale; QA samples overrides</td></tr>
+        <tr><td><b>Escalate</b></td><td>Guidelines don't settle it, system unconfirmed, or another policy layer requires review</td><td>Escalation note; hold publication where required</td></tr>
+      </table>
+    </section>
+
+    <section class="box" aria-labelledby="h-tv">
+      <h2 id="h-tv">TV Parental Guidelines: levels</h2>
+      <table>
+        <tr><td><span class="band">TV-Y7</span></td><td>Children's programs: mild fantasy or comedic violence. <b>FV</b>: fantasy violence more intense or combative than other TV-Y7 programs</td></tr>
+        <tr><td><span class="band">TV-G</span></td><td>Little or no violence, no strong language, little or no sexual dialogue or situations</td></tr>
+        <tr><td><span class="band">TV-PG</span></td><td>Moderate violence (V), some sexual situations (S), infrequent coarse language (L), some suggestive dialogue (D)</td></tr>
+        <tr><td><span class="band">TV-14</span></td><td>Intense V, intense S, strong coarse L, intensely suggestive D</td></tr>
+        <tr><td><span class="band">TV-MA</span></td><td>Graphic V, explicit sexual activity, crude indecent L</td></tr>
+      </table>
+      <p class="lab" style="margin-top:4px">The guidelines name levels; they set no fixed rules about blood or camera time.</p>
+    </section>
+
+    <section class="box" aria-labelledby="h-mpa">
+      <h2 id="h-mpa">MPA rules that turn on count or context</h2>
+      <ul>
+        <li>One harsher sexually derived word, only as an expletive: initially at least <b>PG-13</b>.</li>
+        <li>More than one, or even one in a sexual context: ordinarily <b>R</b>. Exception: the Rating Board may rate it PG-13 by a <b>two-thirds special vote</b> (context, manner, or inconspicuous use). An analyst estimate cannot apply it.</li>
+        <li>Any drug use: initially at least <b>PG-13</b>. A PG film has no drug use content.</li>
+        <li>Violence: PG-13 generally excludes violence that is both realistic and extreme or persistent. No numeric threshold; the Board weighs it.</li>
+        <li>Nudity: PG may include brief nudity; more than brief requires at least PG-13, generally not sexually oriented.</li>
+        <li>Only the MPA Rating Board issues MPA ratings. An unedited film with an MPA rating displays it; an edited version needs its own rating.</li>
+      </ul>
+    </section>
+
+    <section class="box" aria-labelledby="h-rat">
+      <h2 id="h-rat">Rationale format</h2>
+      <p><b>Claim:</b> action, final rating, descriptor.<br><b>Evidence:</b> the moments, with timestamps.<br><b>Policy:</b> the guideline or rule that connects them.</p>
+      <p class="lab" style="margin-top:6px">Example</p>
+      <p class="mono" style="font-size:11.5px">Override to TV-14, Violence (V). · Assault 00:37:10; injury shown 00:40:05, in a sustained break-in. · TV-PG covers moderate violence; TV-14 may contain intense violence.</p>
+    </section>
+
+    <section class="box dashed" aria-labelledby="h-esc">
+      <h2 id="h-esc">Escalation checklist</h2>
+      <ul class="boxes">
+        <li><b>Reason:</b> why the rating rules alone can't settle it</li>
+        <li><b>Source evidence:</b> timestamps and what each shows</li>
+        <li><b>Unresolved question:</b> the decision Policy needs to make</li>
+        <li><b>Policy reference:</b> the guideline or review rule that applies</li>
+        <li><b>Publication hold:</b> in place where a review rule requires it, and noted in the record</li>
+      </ul>
+      <p class="lab" style="margin-top:6px">Example review rule (fictional): Training Market X refers approving depictions of a designated restricted symbol to Policy before publication.</p>
+    </section>
+  </div>
+
+  <footer class="foot">
+    <p><b>What is real here:</b> rating definitions paraphrase the published U.S. TV Parental Guidelines and the MPA Classification and Rating Rules (effective as revised July 24, 2020). The four-action workflow, QA sampling, and Training Market X are illustrative for a training simulation and do not represent Amazon's proprietary tools or policies, or any real country's rules.</p>
+    <p>Sources: <a href="https://tvguidelines.org/ratings.html">tvguidelines.org/ratings.html</a> · <a href="https://tvguidelines.org/faqs.html">tvguidelines.org/faqs.html</a> · <a href="https://www.filmratings.com/ratings-guide/">filmratings.com/ratings-guide</a> · <a href="https://www.filmratings.com/common-descriptors/">filmratings.com/common-descriptors</a> · <a href="https://www.filmratings.com/wp-content/uploads/2025/08/rating_rules.pdf">MPA Classification and Rating Rules (PDF)</a></p>
+  </footer>
+</main>
+</body>
+</html>

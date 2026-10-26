@@ -1,0 +1,1644 @@
+<!doctype html><html lang="en"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<meta charset="utf-8">
+<title>Reviewing with the Co-Pilot</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: a review desk. Instruction sits on paper in ink; anything the co-pilot says sits in a dark console panel with amber labels. One stage per screen, sticky header with progress, sticky audio bar at the foot. */
+/* Palette: white, black, blue, with light-blue highlights. Single light theme by choice. */
+:root {
+  --primary: #1A56DB; --on-primary: #FFFFFF; --primary-container: #E6EFFD;
+  --paper: #FFFFFF;
+  --surface: #FFFFFF;
+  --ink: #0B0D10;
+  --muted: #4A5260;
+  --rule: #DADFE6;
+  --soft: #F3F6FA;
+  --amber: #1A56DB;
+  --amber-ink: #1A3F99;
+  --amber-tint: #E6EFFD;
+  --console: #0B0D10;
+  --console-2: #1C2129;
+  --console-ink: #F2F4F7;
+  --console-muted: #A3ACB9;
+  --console-amber: #8DB8FF;
+  --good: #1A56DB;
+  --good-tint: #E6EFFD;
+  --bad: #0B0D10;
+  --bad-tint: #F1F2F4;
+  --band-all: #E6EFFD; --band-all-t: #1A3F99;
+  --band-7: #A9C7F7; --band-7-t: #0B2A6B;
+  --band-12: #4F86EA; --band-12-t: #FFFFFF;
+  --band-16: #1A3F99; --band-16-t: #FFFFFF;
+  --band-18: #0B0D10; --band-18-t: #FFFFFF;
+  --focus: #1A56DB;
+  --font-display: "Barlow Semi Condensed", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "Public Sans", -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --r: 10px;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { background: var(--paper); color: var(--ink); }
+body { font-family: var(--font-body); font-size: 16px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--surface); }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.gutter { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.wrap { max-width: 1120px; margin: 0 auto; }
+#stage { max-width: none; width: min(100%, max(66.67vw, 880px)); margin: 0 auto; }
+
+/* Header */
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--surface); border-bottom: 1px solid var(--rule); }
+.top .wrap { display: flex; align-items: center; gap: 16px; padding-block: 12px; flex-wrap: wrap; }
+.brand { display: flex; flex-direction: column; min-width: 0; }
+.brand .eyebrow { font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.brand .name { font-family: var(--font-display); font-weight: 600; font-size: 20px; line-height: 1.15; }
+.steps { display: flex; gap: 4px; margin-left: auto; flex-wrap: wrap; }
+.step { width: 26px; height: 26px; border-radius: 6px; border: 1px solid var(--rule); background: var(--surface); font-family: var(--font-mono); font-size: 11px; color: var(--muted); display: grid; place-items: center; padding: 0; }
+.step.done { background: var(--soft); color: var(--ink); }
+.step.on { background: var(--primary); color: var(--on-primary); border-color: var(--primary); }
+.step.q { border-color: var(--primary); }
+
+/* Stage */
+main { padding-block: 28px 110px; }
+.screen-head { display: grid; gap: 8px; margin-bottom: 22px; }
+.kicker { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.kicker .obj { font-family: var(--font-mono); letter-spacing: 0; text-transform: none; font-weight: 500; color: var(--amber-ink); background: var(--amber-tint); padding: 1px 7px; border-radius: 4px; font-size: 11.5px; }
+h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(30px, 4.4vw, 44px); line-height: 1.05; margin: 0; text-wrap: balance; letter-spacing: -.005em; }
+h2 { font-family: var(--font-display); font-weight: 600; font-size: 22px; line-height: 1.2; margin: 0; text-wrap: balance; }
+h3 { font-size: 15px; margin: 0; font-weight: 700; }
+p { margin: 0; }
+.lead { font-size: 18px; color: var(--muted); max-width: 65ch; }
+.task { border-top: 2px solid var(--ink); padding-top: 18px; margin: 34px 0 20px; display: grid; gap: 10px; }
+.task-tag { justify-self: start; background: var(--ink); color: var(--surface); font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; padding: 4px 10px; border-radius: 4px; }
+.task-dir { font-size: 18px; font-weight: 500; line-height: 1.5; }
+.task-dir b { font-weight: 800; }
+.task-dir ol { margin: 6px 0 0; padding-left: 22px; display: grid; gap: 4px; font-weight: 500; font-size: 16.5px; }
+.qlabel { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--primary); }
+.grid2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+.split { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 28px; align-items: start; }
+@media (max-width: 820px) { .grid2, .split { grid-template-columns: minmax(0, 1fr); } }
+.stack { display: grid; gap: 14px; }
+.points { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.points li { padding-left: 22px; position: relative; max-width: 60ch; }
+.points li::before { content: ""; position: absolute; left: 2px; top: .62em; width: 8px; height: 8px; border-radius: 50%; background: var(--primary); }
+.card { background: var(--surface); border: 1px solid var(--rule); border-radius: var(--r); padding: 18px; min-width: 0; }
+.card.plain { background: transparent; border-style: dashed; }
+.label { font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; font-weight: 600; color: var(--muted); }
+.note { font-size: 14px; color: var(--muted); }
+
+/* Buttons */
+.btn { border: 1px solid var(--primary); background: var(--primary); color: var(--on-primary); padding: 10px 20px; border-radius: 999px; font-weight: 600; font-size: 15px; display: inline-flex; align-items: center; gap: 8px; }
+.btn.ghost { background: transparent; color: var(--primary); border-color: var(--rule); }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.chipbtn { border: 1px solid var(--rule); background: var(--surface); padding: 8px 16px; border-radius: 8px; font-weight: 600; font-size: 14.5px; text-align: left; }
+.chipbtn[aria-pressed="true"] { border-color: var(--primary); box-shadow: inset 0 0 0 1px var(--primary); background: var(--primary-container); }
+.chipbtn.right { border-color: var(--good); background: var(--good-tint); box-shadow: inset 0 0 0 1px var(--good); }
+.chipbtn.wrong { border-color: var(--bad); background: var(--bad-tint); box-shadow: inset 0 0 0 1px var(--bad); text-decoration: line-through; text-decoration-thickness: 1.5px; }
+.row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+
+/* Rating band badge */
+.band { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; white-space: nowrap; height: 26px; padding: 0 8px; border-radius: 5px; font-family: var(--font-display); font-weight: 700; font-size: 15px; letter-spacing: .02em; border: 1px solid var(--band-16); }
+.b-0 { background: #EEF4FE; color: #1A3F99; border-color: #A9C7F7 !important; } .b-1 { background: #CFE0FB; color: #0B2A6B; border-color: #A9C7F7 !important; } .b-2 { background: #A9C7F7; color: #0B2A6B; } .b-3 { background: #4F86EA; color: #FFFFFF; } .b-4 { background: #1A3F99; color: #FFFFFF; } .b-5 { background: #0B0D10; color: #FFFFFF; }
+.lvl { font-family: var(--font-mono); font-size: 12px; padding: 1px 6px; border-radius: 4px; border: 1px solid currentColor; }
+
+/* Co-pilot console */
+.console { background: var(--console); color: var(--console-ink); border-radius: var(--r); padding: 18px; font-size: 14.5px; position: relative; min-width: 0; }
+.console .chead { display: flex; justify-content: space-between; align-items: center; gap: 10px; border-bottom: 1px solid var(--console-2); padding-bottom: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+.console .tag { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--console-amber); display: flex; align-items: center; gap: 8px; }
+.console .tag::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--console-amber); }
+.console .ttl { font-family: var(--font-mono); font-size: 12px; color: var(--console-muted); }
+.console .zone { border: 1px solid transparent; border-radius: 8px; padding: 10px; position: relative; }
+.console .zone + .zone { margin-top: 6px; }
+.console .zl { font-family: var(--font-mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--console-muted); margin-bottom: 6px; }
+.console .warn { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; padding: 4px 0; }
+.console .warn b { font-weight: 600; }
+.console .ts { font-family: var(--font-mono); font-size: 12.5px; color: var(--console-amber); background: var(--console-2); padding: 1px 6px; border-radius: 4px; }
+.console .conf { display: inline-flex; gap: 3px; vertical-align: middle; }
+.console .conf i { width: 14px; height: 6px; border-radius: 2px; background: var(--console-2); display: block; }
+.console .conf i.f { background: var(--console-amber); }
+.console .readout { font-family: var(--font-mono); font-size: 13px; line-height: 1.6; color: var(--console-ink); background: var(--console-2); border-radius: 8px; padding: 12px; }
+.console .hot { position: absolute; top: 8px; right: 8px; width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--console-amber); background: var(--console); color: var(--console-amber); font-family: var(--font-mono); font-size: 12px; font-weight: 600; display: grid; place-items: center; padding: 0; }
+.console .zone.lit { border-color: var(--console-amber); background: var(--console-2); }
+.console .hot[aria-pressed="true"] { background: var(--console-amber); color: var(--console); }
+.console .hot[aria-expanded="true"] { background: var(--console-amber); color: var(--console); }
+.playline { display: flex; gap: 10px; align-items: center; margin-top: 12px; }
+.mini { border: 1px solid var(--console-muted); background: transparent; color: var(--console-ink); border-radius: 6px; font-size: 12.5px; padding: 5px 10px; font-family: var(--font-mono); }
+
+/* Annotations */
+.anno { display: grid; gap: 10px; }
+.anno .a { border-left: 3px solid var(--rule); padding: 4px 0 4px 12px; color: var(--muted); }
+.anno .a.on { border-color: var(--amber); color: var(--ink); }
+.anno .a b { color: var(--ink); }
+
+/* Feedback */
+.fb { border-radius: 8px; padding: 12px 14px; font-size: 15px; border: 1px solid; }
+.fb.ok { border-color: var(--good); background: var(--good-tint); }
+.fb.no { border-color: var(--bad); background: var(--bad-tint); }
+.fb b { display: block; margin-bottom: 2px; }
+
+/* Before / after */
+.form { display: grid; gap: 8px; }
+.field { border: 1px dashed var(--rule); border-radius: 6px; padding: 8px 10px; font-size: 14px; color: var(--muted); min-height: 38px; }
+.field.filled { border-style: solid; color: var(--ink); background: var(--amber-tint); border-color: var(--amber); }
+.field .k { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: .06em; display: block; color: var(--muted); }
+
+/* Evidence check */
+.ev { display: grid; gap: 12px; }
+.evrow { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: center; background: var(--surface); border: 1px solid var(--rule); border-radius: var(--r); padding: 14px; }
+@media (max-width: 560px) { .evrow { grid-template-columns: minmax(0, 1fr); } }
+.evrow .what { display: grid; gap: 4px; min-width: 0; }
+.evrow .sug { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-weight: 600; }
+.evrow .scene { color: var(--muted); font-size: 14.5px; }
+
+/* Timeline */
+.tl { width: 100%; height: auto; display: block; }
+
+/* Market cards */
+.mkts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 720px) { .mkts { grid-template-columns: minmax(0, 1fr); } }
+.mkt { text-align: left; background: var(--surface); border: 1px solid var(--rule); border-radius: var(--r); padding: 16px; display: grid; gap: 8px; align-content: start; min-height: 150px; }
+.mkt .mk { font-family: var(--font-display); font-weight: 700; font-size: 26px; }
+.mkt[aria-expanded="true"] { border-color: var(--primary); box-shadow: inset 0 0 0 1px var(--primary); }
+.mkt .rule { font-size: 14.5px; }
+
+/* Decision tree */
+.tree { display: grid; gap: 10px; }
+.node { background: var(--surface); border: 1px solid var(--rule); border-radius: var(--r); padding: 14px; display: grid; gap: 10px; }
+.node.done { opacity: .7; }
+.out { border-radius: var(--r); padding: 14px 16px; border: 2px solid var(--ink); background: var(--surface); }
+.out .act { font-family: var(--font-display); font-weight: 700; font-size: 26px; }
+table.t { border-collapse: collapse; width: 100%; font-size: 14.5px; }
+table.t th, table.t td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+table.t th { font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.tscroll { overflow-x: auto; }
+
+/* Rationale builder */
+.rb { display: grid; gap: 12px; }
+.rb label { font-weight: 600; font-size: 14px; display: grid; gap: 6px; }
+.rb label span { font-weight: 400; color: var(--muted); font-size: 13.5px; }
+.rb input, .rb textarea { width: 100%; border: 1px solid var(--rule); border-radius: 8px; padding: 10px 12px; background: var(--surface); }
+.rb textarea { min-height: 70px; resize: vertical; }
+.checks { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font-size: 14.5px; }
+.checks li { display: flex; gap: 8px; align-items: baseline; }
+.checks li::before { content: "○"; color: var(--muted); font-family: var(--font-mono); }
+.checks li.ok::before { content: "●"; color: var(--good); }
+
+/* Queue */
+.queue { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 24px; align-items: start; }
+@media (max-width: 900px) { .queue { grid-template-columns: minmax(0, 1fr); } }
+.qlist { display: grid; gap: 6px; }
+@media (max-width: 900px) { .qlist { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 480px) { .qlist { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.qitem { text-align: left; border: 1px solid var(--rule); background: var(--surface); border-radius: 8px; padding: 9px 11px; display: grid; gap: 2px; min-width: 0; }
+.qitem .n { font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
+.qitem .tt { font-weight: 600; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.qitem.on { border-color: var(--primary); box-shadow: inset 0 0 0 1px var(--primary); }
+.qitem .st { font-size: 12px; font-weight: 600; }
+.qitem .st.ok { color: var(--good); } .qitem .st.no { color: var(--bad); } .qitem .st.open { color: var(--muted); font-weight: 500; }
+.titlecard { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+.poster { width: 64px; height: 90px; border-radius: 6px; flex: none; display: grid; place-items: end start; padding: 6px; font-family: var(--font-display); font-weight: 700; font-size: 12px; line-height: 1; color: #fff; }
+.mpill { font-family: var(--font-mono); font-size: 12px; border: 1px solid var(--rule); border-radius: 999px; padding: 2px 10px; }
+.evlog { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.evlog li { display: grid; grid-template-columns: 82px minmax(0, 1fr); gap: 10px; font-size: 14.5px; }
+.evlog .ts { font-family: var(--font-mono); font-size: 12.5px; color: var(--muted); padding-top: 2px; }
+.conf-in { display: grid; gap: 6px; }
+.conf-in input { width: 100%; accent-color: var(--primary); }
+.conf-scale { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); }
+
+/* Results */
+.big { font-family: var(--font-display); font-weight: 700; font-size: 56px; line-height: 1; }
+.kv { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 640px) { .kv { grid-template-columns: minmax(0, 1fr); } }
+.jobaid { border: 2px solid var(--ink); border-radius: var(--r); background: var(--surface); padding: 22px; display: grid; gap: 18px; }
+.jobaid h2 { font-size: 26px; }
+.ja-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+@media (max-width: 720px) { .ja-grid { grid-template-columns: minmax(0, 1fr); } }
+.ja-grid ol { margin: 0; padding-left: 20px; display: grid; gap: 6px; font-size: 14.5px; }
+
+/* Narration box */
+.narr { background: var(--primary-container); border: 1px solid #C6D9FA; border-radius: var(--r); padding: 16px 18px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 14px; align-items: start; margin-bottom: 24px; }
+@media (max-width: 560px) { .narr { grid-template-columns: minmax(0, 1fr); } }
+.narr p { font-size: 16.5px; line-height: 1.6; color: var(--ink); }
+.listen { display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--primary); background: var(--surface); color: var(--primary); border-radius: 999px; padding: 6px 13px 6px 10px; font-size: 13.5px; font-weight: 600; white-space: nowrap; }
+.listen svg { width: 13px; height: 13px; fill: currentColor; }
+.listen[aria-pressed="true"] { background: var(--primary); color: var(--on-primary); }
+.fb .listen { margin-top: 10px; }
+/* Screen 2 tooltips */
+.s2wrap { max-width: 640px; margin: 0 auto; }
+.tipzone:hover { border-color: var(--console-amber); background: var(--console-2); }
+.tipzone { padding-right: 44px; }
+.tipzone .hot { cursor: pointer; z-index: 2; }
+.tipzone .hot:focus-visible { outline: 2px solid var(--console-amber); outline-offset: 2px; }
+.tipzone.open { border-color: var(--console-amber); background: var(--console-2); }
+.tipzone.open .tip { opacity: 1; visibility: visible; }
+.tip { position: absolute; left: calc(100% + 18px); top: 4px; width: 260px; background: var(--surface); color: var(--ink); border: 1px solid var(--rule); border-radius: 8px; padding: 10px 12px; font-size: 14.5px; line-height: 1.45; box-shadow: 0 6px 20px rgba(11, 13, 16, .14); z-index: 4; opacity: 0; visibility: hidden; transition: opacity .12s; display: grid; gap: 3px; font-family: var(--font-body); }
+.tip b { color: var(--primary); }
+.tip::before { content: ""; position: absolute; left: -7px; top: 14px; width: 12px; height: 12px; background: var(--surface); border-left: 1px solid var(--rule); border-bottom: 1px solid var(--rule); transform: rotate(45deg); }
+@media (hover: hover) { .tipzone:hover .tip { opacity: 1; visibility: visible; } }
+@media (max-width: 1240px) { .tip { position: static; width: auto; margin-top: 10px; box-shadow: none; display: none; } .tipzone.open .tip { display: grid; } .tip::before { display: none; } }
+@media (max-width: 1240px) and (hover: hover) { .tipzone:hover .tip { display: grid; } }
+.aside-sec { margin-top: 40px; padding-top: 22px; border-top: 1px solid var(--rule); display: grid; gap: 16px; }
+.sw { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+.sw .card { align-content: start; }
+@media (max-width: 640px) { .sw { grid-template-columns: minmax(0, 1fr); } }
+/* Level buttons: light to dark blue, black for explicit */
+.lvbtn { border: 2px solid transparent; border-radius: 8px; padding: 8px 16px; font-weight: 700; font-size: 14.5px; min-width: 100px; transition: transform .08s; }
+.lv-mild { background: #CFE0FB; color: #0B2A6B; border-color: #A9C7F7; }
+.lv-moderate { background: #4F86EA; color: #FFFFFF; }
+.lv-intense { background: #1A3F99; color: #FFFFFF; }
+.lv-graphic { background: #0B0D10; color: #FFFFFF; }
+.lvbtn:disabled { cursor: default; }
+.lvbtn.right { box-shadow: 0 0 0 3px var(--surface), 0 0 0 5px var(--ink); }
+.lvbtn.right::before { content: "\2713  "; }
+.lvbtn.wrong { text-decoration: line-through; opacity: .55; }
+.lvbtn.dim { opacity: .3; }
+.lvhead { display: flex; align-items: center; gap: 10px; margin: 18px 0 2px; }
+.lvhead h2 { font-size: 22px; }
+.lvhead .sw8 { width: 18px; height: 18px; border-radius: 4px; }
+/* Shared interaction pieces */
+.lvchip { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 12.5px; font-weight: 700; }
+.sys { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; } .sys .note { width: 36px; font-weight: 700; }
+.ladder { display: grid; gap: 8px; margin-top: 8px; }
+.rung { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 12px; align-items: center; font-size: 15px; }
+.rung .lvchip { text-align: center; }
+.scorebar { display: flex; align-items: center; gap: 12px; margin: 0 0 16px; font-size: 14px; color: var(--muted); flex-wrap: wrap; }
+.scorebar .sb { flex: 1 1 160px; height: 8px; background: var(--soft); border-radius: 4px; overflow: hidden; border: 1px solid var(--rule); }
+.scorebar .sb i { display: block; height: 100%; background: var(--primary); transition: width .3s; }
+.scorebar b { color: var(--ink); }
+.tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+.tab { border: 1px solid var(--rule); background: var(--surface); border-radius: 8px; padding: 8px 12px; display: inline-flex; gap: 8px; align-items: center; font-size: 14px; font-weight: 600; max-width: 100%; }
+.tab .mono { font-size: 11.5px; color: var(--primary); font-weight: 700; }
+.tab .tt { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 220px; }
+.tab.on { border-color: var(--primary); box-shadow: inset 0 0 0 1px var(--primary); background: var(--primary-container); }
+.tab .st { font-weight: 800; } .tab .st.ok { color: var(--primary); } .tab .st.no { color: var(--ink); }
+.plot { background: var(--soft); border-radius: 8px; padding: 12px 14px; display: grid; gap: 4px; }
+.round { display: grid; gap: 2px; margin: 26px 0 12px; }
+.syskey { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; margin-bottom: 6px; }
+.syskey .card { display: grid; gap: 6px; }
+.sortgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 720px) { .sortgrid, .syskey { grid-template-columns: minmax(0, 1fr); } }
+.sortcard { border: 1px solid var(--rule); border-radius: var(--r); background: var(--surface); padding: 16px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.sortcard.ok { border-color: var(--primary); } .sortcard.no { border-color: var(--ink); }
+.sysbtn { font-size: 13.5px; }
+.quote { font-size: 16px; font-weight: 600; }
+.treegrid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 22px; align-items: start; }
+@media (max-width: 860px) { .treegrid { grid-template-columns: minmax(0, 1fr); } }
+.tree2 { display: grid; gap: 0; }
+.tn { display: grid; grid-template-columns: minmax(0, 1fr) 110px; gap: 12px; align-items: center; position: relative; padding-bottom: 22px; }
+.tn:not(:last-child)::after { content: ""; position: absolute; left: 28px; bottom: 2px; width: 2px; height: 18px; background: var(--rule); }
+.tq { border: 1px solid var(--rule); border-radius: var(--r); padding: 12px 14px; display: grid; gap: 8px; background: var(--surface); }
+.tq .mono { font-size: 11.5px; color: var(--muted); }
+.tn.active .tq { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-container); }
+.tn.locked .tq { opacity: .4; }
+.texits { display: grid; gap: 6px; }
+.exit { border: 1px dashed var(--rule); border-radius: 999px; padding: 4px 10px; text-align: center; font-size: 13px; font-weight: 700; color: var(--muted); }
+.exit.hit { background: var(--primary); color: var(--on-primary); border: 1px solid var(--primary); }
+.rationale { border: 2px solid var(--primary); border-radius: var(--r); padding: 14px; display: grid; gap: 10px; background: var(--surface); }
+.rationale b { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--primary); }
+/* Parts, case menu, build list */
+.part { border-radius: 14px; padding: 22px; margin-top: 22px; display: grid; gap: 14px; }
+.part-blue { background: var(--primary-container); border: 1px solid #C6D9FA; }
+.part-plain { background: var(--surface); border: 1px solid var(--rule); }
+.part .tabs { margin-bottom: 0; }
+.queue { grid-template-columns: 250px minmax(0, 1fr) !important; gap: 26px !important; }
+.qmenu { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 90px); background: var(--surface); border: 1px solid var(--rule); border-radius: 14px; box-shadow: 0 10px 28px rgba(11, 13, 16, .12), 0 2px 6px rgba(11, 13, 16, .06); overflow: hidden; }
+.qmenu-h { display: flex; justify-content: space-between; align-items: baseline; padding: 14px 16px; border-bottom: 1px solid var(--rule); background: var(--soft); }
+.qmenu .qlist { display: grid !important; gap: 0 !important; grid-template-columns: minmax(0, 1fr) !important; }
+.qmenu .qitem { border: 0; border-bottom: 1px solid var(--rule); border-radius: 0; padding: 12px 16px; display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 10px; align-items: center; background: var(--surface); box-shadow: none; }
+.qmenu .qitem:last-child { border-bottom: 0; }
+.qmenu .qitem:hover { background: var(--soft); }
+.qmenu .qitem.on { background: var(--primary-container); box-shadow: inset 4px 0 0 var(--primary); }
+.qn { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font-family: var(--font-mono); font-size: 12.5px; font-weight: 700; background: var(--soft); border: 1px solid var(--rule); }
+.qitem.on .qn { background: var(--primary); color: var(--on-primary); border-color: var(--primary); }
+.qt { display: grid; gap: 2px; min-width: 0; text-align: left; }
+.qt .n { font-family: var(--font-body); font-size: 12.5px; color: var(--muted); }
+.qdetail { background: var(--surface); border: 1px solid var(--rule); border-radius: 14px; padding: 20px; box-shadow: 0 4px 16px rgba(11, 13, 16, .06); min-width: 0; }
+@media (max-width: 900px) { .queue { grid-template-columns: minmax(0, 1fr) !important; } .qmenu { position: static; } }
+.build { margin: 0; padding-left: 0; list-style: none; counter-reset: b; display: grid; gap: 12px; }
+.build li { counter-increment: b; display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 12px; align-items: start; }
+.build li::before { content: counter(b); width: 30px; height: 30px; border-radius: 50%; background: var(--primary); color: var(--on-primary); display: grid; place-items: center; font-weight: 700; font-size: 14px; }
+.build li b { display: block; }
+.build li > div { min-width: 0; }
+/* Case study page */
+.cs-hero { display: grid; gap: 14px; padding: 8px 0 6px; }
+.cs-hero .lead { font-size: 19px; color: var(--muted); max-width: 70ch; }
+.cs-meta { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 14px; color: var(--muted); }
+.cs-meta b { color: var(--ink); }
+.cs-sec { display: grid; gap: 14px; margin-top: 34px; }
+.cs-sec > h2 { font-size: 28px; }
+.cs-sec > p { max-width: 75ch; }
+.flow { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; counter-reset: f; }
+@media (max-width: 900px) { .flow { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 480px) { .flow { grid-template-columns: minmax(0, 1fr); } }
+.flow li { list-style: none; counter-increment: f; background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 14px; display: grid; gap: 6px; align-content: start; position: relative; }
+.flow li::before { content: counter(f); width: 28px; height: 28px; border-radius: 50%; background: var(--primary); color: var(--on-primary); display: grid; place-items: center; font-weight: 700; font-size: 13px; }
+.flow li b { font-size: 15.5px; }
+.flow li span { font-size: 14px; color: var(--muted); }
+.flow li.loop { background: var(--primary-container); border-color: #C6D9FA; }
+.flow-wrap { padding: 0; margin: 0; }
+.loopnote { font-size: 14px; color: var(--primary); font-weight: 600; }
+.cycle { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0; }
+@media (max-width: 900px) { .cycle { grid-template-columns: minmax(0, 1fr); gap: 10px; } }
+.cycle div { padding: 14px; border: 1px solid var(--rule); background: var(--surface); display: grid; gap: 4px; align-content: start; }
+.cycle div:first-child { border-radius: 12px 0 0 12px; } .cycle div:last-child { border-radius: 0 12px 12px 0; }
+@media (max-width: 900px) { .cycle div { border-radius: 12px !important; } }
+.cycle b { color: var(--primary); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+.cycle span { font-size: 14.5px; }
+.cta { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+.btn.big { padding: 13px 24px; font-size: 16px; }
+/* Footer nav */
+.abar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--surface); border-top: 1px solid var(--rule); padding-bottom: env(safe-area-inset-bottom, 0px); }
+.abar .wrap { display: flex; gap: 12px; align-items: center; padding-block: 10px; flex-wrap: wrap; }
+.pp { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--primary); background: var(--primary); color: var(--on-primary); display: grid; place-items: center; padding: 0; flex: none; }
+.pp svg { width: 16px; height: 16px; fill: currentColor; }
+.track { flex: 1 1 160px; min-width: 120px; display: grid; gap: 4px; }
+.track .meta { display: flex; justify-content: space-between; font-size: 12.5px; color: var(--muted); gap: 8px; }
+.track .meta span:first-child { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.bar { height: 4px; background: var(--soft); border-radius: 2px; overflow: hidden; }
+.bar i { display: block; height: 100%; width: 0; background: var(--primary); }
+.toggle { display: inline-flex; gap: 6px; align-items: center; font-size: 13.5px; color: var(--muted); }
+.navbtns { display: flex; gap: 8px; margin-left: auto; }
+.transcript { border-top: 1px solid var(--rule); max-height: 30vh; overflow: auto; }
+.transcript .wrap { display: block; padding-block: 12px; font-size: 15px; color: var(--muted); max-width: 760px; margin: 0 auto; }
+
+.notice { border: 1px solid var(--amber); background: var(--amber-tint); border-radius: var(--r); padding: 14px 16px; font-size: 15px; }
+.notice b { color: var(--amber-ink); }
+@media (prefers-reduced-motion: no-preference) { .fade { animation: fade .25s ease-out; } @keyframes fade { from { opacity: .4; transform: translateY(4px); } to { opacity: 1; transform: none; } } }
+/* Revision additions */
+#skip:focus { position: fixed !important; top: 8px; left: 8px; width: auto; height: auto; clip: auto; padding: 8px 14px; background: var(--primary); color: #fff; z-index: 20; border-radius: 8px; }
+.sr-only { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.listen:disabled { opacity: .6; cursor: not-allowed; border-style: dashed; color: var(--muted); border-color: var(--muted); }
+.illus { display: inline-block; font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; font-weight: 600; color: var(--muted); border: 1px dashed var(--muted); border-radius: 4px; padding: 0 6px; vertical-align: middle; }
+.console .illus { color: var(--console-muted); border-color: var(--console-muted); }
+.layers { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.layers > div { border: 1px solid var(--rule); border-radius: 8px; padding: 12px; display: grid; gap: 6px; align-content: start; font-size: 14.5px; }
+.layers > div:last-child { border-style: dashed; }
+@media (max-width: 760px) { .layers { grid-template-columns: minmax(0, 1fr); } }
+.fs { border: 0; padding: 0; margin: 0; display: grid; gap: 8px; min-width: 0; }
+.fs legend { font-weight: 700; font-size: 14.5px; padding: 0; margin-bottom: 8px; }
+.picks { display: grid; gap: 6px; }
+.pick { display: grid; grid-template-columns: 20px auto minmax(0, 1fr); gap: 10px; align-items: baseline; border: 1px solid var(--rule); border-radius: 8px; padding: 8px 10px; font-size: 14.5px; cursor: pointer; }
+.pick:has(input[type=radio]) { grid-template-columns: 20px minmax(0, 1fr); }
+.pick input { accent-color: var(--primary); width: 16px; height: 16px; margin: 0; align-self: center; }
+.pick:has(input:checked) { border-color: var(--primary); background: var(--primary-container); }
+.pick .ts { font-size: 12.5px; color: var(--muted); }
+.pick.key { border-color: var(--good); box-shadow: inset 3px 0 0 var(--good); }
+.pick.bad { text-decoration: line-through; text-decoration-thickness: 1.5px; }
+.pick:has(input:disabled) { cursor: default; }
+.confbtns { display: flex; gap: 8px; flex-wrap: wrap; }
+.cb { width: 44px; height: 40px; border-radius: 8px; border: 1px solid var(--rule); background: var(--surface); font-family: var(--font-mono); font-weight: 700; font-size: 15px; }
+.cb[aria-checked="true"] { background: var(--primary); color: var(--on-primary); border-color: var(--primary); }
+.cb:disabled { cursor: default; opacity: .75; }
+.pill { display: inline-block; font-size: 12px; font-weight: 700; padding: 1px 9px; border-radius: 999px; border: 1px solid; margin-left: 4px; }
+.pill.pass { color: var(--primary); border-color: var(--primary); background: var(--primary-container); }
+.pill.miss { color: var(--ink); border-color: var(--ink); background: var(--bad-tint); }
+.pill.hr { color: var(--muted); border-color: var(--muted); border-style: dashed; }
+.result-list { margin: 6px 0; padding-left: 18px; display: grid; gap: 4px; }
+.fixes { margin: 4px 0 0; padding-left: 18px; display: grid; gap: 4px; }
+.fb p { margin-top: 6px; }
+.polcard { border: 2px dashed var(--ink); border-radius: var(--r); padding: 14px 16px; display: grid; gap: 8px; background: var(--soft); }
+.status { border-radius: var(--r); padding: 14px 16px; font-size: 15px; border: 2px solid; }
+.status.open { border-color: var(--ink); background: var(--bad-tint); }
+.status.done { border-color: var(--primary); background: var(--primary-container); }
+.selfchk { border: 1px solid var(--rule); border-radius: 8px; padding: 10px 14px; display: grid; gap: 6px; }
+.selfchk legend { font-weight: 700; font-size: 14px; padding: 0 4px; }
+.rb .selfchk label { display: flex; justify-content: flex-start; gap: 10px; align-items: flex-start; text-align: left; font-weight: 400; font-size: 14.5px; }
+.rb .selfchk input { width: 16px; height: 16px; flex: none; margin: 3px 0 0; padding: 0; accent-color: var(--primary); }
+.btn.sm { padding: 6px 14px; font-size: 13.5px; }
+a.btn { text-decoration: none; }
+.tagp { justify-self: start; font-size: 11.5px; font-weight: 700; letter-spacing: .04em; border-radius: 999px; padding: 1px 9px; border: 1px solid var(--primary); color: var(--primary); background: var(--surface); }
+.tagp.planned { border-style: dashed; color: var(--muted); border-color: var(--muted); }
+.tagp.partial { border-style: dashed; }
+pre.code { margin: 0; white-space: pre-wrap; font-family: var(--font-mono); font-size: 12.5px; line-height: 1.55; background: var(--console); color: var(--console-ink); border-radius: 8px; padding: 12px; overflow-x: auto; }
+details > summary { cursor: pointer; }
+table.t caption { text-align: left; }
+.qitem:focus-visible, .tab:focus-visible, .chipbtn:focus-visible, .cb:focus-visible, .pick:has(input:focus-visible) { outline: 3px solid var(--focus); outline-offset: 2px; }
+h1:focus, h2:focus, .fb:focus, #rbresult:focus { outline: none; }
+.fb:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+@media (max-width: 560px) { .abar .wrap { gap: 8px; } .navbtns .btn { padding: 9px 16px; } .big { font-size: 44px; } }
+/* Clickable buttons: resting shadow, small lift on hover, press on click. Disabled buttons stay flat. */
+:root { --lift: 0 1px 2px rgba(11, 13, 16, .10), 0 2px 6px rgba(11, 13, 16, .08); --lift-hover: 0 6px 14px rgba(26, 86, 219, .20), 0 2px 4px rgba(11, 13, 16, .10); }
+:is(.btn, .chipbtn, .lvbtn, .tab, .cb, .listen, .step):not(:disabled) { box-shadow: var(--lift); transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease, background-color .12s ease; }
+:is(.btn, .chipbtn, .lvbtn, .tab, .cb, .listen, .step):not(:disabled):hover { transform: translateY(-2px); box-shadow: var(--lift-hover); }
+:is(.btn.ghost, .chipbtn, .tab, .cb, .step):not(:disabled):hover { border-color: var(--primary); }
+:is(.chipbtn, .tab, .cb, .btn.ghost):not(:disabled):not([aria-pressed="true"]):not([aria-checked="true"]):hover { background: var(--primary-container); }
+:is(.btn, .chipbtn, .lvbtn, .tab, .cb, .listen, .step):not(:disabled):active { transform: translateY(0); box-shadow: var(--lift); }
+.chipbtn[aria-pressed="true"]:not(:disabled), .tab.on { box-shadow: inset 0 0 0 1px var(--primary), var(--lift); }
+.chipbtn[aria-pressed="true"]:not(:disabled):hover, .tab.on:hover { box-shadow: inset 0 0 0 1px var(--primary), var(--lift-hover); }
+.chipbtn { color: var(--ink); }
+.pick { transition: border-color .12s ease, box-shadow .12s ease; }
+.pick:not(:has(input:disabled)):hover { border-color: var(--primary); box-shadow: var(--lift); }
+.qmenu .qitem { transition: background-color .12s ease; }
+@media (prefers-reduced-motion: reduce) { :is(.btn, .chipbtn, .lvbtn, .tab, .cb, .listen, .step):not(:disabled):hover { transform: none; } }
+
+/* Screen 7 cards: shaded light blue to black, so each question reads as its own block. */
+.sortcard { border-color: transparent; }
+.sortcard.sh0 { background: #EEF4FE; } .sortcard.sh1 { background: #CFE0FB; } .sortcard.sh2 { background: #A9C7F7; }
+.sortcard.sh3 { background: #2D66CF; color: #FFFFFF; } .sortcard.sh4 { background: #1A3F99; color: #FFFFFF; } .sortcard.sh5 { background: #0B0D10; color: #FFFFFF; }
+.sortcard.sh2 .note { color: #1C2B4A; }
+.sortcard.sh3 .note { color: #FFFFFF; } .sortcard:is(.sh4, .sh5) .note { color: rgba(255, 255, 255, .88); }
+.sortcard .fb { color: var(--ink); }
+.sortcard.ok { box-shadow: inset 0 0 0 3px var(--primary); } .sortcard.no { box-shadow: inset 0 0 0 3px var(--ink); }
+.sortcard:is(.sh3, .sh4).ok { box-shadow: inset 0 0 0 3px #FFFFFF; } .sortcard.sh5.ok { box-shadow: inset 0 0 0 3px #8DB8FF; } .sortcard:is(.sh3, .sh4, .sh5).no { box-shadow: inset 0 0 0 3px #FFFFFF; }
+.sortcard:is(.sh3, .sh4, .sh5) .chipbtn:disabled:not(.right):not(.wrong) { opacity: .75; }
+.critical { border-left: 4px solid var(--ink); padding: 6px 0 6px 10px; background: var(--bad-tint); }
+.critical-box { border: 2px solid var(--ink); border-left-width: 6px; background: var(--bad-tint); border-radius: var(--r); padding: 14px 16px; font-size: 15px; }
+</style>
+
+<header class="top">
+  <div class="wrap gutter">
+    <div class="brand">
+      <span class="eyebrow">Content Analyst Onboarding (proposed) · Module 3 demonstration</span>
+      <span class="name">Reviewing with the Co-Pilot</span>
+    </div>
+    <nav class="steps" id="steps" aria-label="Screens"></nav>
+  </div>
+</header>
+
+<a href="#stage" class="sr-only" id="skip">Skip to content</a>
+<main class="gutter"><div class="wrap" id="stage"></div></main>
+<div id="sr" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+<div class="abar" id="abar">
+  <div class="wrap gutter">
+    <div class="row" style="gap:12px"><button class="btn ghost" id="tocs" style="padding:8px 14px;font-size:14px">Case study</button><a class="btn ghost" href="job-aid.html" target="_blank" rel="noopener" style="padding:8px 14px;font-size:14px">Job aid<span class="sr-only"> (printable, opens in a new tab)</span></a><span class="note" id="where"></span></div>
+    <div class="navbtns">
+      <button class="btn ghost" id="back">Back</button>
+      <button class="btn" id="next">Next</button>
+    </div>
+  </div>
+</div>
+
+<audio id="au" preload="none"></audio>
+
+<script>
+/* =====================================================================
+   Reviewing with the Co-Pilot · revised build
+   Content layers, kept distinct everywhere in this file:
+   1. PUBLISHED: U.S. TV Parental Guidelines and MPA Classification and Rating Rules (see SRC).
+   2. SYNTHETIC: every title, scene, timestamp, and co-pilot suggestion.
+   3. ILLUSTRATIVE: the co-pilot interface, the accept / modify / override / escalate workflow,
+      QA sampling, the violence intensity ladder, and the fictional "Training Market X" card.
+   ===================================================================== */
+const DURATION = "about 2 to 3 hours";
+const DURATION_NOTE = "Estimate only. It has not been timed with learners yet.";
+
+const T = {
+  s0: "Welcome to Reviewing with the Co-Pilot. This is a stand-alone demonstration, designed as Module 3 of a proposed onboarding program for content analysts. This independent training simulation uses published U.S. television and film rating guidelines alongside fictional titles, scenes, and simulated AI suggestions. The co-pilot interface and analyst review procedures are illustrative and do not represent Amazon's proprietary tools or policies. On the screens ahead you will learn four checks for an AI-suggested rating: Evidence, Context, Count, and System. You will practice choosing an action and writing a rationale, then work a queue of six cases. Plan on " + DURATION + ". That figure is an estimate and has not yet been timed with learners.",
+  s1: "Until now, your work started with a blank form. You watched the title, noted each moment that affected the rating, and chose a rating. With the co-pilot, the form arrives filled in: a suggested rating, content descriptors with levels, evidence timestamps, and a short rationale are waiting before you press play. You are still responsible for the final rating. What changes is the first question you ask. Before, it was: what is in this title? Now it is: is this suggestion right, and how do I know? That second question is a skill, and this module gives you practice with it. Compare the two forms on screen, then select Next.",
+  s2: "Here is the co-pilot panel for a sample series episode. It has five numbered parts. Select a number, or hover over a part, to open its explanation. Press Escape or select the number again to close it. Part one is the suggested rating. For a series, that is a TV Parental Guidelines rating such as TV-PG or TV-14. For a film, the co-pilot estimates against the MPA categories, such as PG-13 or R. Part two lists each content descriptor, such as Violence or Coarse Language, with a level: mild, moderate, intense, or graphic. Part three holds the evidence timestamps the co-pilot used. Part four is a plain-language rationale. Part five is the confidence signal, which shows how sure the model is of its own output. It does not tell you whether the rating is right. Below the panel you will see what the co-pilot tends to do well and where it slips: tone and genre, counting, and deciding which rating system applies.",
+  s3: "That panel sounds certain, and that is part of the challenge. When a suggestion is fluent, specific, and labeled high confidence, people tend to check it less. This is called automation bias, and experience does not make anyone immune to it. The confidence signal reports how sure the model is. Whether the rating matches the guidelines is a separate question, and you are the one who answers it. The opposite habit costs something too. Re-reviewing every title from scratch throws away the time the tool was built to save. The goal is calibrated trust: open the evidence behind each suggestion, every time, and save a full re-review for titles that need it. Read the table on screen, then answer the four questions below it.",
+  s4: "The first check is Evidence. For every descriptor the co-pilot suggests, open its timestamp and confirm the moment supports both the descriptor and its level. Most of the time it will. Sometimes the co-pilot flags something that only resembles a match: a cleaver used to cook, a playful jump scare, a bleeped word no one can hear. That is over-flagging. On this screen, twelve scenes are grouped by level, three at each. Mark each one Supported or Not supported. Four of them are not supported. When a timestamp fails to support its descriptor, remove the descriptor or lower its level, and note why. A descriptor with no matching moment stays unsupported until you find one.",
+  s5: "The second check is Context. The same action can land very differently depending on how it is shown. The TV Parental Guidelines name the levels: mild fantasy or comedic violence, then moderate, intense, and graphic violence. They do not define each level with fixed rules about blood or camera time. So this module uses an illustrative training classification, shown in the guide box, to practice the judgment. Your team's own policy would supply the real one. The co-pilot rated all six scenes on screen as moderate violence, because the action in each is similar. Read each scene, then choose the level you would give it. Pay attention to tone, genre, injury detail, and how long the camera stays. Those are where the co-pilot is weakest and where your judgment counts most.",
+  s6: "The third check is Count. The co-pilot tends to judge moments one at a time. Some rules depend on how often something happens, how long it lasts, or the context it appears in. The MPA rules are the clearest example, so all six examples on this screen are films. One harsher sexually derived word used as an expletive initially requires at least PG-13. More than one, or even one used in a sexual context, ordinarily requires R, though the Rating Board can still rate such a film PG-13 by a two-thirds special vote. Any drug use initially requires at least PG-13. Violence that is both realistic and extreme or persistent generally goes beyond PG-13. Only the MPA Rating Board issues MPA ratings. Here you are checking whether a co-pilot estimate is consistent with the published rules. For each film, read the plot, look at the timeline, and choose the rating the rules point to.",
+  s7: "The fourth check is System. Before you judge any level, confirm which rating system applies to this title, and confirm it from the title's approved rating metadata. Series and episodes, including series made for streaming, use the TV Parental Guidelines. A theatrical film that carries an MPA rating, delivered in its unedited version, displays that MPA rating. Not every film on a streaming service has an MPA rating, though. Some were never submitted, and a version edited after rating needs to be rated again. If the metadata is missing, conflicts with the title, or leaves the system unclear, stop and escalate. Round one asks you to sort titles by system. Round two asks you to match each rule to the system it comes from.",
+  s8: "After the four checks, you choose one of four actions. Accept when the suggestion passes all four checks. Modify when the co-pilot went too high or mislabeled something, such as a descriptor the evidence does not support or a level that context lowers. Add a short note. Override when the co-pilot went too low. Under-rating carries the greater risk to viewers, so in this simulated workflow every override needs a full rationale, and QA samples overrides. Escalate when the guidelines do not settle the question, when you cannot confirm which rating system applies, or when an additional policy layer, such as a market-specific review, calls for a Policy decision. Escalating is a correct decision. It means you found the edge of what the rating rules can settle. Work the four cases on screen through the decision tree: the checks come first, then the action.",
+  s9: "A rationale has three parts: a claim, the evidence, and the policy that connects them. The claim states your action and the final rating. The evidence names the moments, with timestamps. The policy names the guideline or rule that applies. Study the three worked examples first. In The Long Night, the claim is: override to R, language. The evidence is the two expletives, at thirty-one minutes ten and one hour twenty-four. The policy line says that under the MPA rules, more than one such expletive ordinarily requires R, with an exception only by a special Rating Board vote. Then write your own rationale for the practice episode. The checker looks for the right action and rating, timestamps that point to relevant scenes, and a policy line that names the right principle. It matches keywords and timestamps, so it cannot judge whether your reasoning is sound. Compare your answer with the model and complete the self-check.",
+  s10: "Now the queue. Six titles are waiting, each with a co-pilot suggestion. For each one, run the four checks and choose an action. If you modify or override, choose the final rating. Then select the log entries your decision rests on, choose the policy principle or escalation reason that applies, and set your confidence from one to five. Nothing is preset, so every choice is yours. For overrides and escalations, write a short rationale as well. Submit the decision to see detailed feedback. You can move between cases at any time, and your answers are saved as you go.",
+  s11: "These are your results. Decision accuracy shows how many actions and final ratings matched the answer key. Reasoning shows whether you picked the evidence and the policy principle that support each decision. Written rationales are for your own comparison with the model answers. This module does not grade them. The confidence chart sets how sure you were against how each case came out. With only six cases, treat it as a first signal of possible overconfidence or underconfidence. Patterns you missed link back to the lesson that covers them, and targeted practice is available below. You can submit your results once all six cases are complete. This demo does not send them anywhere. Before you go, open the printable job aid and keep it beside your queue."
+};
+
+/* Audio. All 12 screen narrations were re-recorded in ElevenLabs ("api calls male", Multilingual v2)
+   from the T scripts above. A screen's Listen button is active only when its file is listed here;
+   if a script changes again, remove its file from this set until the clip is re-recorded. */
+const AUDIO_OK = new Set(["m3_s00_narrator.mp3", "m3_s01_narrator.mp3", "m3_s02_narrator.mp3", "m3_s03_narrator.mp3", "m3_s04_narrator.mp3", "m3_s05_narrator.mp3", "m3_s06_narrator.mp3", "m3_s07_narrator.mp3", "m3_s08_narrator.mp3", "m3_s09_narrator.mp3", "m3_s10_narrator.mp3", "m3_s11_narrator.mp3"]);
+
+/* Real U.S. systems. Shade runs light to dark with age. */
+const TVR = ["TV-Y", "TV-Y7", "TV-G", "TV-PG", "TV-14", "TV-MA"];
+const MPA = ["G", "PG", "PG-13", "R", "NC-17"];
+const SHADE = { "TV-Y": 0, "TV-Y7": 1, "TV-Y7-FV": 1, "TV-G": 2, "TV-PG": 3, "TV-14": 4, "TV-MA": 5, "G": 0, "PG": 2, "PG-13": 3, "R": 4, "NC-17": 5 };
+const band = b => `<span class="band b-${SHADE[b]}">${b}</span>`;
+const LEVELS = ["mild", "moderate", "intense", "graphic"];
+/* Mild comedic or fantasy violence is named in TV-Y7 (children's programs). General-audience programs with
+   little or no violence are TV-G. */
+const LV_TV = { mild: ["TV-Y7", "TV-G"], moderate: ["TV-PG"], intense: ["TV-14"], graphic: ["TV-MA"] };
+const SRC = {
+  tv: "https://tvguidelines.org/ratings.html",
+  tvfaq: "https://tvguidelines.org/faqs.html",
+  mpaGuide: "https://www.filmratings.com/ratings-guide/",
+  mpaDesc: "https://www.filmratings.com/common-descriptors/",
+  mpa: "https://www.filmratings.com/wp-content/uploads/2025/08/rating_rules.pdf"
+};
+const link = (k, label) => `<a href="${SRC[k]}" target="_blank" rel="noopener">${label}<span class="sr-only"> (opens in a new tab)</span></a>`;
+const SOURCES_ALL = `Sources: ${link("tv", "TV Parental Guidelines")} · ${link("tvfaq", "TV Guidelines FAQ")} · ${link("mpaGuide", "MPA Ratings Guide")} · ${link("mpaDesc", "MPA Common Descriptors")} · ${link("mpa", "MPA Classification and Rating Rules (PDF)")}`;
+const conf = n => `<span class="conf" role="img" aria-label="Confidence ${["", "low", "medium", "high"][n]}">${[1, 2, 3].map(i => `<i class="${i <= n ? "f" : ""}"></i>`).join("")}</span>`;
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const ILLUS = `<span class="illus">Illustrative</span>`;
+
+const state = { cs: !/module/.test(location.hash), i: 0, seen: new Set([0]), kc: {}, ev: {}, ctx: {}, cnt: {}, cntOn: 0, sort: {}, rule: {}, sc: 0, path: {}, ex: 0,
+  rb: { c: "", e: "", p: "" }, rbChecked: false, rbSelf: {}, q: 0, ans: {}, submitted: false, xp: {}, xpSkill: null };
+
+const SCREENS = [
+  { id: "s0", title: "Welcome", audio: "m3_s00_narrator.mp3" },
+  { id: "s1", title: "From author to reviewer", obj: "EO1", audio: "m3_s01_narrator.mp3" },
+  { id: "s2", title: "Meet the co-pilot", obj: "EO1", audio: "m3_s02_narrator.mp3" },
+  { id: "s3", title: "Why confident output persuades", obj: "EO1", audio: "m3_s03_narrator.mp3" },
+  { id: "s4", title: "Check 1: Evidence", obj: "EO2", audio: "m3_s04_narrator.mp3" },
+  { id: "s5", title: "Check 2: Context", obj: "EO3", audio: "m3_s05_narrator.mp3" },
+  { id: "s6", title: "Check 3: Count", obj: "EO3", audio: "m3_s06_narrator.mp3" },
+  { id: "s7", title: "Check 4: Which system applies", obj: "EO3", audio: "m3_s07_narrator.mp3" },
+  { id: "s8", title: "Accept, modify, override, or escalate", obj: "EO4 · EO6", audio: "m3_s08_narrator.mp3" },
+  { id: "s9", title: "Writing the rationale", obj: "EO5", audio: "m3_s09_narrator.mp3" },
+  { id: "s10", title: "Practice queue", obj: "EO2 to EO6", audio: "m3_s10_narrator.mp3" },
+  { id: "s11", title: "Results and job aid", audio: "m3_s11_narrator.mp3" },
+  { id: "s12", title: "Targeted practice", hidden: true }
+];
+const LAST = 11;
+/* Which lesson teaches each check, for remediation links. */
+const CHECK_SCREEN = { Evidence: 4, Context: 5, Count: 6, System: 7, Escalation: 8, Rationale: 9 };
+
+const $ = s => document.querySelector(s);
+const stage = $("#stage"), au = $("#au");
+const announce = msg => { const r = $("#sr"); if (!r) return; r.textContent = ""; setTimeout(() => { r.textContent = msg; }, 30); };
+
+/* ---------- audio: optional, per screen ---------- */
+let playing = null;
+const PLAY = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2l10 6-10 6z"/></svg>', PAUSE = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2h4v12H3zM9 2h4v12H9z"/></svg>';
+const listenBtn = file => AUDIO_OK.has(file)
+  ? `<button class="listen" data-listen="${file}" aria-pressed="${playing === file && !au.paused}">${playing === file && !au.paused ? PAUSE + "Pause" : PLAY + "Listen"}</button>`
+  : `<button class="listen" disabled aria-disabled="true" title="This recording is being re-recorded to match the revised text.">${PLAY}Audio being updated</button>`;
+const narr = (key, file) => `<div class="narr fade"><p>${esc(T[key])}</p>${listenBtn(file)}</div>`;
+function syncListen() { document.querySelectorAll("[data-listen]").forEach(b => { const on = b.dataset.listen === playing && !au.paused; b.setAttribute("aria-pressed", on); b.innerHTML = (on ? PAUSE + "Pause" : PLAY + "Listen"); }); }
+function stopAudio() { au.pause(); playing = null; syncListen(); }
+au.addEventListener("play", syncListen); au.addEventListener("pause", syncListen); au.addEventListener("ended", () => { playing = null; syncListen(); });
+document.addEventListener("click", e => { const b = e.target.closest("[data-listen]"); if (!b || b.disabled) return; const f = b.dataset.listen;
+  if (playing === f && !au.paused) { au.pause(); return; }
+  if (playing !== f) { au.src = "audio/" + f; playing = f; }
+  au.play().catch(() => { playing = null; syncListen(); }); });
+
+/* ---------- nav ---------- */
+function go(i) {
+  state.i = Math.max(0, Math.min(SCREENS.length - 1, i));
+  state.cs = false;
+  state.seen.add(state.i);
+  stopAudio();
+  render({ keepFocus: false });
+  window.scrollTo({ top: 0 });
+  const h = stage.querySelector("h1"); if (h) { h.setAttribute("tabindex", "-1"); h.focus({ preventScroll: true }); }
+}
+$("#back").addEventListener("click", () => go(state.i - 1));
+$("#tocs").addEventListener("click", () => { stopAudio(); state.cs = true; render({ keepFocus: false }); window.scrollTo({ top: 0 }); const h = stage.querySelector("h1"); if (h) { h.setAttribute("tabindex", "-1"); h.focus({ preventScroll: true }); } });
+$("#next").addEventListener("click", () => go(state.i + 1));
+function steps() {
+  $("#steps").innerHTML = SCREENS.filter(s => !s.hidden).map((s, k) => `<button class="step ${k === state.i ? "on" : state.seen.has(k) ? "done" : ""} ${k === 10 ? "q" : ""}" data-go="${k}" aria-label="Screen ${k}: ${esc(s.title)}" ${k === state.i ? 'aria-current="step"' : ""}>${k}</button>`).join("");
+}
+document.addEventListener("click", e => { const g = e.target.closest("[data-go]"); if (g) go(+g.dataset.go); });
+
+function head(s, dir, tag = "Now you try") {
+  return `<div class="screen-head fade"><div class="kicker"><span>Screen ${SCREENS.indexOf(s)} of ${LAST}</span>${s.obj ? `<span class="obj">${s.obj}</span>` : ""}</div><h1>${esc(s.title)}</h1></div>${narr(s.id, s.audio)}${dir ? `<div class="task"><span class="task-tag">${tag}</span><div class="task-dir">${dir}</div></div>` : ""}`;
+}
+const verdict = (ok, a = "Right.", b = "Not quite.") => `<b>${ok ? a : b}</b>`;
+const pickBtn = (label, attr, picked, ans, extra = "") => `<button class="lvbtn ${extra} ${picked == null ? "" : label === ans ? "right" : label === picked ? "wrong" : "dim"}" ${attr} ${picked != null ? "disabled" : ""} ${picked != null && label === picked ? 'aria-pressed="true"' : ""}>${label}</button>`;
+const lvBtn = (l, attr, p, ans) => pickBtn(l, attr, p, ans, `lv-${l}`);
+const rateBtn = (r, attr, p, ans) => pickBtn(r, attr, p, ans, `b-${SHADE[r]}`);
+const scoreBar = (n, of, label) => `<div class="scorebar"><span>${label}</span><div class="sb" role="img" aria-label="${n} of ${of}"><i style="width:${of ? n / of * 100 : 0}%"></i></div><b class="mono">${n} / ${of}</b></div>`;
+const LAYERS = `<div class="layers">
+  <div><span class="label">Published rating systems</span><p>U.S. TV Parental Guidelines and MPA film ratings. Definitions quoted or paraphrased from the official sources linked on each screen.</p></div>
+  <div><span class="label">Synthetic practice material</span><p>Every title, character, scene, timestamp, and co-pilot suggestion is invented for practice.</p></div>
+  <div><span class="label">Illustrative workflow</span><p>The co-pilot interface, the accept, modify, override, and escalate procedure, QA sampling, the violence intensity ladder, and “Training Market X” are made up for this module. They do not represent Amazon's tools or policies, or any real country's rules.</p></div></div>`;
+
+/* ---------- screens ---------- */
+const R = {};
+R.s0 = s => `
+  <div class="screen-head fade"><div class="kicker"><span>Demonstration module · designed as Module 3 of a proposed 5-module curriculum · ${DURATION}</span><span class="obj">Estimate, not yet user-tested</span></div>
+  <h1>Reviewing with the Co-Pilot</h1></div>
+  ${narr("s0", s.audio)}
+  <div class="stack" style="gap:18px">
+    <div class="card stack">
+      <span class="label">By the end, you can</span>
+      <ul class="points">
+        <li>Explain what the co-pilot produces and where it tends to make mistakes</li>
+        <li>Run the four checks: Evidence, Context, Count, and System</li>
+        <li>Choose to accept, modify, override, or escalate</li>
+        <li>Back each decision with the evidence and the rule that supports it, in a three-part rationale: claim, evidence, policy</li>
+      </ul>
+      <p class="note"><b>How you will be assessed:</b> six final cases. Decision accuracy is scored on your action, your final rating, and any required publication hold, with a target of at least 5 of 6. <b>Critical safety requirement:</b> if a case requires a publication hold, a decision that lets the title publish fails the assessment, even with 5 or more correct decisions. Reasoning is scored on the evidence and policy principle you select; evidence counts only when you cite every essential log entry. Written rationales are compared with a model answer by you; this module does not grade them.</p>
+    </div>
+    <div class="card stack">
+      <span class="label">What is real in this module, and what is not</span>
+      <p>This independent training simulation uses published U.S. television and film rating guidelines alongside fictional titles, scenes, and simulated AI suggestions. The co-pilot interface and analyst review procedures are illustrative and do not represent Amazon's proprietary tools or policies.</p>
+      ${LAYERS}
+    </div>
+    <div class="card stack">
+      <span class="label">Rating systems used in this module</span>
+      <p>Series are rated with the <b>TV Parental Guidelines</b>. Films that were submitted to the <b>MPA</b> (Motion Picture Association) carry an MPA rating. Which system applies to a title is confirmed from its rating metadata (Check 4).</p>
+      <div class="sys"><span class="note">TV</span><div class="row">${TVR.map(band).join("")}</div></div>
+      <div class="sys"><span class="note">Film</span><div class="row">${MPA.map(band).join("")}</div></div>
+    </div>
+    <div class="card stack">
+      <span class="label">The four levels you will use</span>
+      <p>The level names follow the wording of the TV Parental Guidelines. The guidelines name these levels but do not define them with fixed rules, so later screens add an illustrative training classification.</p>
+      <div class="tscroll"><table class="t"><tr><th scope="col">Level</th><th scope="col">TV rating</th><th scope="col">What the TV Parental Guidelines say it may contain</th></tr>
+        <tr><td><span class="lvchip lv-mild">mild</span></td><td>${band("TV-Y7")} ${band("TV-G")}</td><td>TV-Y7 (children's programs): mild fantasy or comedic violence. TV-Y7-FV marks fantasy violence that is more intense or combative. TV-G: little or no violence</td></tr>
+        <tr><td><span class="lvchip lv-moderate">moderate</span></td><td>${band("TV-PG")}</td><td>Moderate violence (V), infrequent coarse language (L), some sexual situations (S), some suggestive dialogue (D)</td></tr>
+        <tr><td><span class="lvchip lv-intense">intense</span></td><td>${band("TV-14")}</td><td>Intense violence (V), strong coarse language (L), intense sexual situations (S), intensely suggestive dialogue (D)</td></tr>
+        <tr><td><span class="lvchip lv-graphic">graphic</span></td><td>${band("TV-MA")}</td><td>Graphic violence (V), crude indecent language (L), explicit sexual activity (S)</td></tr></table></div>
+      <p class="note">${SOURCES_ALL}</p>
+    </div>
+    <div class="row"><button class="btn" data-go="1">Start</button></div>
+  </div>`;
+
+R.s1 = s => head(s, "<b>Compare</b> the two rating forms below. The left form is blank, the way your work used to start. The right form is how it now arrives, filled in by the co-pilot. Nothing to answer here. <b>Select</b> Next when you are ready.", "Look below") + `
+  <div class="grid2">
+    <div class="card stack"><span class="label">Before</span><h2>What is in this title?</h2>
+      <div class="form"><div class="field"><span class="k">Rating</span>&nbsp;</div><div class="field"><span class="k">Descriptors</span>&nbsp;</div><div class="field"><span class="k">Evidence</span>&nbsp;</div><div class="field"><span class="k">Rationale</span>&nbsp;</div></div>
+      <p class="note">You watch the title, note each flagged moment with its timestamp, and fill in every field.</p></div>
+    <div class="card stack"><span class="label">With the co-pilot ${ILLUS}</span><h2>Is this suggestion right, and how do I know?</h2>
+      <div class="form"><div class="field filled"><span class="k">Rating</span>${band("TV-14")}</div><div class="field filled"><span class="k">Descriptors</span>Violence (V), intense</div><div class="field filled"><span class="k">Evidence</span><span class="mono">00:04:10 · 00:11:02 · 00:38:40</span></div><div class="field filled"><span class="k">Rationale</span>Three fight scenes with intense violence.</div></div>
+      <p class="note">The co-pilot fills in every field. You check each one before you submit.</p></div>
+  </div>`;
+
+const ZONES = [
+  ["band", "Suggested rating", "For a series, a TV Parental Guidelines rating. For a film, an estimate against the MPA categories. Only the MPA Rating Board issues official MPA ratings."],
+  ["warn", "Descriptors and level", "Each content descriptor, such as Violence (V) or Coarse language (L), with a level: mild, moderate, intense, or graphic."],
+  ["ts", "Evidence timestamps", "The moments the co-pilot used. In the live tool, selecting one would jump the player there."],
+  ["why", "Rationale", "A short summary in plain language. Check it against the moments themselves."],
+  ["conf", "Confidence signal", "How sure the model is of its own output. It says nothing about whether the rating is right."]
+];
+R.s2 = s => {
+  const z = (i, inner) => { const [k, n, d] = ZONES[i]; return `<div class="zone tipzone" data-zone="${i}">
+      <button type="button" class="hot" data-tip="${i}" aria-expanded="false" aria-controls="tip-${k}" aria-label="Part ${i + 1}: ${n}. Show explanation">${i + 1}</button>${inner}
+      <div class="tip" id="tip-${k}" role="region" aria-label="${n} explanation"><b>${i + 1}. ${n}</b>${d}</div></div>`; };
+  return head(s, "<b>Open</b> each numbered part of the co-pilot panel below to read what it means. <b>Select</b> a number, <b>tap</b> it on a touchscreen, or <b>hover</b> over the part with a mouse. A note closes when you move away from it, tap somewhere else, or press <b>Escape</b>.") + `
+  <div class="s2wrap">
+    <div class="console">
+      <div class="chead"><span class="tag">Co-pilot suggestion</span><span class="ttl">Sample series episode · TV · ${ILLUS}</span></div>
+      ${z(0, `<div class="zl">Suggested rating</div>${band("TV-14")}`)}
+      ${z(1, `<div class="zl">Descriptors</div><div class="warn"><b>Violence (V)</b><span class="lvl">intense</span></div>`)}
+      ${z(2, `<div class="zl">Evidence</div><div class="row"><span class="ts">00:04:10</span><span class="ts">00:11:02</span><span class="ts">00:38:40</span></div>`)}
+      ${z(3, `<div class="zl">Rationale</div><div>Three fight scenes with heavy blows and visible blood. No lingering close-ups of injuries.</div>`)}
+      ${z(4, `<div class="zl">Confidence</div><div class="row">${conf(3)}<span class="mono" style="font-size:12.5px">HIGH</span></div>`)}
+      <div class="zone"><div class="zl">Readout</div><div class="readout">Suggested rating: TV-14. Violence, intense. Three instances, at 00:04:10, 00:11:02, and 00:38:40. Confidence: high.</div></div>
+    </div>
+    <p class="note" id="tipcount" style="margin-top:10px">Parts opened: <b class="mono">${(state.tipsSeen || new Set()).size}</b> of 5</p>
+  </div>
+  <section class="aside-sec">
+    <h2>What the co-pilot does well, and where it slips</h2>
+    <div class="sw">
+      <div class="card stack"><span class="label">Does well</span><ul class="points">
+        <li>Finds nearly every relevant moment</li><li>Works fast and gives consistent results</li><li>Reads the video, audio, subtitles, and metadata</li></ul></div>
+      <div class="card stack"><span class="label">Slips on</span><ul class="points">
+        <li>Tone and genre, such as cartoon slapstick versus realistic harm</li><li>Counting and persistence, such as how many times a word is used</li><li>Which rating system applies, and whether another policy layer applies</li></ul></div>
+    </div>
+    <p class="note">These strengths and weak spots describe the simulated co-pilot in this module. They are not measured results from a real tool.</p>
+  </section>`;
+};
+R.s2.after = () => {
+  state.tipsSeen = state.tipsSeen || new Set();
+  const zones = [...document.querySelectorAll(".tipzone")];
+  const close = (z, refocus) => { z.classList.remove("open"); const b = z.querySelector(".hot"); b.setAttribute("aria-expanded", "false"); b.setAttribute("aria-label", b.getAttribute("aria-label").replace("Hide", "Show")); if (refocus) b.focus(); };
+  const open = z => { zones.forEach(o => o !== z && close(o)); z.classList.add("open"); const b = z.querySelector(".hot"); b.setAttribute("aria-expanded", "true"); b.setAttribute("aria-label", b.getAttribute("aria-label").replace("Show", "Hide"));
+    state.tipsSeen.add(+z.dataset.zone); const c = $("#tipcount b"); if (c) c.textContent = state.tipsSeen.size; };
+  zones.forEach(z => {
+    z.querySelector(".hot").addEventListener("click", () => z.classList.contains("open") ? close(z) : open(z));
+    z.addEventListener("mouseleave", () => { if (z.classList.contains("open")) close(z); });
+    z.addEventListener("focusout", e => { if (!z.contains(e.relatedTarget) && z.classList.contains("open")) close(z); });
+    z.addEventListener("mouseenter", () => { state.tipsSeen.add(+z.dataset.zone); const c = $("#tipcount b"); if (c) c.textContent = state.tipsSeen.size; });
+    z.addEventListener("keydown", e => { if (e.key === "Escape" && z.classList.contains("open")) { e.stopPropagation(); close(z, true); } });
+  });
+  /* Tap or click anywhere outside the panel parts closes an open note (touchscreens have no hover). */
+  if (!window.__tipOutside) { window.__tipOutside = true; document.addEventListener("pointerdown", e => { if (!e.target.closest(".tipzone")) document.querySelectorAll(".tipzone.open .hot").forEach(h => h.click()); }); }
+};
+
+const KC = [
+  { q: "The co-pilot shows “Confidence: high.” What does that tell you?", o: ["The rating matches the guidelines", "The model is sure of its own output", "QA has already reviewed it"], a: 1, fb: "Confidence describes how sure the model is of itself. Whether the rating matches the guidelines is still yours to confirm." },
+  { q: "Which habit keeps ratings accurate and still saves time?", o: ["Accept every high-confidence suggestion", "Re-review every title from scratch", "Check the evidence behind each suggestion"], a: 2, fb: "Checking the evidence catches the co-pilot's errors without redoing all of its work." },
+  { q: "Who is affected by automation bias?", o: ["New analysts only", "Experienced analysts only", "Analysts at every level of experience"], a: 2, fb: "Fluent, confident output reduces checking for experienced and new reviewers alike." },
+  { q: "Why is re-reviewing every title from scratch a problem?", o: ["It removes the time the tool was built to save", "The guidelines do not allow it", "It makes ratings less accurate"], a: 0, fb: "A full re-review is accurate but slow. Checking the evidence keeps accuracy and saves time." }
+];
+R.s3 = s => head(s, "<b>Read</b> the table below. Then <b>answer</b> the four questions under it. <b>Select</b> one answer for each question. Feedback appears as soon as you choose.") + `
+  <div class="stack" style="gap:18px">
+    <div class="card stack"><span class="label">Three ways to use the co-pilot</span>
+      <div class="tscroll"><table class="t"><tr><th scope="col">Approach</th><th scope="col">Likely result</th></tr>
+      <tr><td>Accept anything marked high confidence</td><td>Wrong ratings get published</td></tr>
+      <tr><td>Re-review every title from the start</td><td>Little time saved</td></tr>
+      <tr><td><b>Check the evidence for each descriptor</b></td><td><b>Accurate ratings, less time per title</b></td></tr></table></div></div>
+    ${KC.map((k, qi) => {
+      const pick = state.kc[qi];
+      return `<div class="card stack" role="group" aria-labelledby="kcq${qi}"><span class="qlabel">Question ${qi + 1} of ${KC.length}</span><h3 id="kcq${qi}" style="font-size:17px">${esc(k.q)}</h3><div class="stack" style="gap:8px">${k.o.map((o, oi) => {
+        const cls = pick === undefined ? "" : oi === k.a ? "right" : oi === pick ? "wrong" : "";
+        return `<button class="chipbtn ${cls}" data-kc="${qi}:${oi}" ${pick !== undefined ? "disabled" : ""} ${pick === oi ? 'aria-pressed="true"' : ""}>${esc(o)}</button>`; }).join("")}</div>
+        ${pick !== undefined ? `<div class="fb ${pick === k.a ? "ok" : "no"}" id="kcfb${qi}" tabindex="-1">${verdict(pick === k.a, "Correct.")}${esc(k.fb)}</div>` : ""}</div>`; }).join("")}
+  </div>`;
+R.s3.after = () => document.querySelectorAll("[data-kc]").forEach(b => b.addEventListener("click", () => { const [q, o] = b.dataset.kc.split(":").map(Number); state.kc[q] = o; render({ focus: "#kcfb" + q }); announce((o === KC[q].a ? "Correct. " : "Not quite. ") + KC[q].fb); }));
+
+/* Screen 4: evidence, grouped by level */
+const EV = [
+  { g: "mild", w: "Violence (V)", ts: "00:03:15", scene: "Cartoon squirrels pelt each other with acorns. Everyone bounces back laughing.", ok: true, fb: "Comedic cartoon violence with no harm is mild fantasy or comedic violence, named in the TV-Y7 definition." },
+  { g: "mild", w: "Fantasy violence (FV)", ts: "00:09:40", scene: "In an animated adventure for children, a young wizard and a dragon trade spell blasts in a long battle until the dragon flies away unhurt.", ok: true, fb: "FV stays within the TV-Y7 children's category, but marks fantasy violence that is more intense or combative than other TV-Y7 programs. A sustained spell battle fits." },
+  { g: "mild", w: "Violence (V)", ts: "00:14:05", scene: "A girl jumps out from behind a door and shouts “Boo!” at her brother. He laughs.", ok: false, fb: "A playful surprise is not violence. Remove this descriptor." },
+  { g: "moderate", w: "Violence (V)", ts: "00:12:40", scene: "A chef uses a cleaver to break down a whole chicken.", ok: false, fb: "A knife used for cooking is not violence. Remove this descriptor." },
+  { g: "moderate", w: "Coarse language (L)", ts: "00:33:20", scene: "Two coworkers argue. One says “damn” once and “hell” once.", ok: true, fb: "Two mild words in one argument fits infrequent coarse language, which TV-PG names." },
+  { g: "moderate", w: "Sexual situations (S)", ts: "00:41:10", scene: "A married couple kisses and heads toward the bedroom. The scene fades out at the door.", ok: true, fb: "An implied situation with nothing shown fits some sexual situations, the TV-PG wording." },
+  { g: "intense", w: "Violence (V)", ts: "01:05:30", scene: "A man is beaten in an alley. The camera shows his bloodied face.", ok: true, fb: "A realistic beating with injury shown fits intense violence (TV-14) under this module's training classification." },
+  { g: "intense", w: "Coarse language (L)", ts: "01:12:15", scene: "A player shouts at a referee. The audio is bleeped, and no words can be heard.", ok: false, fb: "The bleep means no strong language is heard. Lower or remove this descriptor." },
+  { g: "intense", w: "Suggestive dialogue (D)", ts: "00:22:40", scene: "At a bachelor party, friends trade a long run of crude sexual jokes in detail.", ok: true, fb: "A long run of detailed sexual jokes fits intensely suggestive dialogue, the TV-14 wording." },
+  { g: "graphic", w: "Sexual situations (S)", ts: "00:47:00", scene: "A couple kisses in bed, then the scene cuts to the next morning. No nudity is shown.", ok: false, fb: "A kiss and a cut away does not reach explicit sexual activity. Lower the level." },
+  { g: "graphic", w: "Violence (V)", ts: "01:31:00", scene: "A torture scene shows injuries in close-up for over a minute.", ok: true, fb: "Prolonged injury detail in close-up fits graphic violence (TV-MA)." },
+  { g: "graphic", w: "Sexual situations (S)", ts: "01:02:30", scene: "A sex scene with full nudity, shown in explicit detail.", ok: true, fb: "This is explicit sexual activity, the TV-MA wording." }
+];
+R.s4 = s => {
+  const done = Object.keys(state.ev).length, right = EV.filter((e, i) => state.ev[i] === e.ok).length;
+  return head(s, "<b>Read</b> each scene below. Each one comes with a descriptor and a level from the co-pilot. <b>Select</b> Supported if the scene matches both the descriptor and the level. <b>Select</b> Not supported if it does not. The scenes are grouped by level: mild, moderate, intense, and graphic.") + `
+  ${scoreBar(right, EV.length, `${done} of ${EV.length} marked · correct so far`)}
+  <div class="stack">
+  ${LEVELS.map(g => `
+    <div class="lvhead"><span class="sw8 lv-${g}" aria-hidden="true"></span><h2>${g[0].toUpperCase() + g.slice(1)}</h2><span class="note">TV rating at this level: ${LV_TV[g].map(band).join(" ")}</span></div>
+    <div class="ev">${EV.map((e, i) => e.g !== g ? "" : (() => { const p = state.ev[i]; const n = EV.filter(x => x.g === g).indexOf(e) + 1; return `
+      <div class="evrow" role="group" aria-label="${g} example ${n}"><div class="what"><span class="qlabel">${g} · example ${n} of 3</span><div class="sug">${e.w} <span class="lvl">${e.g}</span><span class="mono note">${e.ts}</span></div><div class="scene">${esc(e.scene)}</div>
+        ${p !== undefined ? `<div class="fb ${p === e.ok ? "ok" : "no"}" id="evfb${i}" tabindex="-1" style="margin-top:6px"><b>${p === e.ok ? "Right." : "Look again."} ${e.ok ? "Supported." : "Not supported."}</b>${esc(e.fb)}</div>` : ""}</div>
+        <div class="row"><button class="chipbtn ${p === undefined ? "" : (e.ok ? "right" : p === true ? "wrong" : "")}" data-ev="${i}:1" ${p !== undefined ? "disabled" : ""} ${p === true ? 'aria-pressed="true"' : ""}>Supported</button><button class="chipbtn ${p === undefined ? "" : (!e.ok ? "right" : p === false ? "wrong" : "")}" data-ev="${i}:0" ${p !== undefined ? "disabled" : ""} ${p === false ? 'aria-pressed="true"' : ""}>Not supported</button></div></div>`; })()).join("")}
+    </div>`).join("")}
+  ${done === EV.length ? `<div class="card"><b>You marked ${right} of ${EV.length} correctly.</b> When a descriptor is not supported, remove it or lower its level, then add a one-line note explaining why.</div>` : ""}
+  <p class="note">Level wording from the ${link("tv", "TV Parental Guidelines")}. Where a level turns on blood or injury detail, the call uses this module's illustrative training classification (Screen 5).</p>
+  </div>`;
+};
+R.s4.after = () => document.querySelectorAll("[data-ev]").forEach(b => b.addEventListener("click", () => { const [i, v] = b.dataset.ev.split(":"); state.ev[i] = v === "1"; render({ focus: "#evfb" + i }); const e = EV[i]; announce((state.ev[i] === e.ok ? "Right. " : "Look again. ") + e.fb); }));
+
+/* Screen 5: context. The ladder is an illustrative training classification, not published wording. */
+const LADDER = { mild: "Fantasy or comedic violence, no real harm (TV-Y7 in children's programs; little or no violence is TV-G)", moderate: "Realistic violence, little or no injury detail (TV-PG)", intense: "Realistic violence with blood or injury shown (TV-14)", graphic: "Camera dwells on injury in detail (TV-MA)" };
+const CTX = [
+  { k: "a", name: "Scene A", d: "In a children's cartoon, a fox is flattened by a falling piano, peels himself off the floor, and keeps running.", ans: "mild", fb: "Comedic cartoon violence with no harm is mild fantasy or comedic violence, the wording of TV-Y7." },
+  { k: "b", name: "Scene B", d: "A character is struck and falls. The camera shows a bleeding head wound for a few seconds, then cuts away.", ans: "intense", fb: "Under the training classification, realistic violence with blood shown is intense (TV-14). It cuts away without dwelling, so it stops short of graphic." },
+  { k: "c", name: "Scene C", d: "Two men trade punches in a bar fight. The blows land, but no blood or injuries are shown.", ans: "moderate", fb: "Realistic fighting with no injury detail fits moderate violence (TV-PG) under the training classification." },
+  { k: "d", name: "Scene D", d: "In a live-action family sitcom, a man slips on a banana peel, crashes into a stack of boxes, and stands up laughing.", ans: "mild", fb: "Comedic harm with no injury stays mild, even in live action. In a general-audience sitcom, that points to TV-G's little or no violence." },
+  { k: "e", name: "Scene E", d: "A soldier is shot. The camera stays close on the open wound for a long stretch while a medic works.", ans: "graphic", fb: "The camera dwells on the wound in close-up. Under the training classification, that is graphic violence (TV-MA)." },
+  { k: "f", name: "Scene F", d: "A boxing match in a sports drama. Punches land all round, with some swelling, but the camera never dwells on cuts.", ans: "moderate", fb: "Realistic blows without lingering injury detail fit moderate violence (TV-PG). This one is close to the line; a team policy might call it intense, which is why the ladder is a training aid." }
+];
+R.s5 = s => {
+  const right = CTX.filter(c => state.ctx[c.k] === c.ans).length;
+  return head(s, "<b>Read</b> the six scenes below. The co-pilot rated every one as Violence, moderate. For each scene, <b>select</b> the level you would give it: mild, moderate, intense, or graphic. <b>Use</b> the guide in the box below.") + `
+  <div class="card" style="margin-bottom:16px"><div class="row" style="justify-content:space-between"><span class="label">How presentation changes the level</span>${ILLUS}</div>
+    <div class="ladder">${LEVELS.map(l => `<div class="rung"><span class="lvchip lv-${l}">${l}</span><span>${LADDER[l]}</span></div>`).join("")}</div>
+    <p class="note" style="margin-top:8px"><b>What is published, and what is a training aid.</b> The ${link("tv", "TV Parental Guidelines")} use the terms mild fantasy or comedic violence, moderate, intense, and graphic violence. They do not say that blood, injury detail, or camera time automatically sets a level. The right-hand descriptions are this module's illustrative classification, written to practice the judgment. A real team would use its own approved policy.</p></div>
+  ${scoreBar(right, CTX.length, "Correct so far")}
+  <div class="grid2">${CTX.map(c => { const p = state.ctx[c.k]; return `
+    <div class="card stack" role="group" aria-labelledby="ctx-${c.k}"><div class="row" style="justify-content:space-between"><h2 id="ctx-${c.k}">${c.name}</h2><span class="note">Co-pilot: Violence <span class="lvl">moderate</span></span></div>
+      <p>${esc(c.d)}</p>
+      <div class="row">${LEVELS.map(l => lvBtn(l, `data-ctx="${c.k}:${l}"`, p, c.ans)).join("")}</div>
+      ${p !== undefined ? `<div class="fb ${p === c.ans ? "ok" : "no"}" id="ctxfb-${c.k}" tabindex="-1">${verdict(p === c.ans)}${esc(c.fb)}</div>` : ""}</div>`; }).join("")}</div>`;
+};
+R.s5.after = () => document.querySelectorAll("[data-ctx]").forEach(b => b.addEventListener("click", () => { const [k, l] = b.dataset.ctx.split(":"); state.ctx[k] = l; render({ focus: "#ctxfb-" + k }); const c = CTX.find(x => x.k === k); announce((l === c.ans ? "Right. " : "Not quite. ") + c.fb); }));
+
+/* Screen 6: counting, MPA rules */
+const SV = "The Rating Board can still rate such a film PG-13 by a special two-thirds vote, if most American parents would find PG-13 appropriate because of the context or manner of use, or because the use is inconspicuous. An analyst's estimate cannot apply that exception.";
+const CNT = [
+  { t: "Food Truck Summer", meta: "Feature film · teen comedy · 1h 50m", len: 110,
+    plot: "Three friends spend the summer before college running a taco truck at the beach. Most of the film is light banter with customers and a rivalry with a competing truck. In one scene the truck's generator dies during a rush, and one friend yells in frustration.",
+    marks: [64], what: "One use of a harsher sexually derived word, as an expletive, during the generator scene.",
+    q: "What is the lowest rating the published rules allow?", opts: ["G", "PG", "PG-13", "R"], ans: "PG-13",
+    fb: "MPA rules: a single use of one of the harsher sexually derived words, used only as an expletive, initially requires at least PG-13." },
+  { t: "The Long Night", meta: "Feature film · crime drama · 1h 52m", len: 112,
+    plot: "A night-shift paramedic treats a wounded robbery suspect and gets pulled into a cover-up. Over one night she has to decide whether to trust the detective who says he can protect her. Tempers run high in the ambulance, the ER, and a parking-garage standoff.",
+    marks: [31, 58, 84], what: "Three uses of a harsher sexually derived word as an expletive, by two different characters.",
+    q: "What rating do the published rules ordinarily require?", opts: ["PG", "PG-13", "R", "NC-17"], ans: "R",
+    fb: "MPA rules: more than one such expletive ordinarily requires an R rating. " + SV },
+  { t: "Second Chances", meta: "Feature film · romantic drama · 1h 38m", len: 98,
+    plot: "Two former college sweethearts meet again at a friend's wedding, ten years after a bad breakup. The film follows the weekend as they decide whether to try again. In one hotel-room scene they argue about the past, and the conversation turns sexual.",
+    marks: [47], what: "One use of a harsher sexually derived word, used in a sexual context, during the hotel scene.",
+    q: "What rating do the published rules ordinarily require for this one word?", opts: ["PG", "PG-13", "R", "NC-17"], ans: "R",
+    fb: "MPA rules: even one such word used in a sexual context ordinarily requires R. Context changes what a single use means. The same two-thirds special-vote exception applies here, and only the Rating Board can use it." },
+  { t: "Cul-de-sac", meta: "Feature film · family drama · 1h 35m", len: 95,
+    plot: "A family moves to a new suburb and their teenage son struggles to fit in. He joins an older group of kids who skate in an empty parking lot. In one short scene, two of them pass a joint while he watches and turns it down.",
+    marks: [40], what: "One brief scene of marijuana use by secondary characters.",
+    q: "What is the lowest rating the published rules allow?", opts: ["G", "PG", "PG-13", "R"], ans: "PG-13",
+    fb: "MPA rules: any drug use initially requires at least PG-13. A PG-rated film has no drug use content. Here, a single brief scene is enough." },
+  { t: "Siege at Harrow Point", meta: "Feature film · action thriller · 2h 00m", len: 120,
+    plot: "Armed men take over a remote coastal research station, and a retired marine guides the staff to safety. The first hour is tense but quiet. Then a 25-minute siege fills the second half, with realistic gunfire and people killed on screen throughout.",
+    marks: [70, 72, 74, 76, 78, 80, 82, 84, 86, 88, 90, 92, 94], span: [69, 95], spanLabel: "25-minute siege", what: "Realistic gunfire and on-screen killings throughout the siege.",
+    q: "What rating does this violence point to?", opts: ["PG", "PG-13", "R", "NC-17"], ans: "R",
+    fb: "MPA rules: PG-13 may include violence, but generally not violence that is both realistic and extreme or persistent. R may include intense or persistent violence. The rules give no minute count or number of incidents; realism, persistence, extremity, and context all weigh in, and the Rating Board makes the call. A long realistic siege points to R." },
+  { t: "The Life Room", meta: "Feature film · drama · 1h 44m", len: 104,
+    plot: "A retired teacher joins an evening art class to cope with her husband's death. The film follows the class through a full season. In one long sequence the students draw a nude model, and the camera stays on the room for about two minutes. Nothing about it is sexual.",
+    marks: [52, 53, 54], span: [51.5, 54.5], spanLabel: "about 2 minutes", what: "Non-sexual nudity held on screen for about two minutes.",
+    q: "What is the lowest rating the published rules allow?", opts: ["G", "PG", "PG-13", "R"], ans: "PG-13",
+    fb: "MPA rules: PG may include brief nudity. More than brief nudity requires at least PG-13, and nudity in a PG-13 film generally is not sexually oriented, as here." }
+];
+function timeline(c) {
+  const W = 760, x0 = 40, x1 = 720, X = m => x0 + (m / c.len) * (x1 - x0);
+  const step = c.len > 100 ? 20 : 15, ticks = [];
+  for (let t = 0; t <= c.len; t += step) ticks.push(t);
+  return `<svg class="tl" viewBox="0 0 ${W} 150" role="img" aria-label="Timeline: ${esc(c.what)} Marks at ${c.span ? "minutes " + c.span[0] + " to " + c.span[1] : c.marks.map(m => m + " minutes").join(", ")}.">
+    ${c.span ? `<rect x="${X(c.span[0])}" y="36" width="${X(c.span[1]) - X(c.span[0])}" height="68" rx="6" fill="var(--primary-container)" stroke="var(--primary)" stroke-dasharray="4 3"/><text x="${(X(c.span[0]) + X(c.span[1])) / 2}" y="28" text-anchor="middle" font-size="12.5" fill="var(--primary)" font-family="var(--font-mono)">${c.spanLabel}</text>` : ""}
+    <line x1="${x0}" x2="${x1}" y1="70" y2="70" stroke="var(--rule)" stroke-width="2"/>
+    ${c.marks.map(m => `<circle cx="${X(m)}" cy="70" r="7" fill="var(--ink)"/>`).join("")}
+    ${!c.span ? c.marks.map(m => `<text x="${X(m)}" y="50" text-anchor="middle" font-size="12" fill="var(--ink)" font-family="var(--font-mono)">${m}m</text>`).join("") : ""}
+    ${ticks.map(t => `<line x1="${X(t)}" x2="${X(t)}" y1="112" y2="118" stroke="var(--muted)"/><text x="${X(t)}" y="134" text-anchor="middle" font-size="12" fill="var(--muted)" font-family="var(--font-mono)">${t}m</text>`).join("")}
+  </svg>`;
+}
+R.s6 = s => {
+  const i = state.cntOn, c = CNT[i], p = state.cnt[i];
+  const right = CNT.filter((x, k) => state.cnt[k] === x.ans).length;
+  return head(s, "<b>Work through</b> the six films below, one at a time. For each film, <b>read</b> the plot, <b>look</b> at the timeline of flagged moments, then <b>select</b> the rating the published MPA rules point to. All six examples are films because the MPA rules state these frequency and context tests directly.") + `
+  <div class="notice" style="margin-bottom:16px"><b>Only the MPA Rating Board issues MPA ratings.</b> In this simulation, a film with no MPA certificate on file gets a provisional estimate against the published MPA criteria, and an official certificate always replaces it. ${ILLUS}</div>
+  ${scoreBar(right, CNT.length, "Correct so far")}
+  <div class="tabs" role="tablist" aria-label="Films">${CNT.map((x, k) => { const a = state.cnt[k]; return `<button role="tab" id="cnt-tab-${k}" aria-controls="cnt-panel" aria-selected="${k === i}" tabindex="${k === i ? 0 : -1}" class="tab ${k === i ? "on" : ""}" data-cnt-on="${k}"><span class="mono">${k + 1}</span><span class="tt">${esc(x.t)}</span>${a ? `<span class="st ${a === x.ans ? "ok" : "no"}" aria-label="${a === x.ans ? "correct" : "missed"}">${a === x.ans ? "✓" : "✕"}</span>` : ""}</button>`; }).join("")}</div>
+  <div class="card stack fade" role="tabpanel" id="cnt-panel" aria-labelledby="cnt-tab-${i}">
+    <div class="row" style="justify-content:space-between"><div class="stack" style="gap:2px"><span class="qlabel">Example ${i + 1} of ${CNT.length}</span><h2>${esc(c.t)}</h2><span class="note">${esc(c.meta)}</span></div></div>
+    <div class="plot"><span class="label">Plot</span><p>${esc(c.plot)}</p></div>
+    <div class="tscroll">${timeline(c)}</div>
+    <p><b>Each dot:</b> ${esc(c.what)}</p>
+    <span class="qlabel">Question</span><h3 style="font-size:17px">${esc(c.q)}</h3>
+    <div class="row">${c.opts.map(r => rateBtn(r, `data-cnt="${i}:${r}"`, p, c.ans)).join("")}</div>
+    ${p ? `<div class="fb ${p === c.ans ? "ok" : "no"}" id="cntfb" tabindex="-1">${verdict(p === c.ans)}${esc(c.fb)}</div>
+      <div class="row">${i < CNT.length - 1 ? `<button class="btn" data-cnt-on="${i + 1}">Next example</button>` : ""}</div>` : ""}
+  </div>
+  <p class="note">Source: ${link("mpa", "MPA Classification and Rating Rules")} (effective as revised July 24, 2020), PG, PG-13, and R definitions. Descriptor vocabulary: ${link("mpaDesc", "MPA Common Descriptors")}.</p>`;
+};
+const tabKeys = (sel, onPick) => document.querySelectorAll(sel).forEach((t, k, all) => t.addEventListener("keydown", e => {
+  const n = all.length; let j = null;
+  if (e.key === "ArrowRight") j = (k + 1) % n; else if (e.key === "ArrowLeft") j = (k - 1 + n) % n; else if (e.key === "Home") j = 0; else if (e.key === "End") j = n - 1;
+  if (j !== null) { e.preventDefault(); onPick(j); }
+}));
+R.s6.after = () => {
+  document.querySelectorAll("[data-cnt-on]").forEach(b => b.addEventListener("click", () => { state.cntOn = +b.dataset.cntOn; render({ focus: b.classList.contains("tab") ? "#cnt-tab-" + state.cntOn : "#cnt-panel h2" }); }));
+  tabKeys('[role="tab"][data-cnt-on]', j => { state.cntOn = j; render({ focus: "#cnt-tab-" + j }); });
+  document.querySelectorAll("[data-cnt]").forEach(b => b.addEventListener("click", () => { const [k, r] = b.dataset.cnt.split(":"); state.cnt[k] = r; render({ focus: "#cntfb" }); const c = CNT[k]; announce((r === c.ans ? "Right. " : "Not quite. ") + c.fb); }));
+};
+
+/* Screen 7: which system. Answers depend on the title's approved rating metadata. */
+const SORT = [
+  { t: "Maple Street, season 2, episode 4", d: "Half-hour sitcom episode", a: "TV", fb: "A series episode uses the TV Parental Guidelines, rated episode by episode." },
+  { t: "The Long Night", d: "Theatrical feature film · metadata: MPA certificate on file · unedited theatrical cut", a: "MPA", fb: "An unedited theatrical film with an MPA rating displays that MPA rating." },
+  { t: "Northern Line, episode 1", d: "Episode of a limited crime series made for streaming", a: "TV", fb: "Series made for streaming are TV programming, so the TV Parental Guidelines apply, episode by episode." },
+  { t: "Cul-de-sac", d: "Feature film · metadata: MPA certificate on file", a: "MPA", fb: "The metadata confirms an MPA rating. Use it and check its version matches the one being published." },
+  { t: "A Holiday at Pine Lodge", d: "Movie made for a TV network, never shown in theaters", a: "TV", fb: "A made-for-TV movie airs as television programming, so it carries a TV rating." },
+  { t: "Paper Lanterns", d: "Feature-length film made for streaming · metadata: TV Parental Guidelines · no MPA certificate", a: "TV", fb: "Not every feature film has an MPA rating. This one was never submitted, and its approved metadata names the TV system. Follow the metadata." },
+  { t: "The Long Night (broadcast version)", d: "Theatrical film edited for broadcast after its MPA rating · metadata: TV Parental Guidelines", a: "TV", fb: "The MPA rating belongs to the version the MPA rated. An edited version needs its own rating; for broadcast, the TV rating is applied after editing." }
+];
+const RULES = [
+  { r: "Any drug use will initially require at least PG-13.", a: "MPA", note: "This comes from the MPA definition of PG-13." },
+  { r: "May contain infrequent coarse language.", a: "TV", note: "This is TV-PG." },
+  { r: "More than one harsher sexually derived expletive ordinarily requires R, unless a two-thirds special vote of the Rating Board finds PG-13 appropriate.", a: "MPA", note: "This comes from the MPA definition of PG-13, including the special-vote exception." },
+  { r: "FV marks fantasy violence that may be more intense or more combative than other programs in this category.", a: "TV", note: "This applies to TV-Y7 programs (TV-Y7-FV)." },
+  { r: "Children under 17 require an accompanying parent or adult guardian.", a: "MPA", note: "This is R." },
+  { r: "May be unsuitable for children under 17.", a: "TV", note: "This is TV-MA." }
+];
+const SYS = { TV: "TV Parental Guidelines", MPA: "MPA film rating" };
+R.s7 = s => {
+  const sortRight = SORT.filter((x, i) => state.sort[i] === x.a).length, ruleRight = RULES.filter((x, i) => state.rule[i] === x.a).length;
+  const done = Object.keys(state.sort).length + Object.keys(state.rule).length;
+  const card = (x, i, key, store, body, fb) => { const p = store[i], n = (key === "sort" ? SORT : RULES).length, sh = Math.round(i * 5 / (n - 1)); return `
+    <div class="sortcard sh${sh} ${p ? (p === x.a ? "ok" : "no") : ""}" role="group" aria-label="${key === "sort" ? "Title" : "Rule"} ${i + 1}">
+      <div class="stack" style="gap:4px">${body}</div>
+      <div class="row">${["TV", "MPA"].map(k => `<button class="chipbtn sysbtn ${p ? (k === x.a ? "right" : k === p ? "wrong" : "") : ""}" data-${key}="${i}:${k}" ${p ? "disabled" : ""} ${p === k ? 'aria-pressed="true"' : ""}>${SYS[k]}</button>`).join("")}</div>
+      ${p ? `<div class="fb ${p === x.a ? "ok" : "no"}" id="${key}fb${i}" tabindex="-1">${verdict(p === x.a)}${esc(fb)}</div>` : ""}
+    </div>`; };
+  return head(s, "This check has two rounds. In Round 1, <b>read</b> each title's format and rating metadata, then <b>sort</b> it into the system that rates it. In Round 2, <b>match</b> each rule to the system it comes from. <b>Select</b> one button on every card.") + `
+  ${scoreBar(sortRight + ruleRight, SORT.length + RULES.length, `${done} of ${SORT.length + RULES.length} answered · correct so far`)}
+  <div class="syskey"><div class="card"><span class="label">TV Parental Guidelines</span><p>Series and episodes, including series made for streaming, movies made for TV, and versions edited for TV.</p><div class="row">${TVR.map(band).join("")}</div></div>
+    <div class="card"><span class="label">MPA film rating</span><p>Films submitted to the MPA Rating Board. An unedited film with an MPA rating displays it.</p><div class="row">${MPA.map(band).join("")}</div></div></div>
+  <div class="notice"><b>Confirm the system from the approved rating metadata, every time.</b> Format is a clue, never proof. If the metadata is missing, conflicts with the title, or leaves the system unclear, escalate. Screen 8 has an example.</div>
+  <div class="round"><span class="qlabel">Round 1 of 2</span><h2>Sort the titles</h2></div>
+  <div class="sortgrid">${SORT.map((x, i) => card(x, i, "sort", state.sort, `<b>${esc(x.t)}</b><span class="note">${esc(x.d)}</span>`, x.fb)).join("")}</div>
+  <div class="round"><span class="qlabel">Round 2 of 2</span><h2>Match the rule to its system</h2></div>
+  <div class="sortgrid">${RULES.map((x, i) => card(x, i, "rule", state.rule, `<span class="quote">“${esc(x.r)}”</span>`, `${SYS[x.a]}. ${x.note || ""}`)).join("")}</div>
+  <p class="note">${SOURCES_ALL}. Streaming display practice summarized from the TV Parental Guidelines Monitoring Board's streaming guidance; see POLICY_SOURCES.md.</p>`;
+};
+R.s7.after = () => {
+  document.querySelectorAll("[data-sort]").forEach(b => b.addEventListener("click", () => { const [i, k] = b.dataset.sort.split(":"); state.sort[i] = k; render({ focus: "#sortfb" + i }); announce((k === SORT[i].a ? "Right. " : "Not quite. ") + SORT[i].fb); }));
+  document.querySelectorAll("[data-rule]").forEach(b => b.addEventListener("click", () => { const [i, k] = b.dataset.rule.split(":"); state.rule[i] = k; render({ focus: "#rulefb" + i }); announce((k === RULES[i].a ? "Right. " : "Not quite. ") + SYS[RULES[i].a] + ". " + RULES[i].note); }));
+};
+
+/* Screen 8: decision tree with scenarios */
+const SCEN = [
+  { t: "Maple Street, season 2, episode 4", fmt: "TV", sug: "TV-PG", d: "Coarse language (L)",
+    find: "The two flagged moments are one “damn” and one “hell” in arguments. Nothing else is flagged. Context, count, and system all check out.",
+    path: [0], act: "Accept", fb: "The suggestion passes all four checks. TV-PG may contain infrequent coarse language, so the suggestion stands." },
+  { t: "Northern Line, episode 3", fmt: "TV", sug: "TV-14", d: "Sexual situations (S), intense",
+    find: "The only flagged scene is a kiss that fades out at the bedroom door. Nothing else is shown.",
+    path: [1, 1, 0], act: "Modify", fb: "The checks fail because the level is too high. An implied scene with nothing shown fits some sexual situations. Modify to TV-PG." },
+  { t: "The Long Night", fmt: "Film", sug: "PG-13", d: "Language",
+    find: "No MPA certificate is on file yet, so the co-pilot estimated. It counted one harsher sexually derived expletive. You found three, at 31, 58, and 84 minutes.",
+    path: [1, 1, 1], act: "Override", fb: "The co-pilot rated too low. More than one such expletive ordinarily requires R; only the Rating Board's special vote could allow PG-13, and an estimate cannot assume it. Override to R with a full rationale." },
+  { t: "Live from Lincoln Hall", fmt: "?", sug: "TV-14", d: "Coarse language (L), intense",
+    find: "A filmed stage play released straight to streaming. It never aired on TV, was never shown in theaters, and its rating metadata names no system.",
+    path: [1, 0], act: "Escalate", fb: "You cannot confirm which system applies, and the guidelines do not settle it. Escalate to Policy with a short note naming the missing metadata." }
+];
+const TQ = [
+  { q: "Does the suggestion pass all four checks?", o: ["Yes", "No"], hint: "Evidence, Context, Count, System" },
+  { q: "Is the question left open? (guidelines unclear, system unconfirmed, or another policy layer applies)", o: ["Yes, it's open", "No, it's settled"] },
+  { q: "Which way is the co-pilot off?", o: ["Too high, or a descriptor is wrong", "Too low"] }
+];
+const EXITS = [["Accept", null], ["Escalate", null], ["Modify", "Override"]];
+function walk(path) { let node = 0; for (const ch of path) { if (node === 0) { if (ch === 0) return "Accept"; node = 1; } else if (node === 1) { if (ch === 0) return "Escalate"; node = 2; } else return ch === 0 ? "Modify" : "Override"; } return null; }
+R.s8 = s => {
+  const i = state.sc, c = SCEN[i], path = state.path[i] || [];
+  const out = walk(path);
+  const ok = out === c.act, solved = SCEN.filter((x, k) => walk(state.path[k] || []) === x.act).length;
+  const visited = [0]; { let nd = 0; for (const ch of path) { if (nd === 0 && ch === 1) { nd = 1; visited.push(1); } else if (nd === 1 && ch === 1) { nd = 2; visited.push(2); } else break; } }
+  const node = visited[visited.length - 1];
+  const nodeHtml = (n) => { const on = visited.includes(n), chosen = path[n], active = !out && n === node;
+    const exitL = EXITS[n][0], exitR = EXITS[n][1];
+    return `<div class="tn ${active ? "active" : ""} ${on ? "" : "locked"}">
+      <div class="tq" role="group" aria-labelledby="tq${n}"><span class="mono">Q${n + 1}</span><b id="tq${n}">${TQ[n].q}</b>${TQ[n].hint ? `<span class="note">${TQ[n].hint}</span>` : ""}
+        <div class="row">${TQ[n].o.map((o, oi) => `<button class="chipbtn" aria-pressed="${chosen === oi}" data-tree="${n}:${oi}" ${on ? "" : "disabled"}>${o}</button>`).join("")}</div></div>
+      <div class="texits" aria-hidden="true">${[exitL, exitR].filter(Boolean).map(x => `<span class="exit ${out === x ? "hit" : ""}">${x}</span>`).join("")}</div>
+    </div>`; };
+  return head(s, "<b>Work through</b> the four cases below, one at a time. For each case, <b>read</b> the co-pilot suggestion and what you found. Then <b>answer</b> the questions in the decision tree until you reach an action.") + `
+  ${scoreBar(solved, SCEN.length, "Cases solved")}
+  <div class="tabs" role="tablist" aria-label="Decision tree cases">${SCEN.map((x, k) => { const w = walk(state.path[k] || []); return `<button role="tab" id="sc-tab-${k}" aria-controls="sc-panel" class="tab ${k === i ? "on" : ""}" aria-selected="${k === i}" tabindex="${k === i ? 0 : -1}" data-sc="${k}"><span class="mono">${k + 1}</span><span class="tt">${esc(x.t)}</span>${w ? `<span class="st ${w === x.act ? "ok" : "no"}" aria-label="${w === x.act ? "solved" : "missed"}">${w === x.act ? "✓" : "✕"}</span>` : ""}</button>`; }).join("")}</div>
+  <div class="treegrid fade" role="tabpanel" id="sc-panel" aria-labelledby="sc-tab-${i}">
+    <div class="stack">
+      <div class="console"><div class="chead"><span class="tag">Co-pilot suggestion</span><span class="ttl">${c.fmt === "?" ? "System unclear" : c.fmt}</span></div>
+        <div class="zone"><div class="zl">Title</div><div>${esc(c.t)}</div></div>
+        <div class="zone"><div class="zl">Suggested rating</div>${band(c.sug)}</div>
+        <div class="zone"><div class="zl">Descriptor</div><div>${esc(c.d)}</div></div></div>
+      <div class="card stack"><span class="label">What you found</span><p>${esc(c.find)}</p></div>
+    </div>
+    <div class="stack">
+      <div class="tree2">${[0, 1, 2].map(nodeHtml).join("")}</div>
+      ${out ? `<div class="fb ${ok ? "ok" : "no"}" id="treefb" tabindex="-1">${verdict(ok, "Right action: " + out + ".", "You reached " + out + ". The right action is " + c.act + ".")}${esc(c.fb)}</div>
+        <div class="row"><button class="btn ghost" data-tree="reset">Try this case again</button>${i < SCEN.length - 1 ? `<button class="btn" data-sc="${i + 1}">Next case</button>` : ""}</div>` : ""}
+    </div>
+  </div>
+  <div class="card tscroll" style="margin-top:18px"><div class="row" style="justify-content:space-between"><span class="label">Reference</span>${ILLUS}</div><table class="t"><tr><th scope="col">Action</th><th scope="col">When</th><th scope="col">Record</th></tr>
+    <tr><td><b>Accept</b></td><td>The suggestion passes all four checks</td><td>None</td></tr>
+    <tr><td><b>Modify</b></td><td>Co-pilot rated too high, or a descriptor is wrong</td><td>Short note</td></tr>
+    <tr><td><b>Override</b></td><td>Co-pilot rated too low</td><td>Full rationale, QA sampled</td></tr>
+    <tr><td><b>Escalate</b></td><td>The guidelines do not settle it, the system is unconfirmed, or another policy layer requires review</td><td>Escalation note to Policy; hold publication where a policy layer requires it</td></tr></table>
+    <p class="note" style="margin-top:8px">The four actions, record requirements, and QA sampling are an illustrative workflow for this simulation.</p></div>`;
+};
+R.s8.after = () => {
+  document.querySelectorAll("[data-sc]").forEach(b => b.addEventListener("click", () => { state.sc = +b.dataset.sc; render({ focus: "#sc-tab-" + state.sc }); }));
+  tabKeys('[role="tab"][data-sc]', j => { state.sc = j; render({ focus: "#sc-tab-" + j }); });
+  document.querySelectorAll("[data-tree]").forEach(b => b.addEventListener("click", () => { const v = b.dataset.tree, i = state.sc;
+    if (v === "reset") { state.path[i] = []; render({ focus: '[data-tree="0:0"]' }); return; }
+    const [n, o] = v.split(":").map(Number); const p = (state.path[i] || []).slice(0, n); p[n] = o; state.path[i] = p;
+    const w = walk(p);
+    if (w) { render({ focus: "#treefb" }); announce((w === SCEN[i].act ? "Right action: " : "You reached " + w + ". The right action is " + SCEN[i].act + ". ") + SCEN[i].fb); }
+    else render({ focus: `[data-tree="${n + 1}:0"]` });
+  }));
+};
+
+/* Screen 9: rationale. Worked examples, then a transparent rule-based rubric with self-comparison. */
+const EXAMPLES = [
+  { act: "Override", t: "The Long Night", meta: "Feature film · crime drama · 1h 52m · MPA criteria (provisional estimate, no certificate on file)",
+    plot: "A night-shift paramedic treats a wounded robbery suspect and gets pulled into a cover-up. A detective tells her he can protect her, but his story keeps changing. Most of the film plays out in her ambulance, an emergency room, and a parking garage, over one night.",
+    seen: [["00:31:10", "The suspect shouts a harsher sexually derived expletive at the paramedic."], ["00:58:20", "Fistfight in the parking garage. No blood or injury shown."], ["01:24:05", "The detective uses the same word during the standoff."]],
+    sug: ["PG-13", "Language, violence"],
+    c: "Override to R, Language.", e: "A harsher sexually derived word is used twice as an expletive, at 00:31:10 and 01:24:05.", p: "MPA rules: more than one such expletive ordinarily requires R. Only the Rating Board's two-thirds special vote can allow PG-13, so the estimate goes to R.",
+    why: "The claim names the action and the new rating. The evidence gives both timestamps. The policy line states the rule and its one exception, so a reviewer can see why the exception does not change the estimate." },
+  { act: "Modify", t: "Maple Street, S2 E4, “The Open House”", meta: "Sitcom episode · 22m · TV Parental Guidelines",
+    plot: "The Park family tries to sell their house before a new baby arrives. A nosy neighbor keeps showing up at the open house with low offers. By the end, the family decides the house is home and takes it off the market.",
+    seen: [["00:06:40", "The dad jokes about “showing off the master bedroom” to a buyer."], ["00:14:15", "The parents flirt in the kitchen while the kids roll their eyes."], ["", "Nothing else is flagged."]],
+    sug: ["TV-14", "Suggestive dialogue (D), intense"],
+    c: "Modify to TV-PG, Suggestive dialogue (D).", e: "Two light innuendos, at 00:06:40 and 00:14:15. No other flagged content.", p: "TV Parental Guidelines: TV-PG may contain some suggestive dialogue. TV-14 is for intensely suggestive dialogue.",
+    why: "The co-pilot read two jokes as intense. The rationale shows the scenes are light and points to the wording that separates TV-PG from TV-14." },
+  { act: "Accept", t: "Northern Line, S1 E1, “Last Stop”", meta: "Crime drama episode · 50m · TV Parental Guidelines",
+    plot: "A transit detective investigates a shooting on a late-night train. She tracks the shooter through the subway system while dealing with a partner she doesn't trust. The episode ends with a chase through a train yard.",
+    seen: [["00:03:30", "A passenger is shot. Blood on the floor, no close-up of the wound."], ["00:27:45", "Fistfight between the detective and a suspect."], ["00:41:00", "Chase through the train yard with gunfire."]],
+    sug: ["TV-14", "Violence (V), intense"],
+    c: "Accept TV-14, Violence (V).", e: "Shooting with blood shown at 00:03:30, fistfight at 00:27:45, gunfire chase at 00:41:00. No lingering injury detail.", p: "TV Parental Guidelines: TV-14 may contain intense violence. Under the training classification, nothing here dwells on injury, so it stops short of graphic violence (TV-MA).",
+    why: "Even an accept gets a rationale when QA samples it. Naming why it is not TV-MA shows the analyst checked the next level up." }
+];
+/* Practice case: "Static", S1 E3. Answer key: Override to TV-14, Violence (V). */
+const RB = {
+  log: [["00:08:45", "A stranger stands outside the window during the storm.", "menace"], ["00:18:00", "The intruder searches room by room for 12 minutes while the family hides.", "sustained"], ["00:27:30", "The intruder grabs the father and slams him into a wall.", "key"], ["00:31:10", "The father's bloodied face is shown before the scene cuts away.", "key"]],
+  model: { c: "Override to TV-14, Violence (V).", e: "The intruder slams the father into a wall at 00:27:30, and his bloodied face is shown at 00:31:10, after a 12-minute search that starts at 00:18:00.", p: "TV Parental Guidelines: TV-PG is limited to moderate violence; TV-14 may contain intense violence. Realistic violence with injury shown is intense under the training classification." }
+};
+const TS_RE = /\b(\d{1,2}):(\d{2})(?::(\d{2}))?\b/g;
+const normTs = s => [...s.matchAll(TS_RE)].map(m => m[3] !== undefined ? `${m[1].padStart(2, "0")}:${m[2]}:${m[3]}` : `00:${m[1].padStart(2, "0")}:${m[2]}`);
+const has = (s, re) => re.test(s.toLowerCase());
+function gradeRationale(r) {
+  const c = r.c.trim(), e = r.e.trim(), p = r.p.trim(), notes = [];
+  const words = x => x.split(/\s+/).filter(Boolean).length;
+  const tss = normTs(e), known = RB.log.map(l => l[0]), key = RB.log.filter(l => l[2] === "key").map(l => l[0]);
+  /* 1. Structurally complete */
+  const structural = words(c) >= 3 && words(e) >= 4 && tss.length > 0 && words(p) >= 4;
+  if (!structural) notes.push(["Structure", "Fill all three parts. Evidence needs at least one timestamp; each part needs a few words."]);
+  /* 2. Claim matches the intended action and rating */
+  const actOk = has(c, /\boverrid/), actOther = has(c, /\b(accept|modif|escalat)/);
+  const rateOk = has(c, /tv[\s-]?14\b/), rateOther = has(c, /tv[\s-]?(y7?|g|pg|ma)\b|\bpg-13\b|\bnc-17\b|\bR\b/i) && !rateOk;
+  const descOk = has(c, /violen|\(v\)/);
+  const claimOk = actOk && !actOther && rateOk && !rateOther;
+  if (!actOk || actOther) notes.push(["Claim", "The co-pilot suggested TV-PG, which is too low for what the log shows. That makes this an override, and the claim should say so."]);
+  if (!rateOk || rateOther) notes.push(["Claim", "Name the final rating. Check which TV rating names intense violence."]);
+  if (claimOk && !descOk) notes.push(["Claim", "Add the descriptor, Violence (V), so the claim says what changed."]);
+  /* 3. Evidence points to relevant scenes */
+  const unknownTs = tss.filter(t => !known.includes(t)), keyHit = tss.filter(t => key.includes(t));
+  const evidenceOk = keyHit.length > 0;
+  if (unknownTs.length) notes.push(["Evidence", `${unknownTs.join(", ")} ${unknownTs.length > 1 ? "are" : "is"} not in the evidence log. Use the timestamps of moments you can point to.`]);
+  if (tss.length && !keyHit.length) notes.push(["Evidence", "The timestamps you cited show menace or searching, which builds tension but does not show the violence itself. Cite the assault or the injury shot."]);
+  if (keyHit.length === 1) notes.push(["Evidence", "One relevant moment cited. Citing both the assault and the injury shot makes the case harder to dispute."]);
+  /* 4. Policy names the applicable principle and the right system */
+  const wrongSys = has(p, /\bmpa\b|pg-13|expletive|rating board|\bR\b/i);
+  const polIntense = has(p, /intense/), polTv = has(p, /tv[\s-]?14|tv parental|tv guidelines/), polGraphic = has(p, /graphic/) && !has(p, /not graphic|short of graphic|stops short|not reach graphic|below graphic/);
+  const policyOk = polIntense && polTv && !wrongSys && !polGraphic;
+  if (wrongSys) notes.push(["Policy", "This is a series episode, so the TV Parental Guidelines apply. MPA rules are the wrong system here."]);
+  if (!polIntense) notes.push(["Policy", "Name the principle that decides it: the level of violence that TV-14 covers, set against what TV-PG allows."]);
+  if (polIntense && !polTv) notes.push(["Policy", "Name the guideline or rating the principle comes from, such as TV-14 in the TV Parental Guidelines."]);
+  if (polGraphic) notes.push(["Policy", "Graphic violence is the TV-MA level. Nothing here dwells on injury, so the policy line should point to intense violence."]);
+  return { structural, claimOk, evidenceOk, policyOk, notes };
+}
+R.s9 = s => {
+  const x = EXAMPLES[state.ex], r = state.rb, ck = state.rbChecked, g = ck ? gradeRationale(r) : null;
+  const row = (label, ok, desc) => `<tr><th scope="row">${label}</th><td><span class="pill ${ok ? "pass" : "miss"}">${ok ? "Met" : "Not yet"}</span></td><td>${desc}</td></tr>`;
+  const SELF = ["My claim names the action, the final rating, and the descriptor", "My evidence cites the moments that actually show the violence", "My policy line names the principle that separates the suggested rating from mine"];
+  return head(s, "First, <b>study</b> the three worked examples. <b>Select</b> each tab to read the plot, the scenes, and the rationale an analyst wrote. Then <b>write</b> your own rationale for the practice case at the bottom and <b>check</b> it.") + `
+  <section class="part part-blue"><div class="round" style="margin-top:0"><span class="qlabel">Part 1 of 2</span><h2>Worked examples</h2></div>
+  <div class="tabs" role="tablist" aria-label="Worked examples">${EXAMPLES.map((e, k) => `<button role="tab" id="ex-tab-${k}" aria-controls="ex-panel" class="tab ${k === state.ex ? "on" : ""}" aria-selected="${k === state.ex}" tabindex="${k === state.ex ? 0 : -1}" data-ex="${k}"><span class="mono">${e.act}</span><span class="tt">${esc(e.t)}</span></button>`).join("")}</div>
+  <div class="card stack fade" role="tabpanel" id="ex-panel" aria-labelledby="ex-tab-${state.ex}">
+    <div class="stack" style="gap:2px"><span class="qlabel">Example ${state.ex + 1} of 3 · ${x.act}</span><h2>${esc(x.t)}</h2><span class="note">${esc(x.meta)}</span></div>
+    <div class="plot"><span class="label">Plot</span><p>${esc(x.plot)}</p></div>
+    <div class="grid2">
+      <div class="stack"><span class="label">Scenes flagged</span><ul class="evlog">${x.seen.map(l => `<li><span class="ts">${l[0] || "—"}</span><span>${esc(l[1])}</span></li>`).join("")}</ul>
+        <div class="row" style="margin-top:6px"><span class="note">Co-pilot suggested</span>${band(x.sug[0])}<span class="note">${esc(x.sug[1])}</span></div></div>
+      <div class="rationale"><span class="label">The analyst's rationale</span>
+        <div><b>Claim</b><p>${esc(x.c)}</p></div><div><b>Evidence</b><p>${esc(x.e)}</p></div><div><b>Policy</b><p>${esc(x.p)}</p></div></div>
+    </div>
+    <p class="note"><b>Why it works:</b> ${esc(x.why)}</p>
+  </div>
+  </section>
+  <section class="part part-plain"><div class="round" style="margin-top:0"><span class="qlabel">Part 2 of 2</span><h2>Your turn: Static, S1 E3, “Lights Out”</h2></div>
+  <div class="split">
+    <div class="stack">
+      <div class="card stack"><span class="note">Thriller episode · 44m · TV Parental Guidelines</span>
+        <div class="plot"><span class="label">Plot</span><p>A storm knocks out the power at a family's farmhouse, and they realize someone is already inside. They hide in the dark and try to reach a neighbor's phone. The second half is one long search through the house, ending in a struggle in the hallway.</p></div>
+        <span class="label">Scenes flagged</span><ul class="evlog">${RB.log.map(l => `<li><span class="ts">${l[0]}</span><span>${esc(l[1])}</span></li>`).join("")}</ul></div>
+      <div class="console"><div class="chead"><span class="tag">Co-pilot suggestion</span><span class="ttl">TV</span></div>
+        <div class="row">${band("TV-PG")}<span>Violence (V) <span class="lvl">moderate</span></span>${conf(3)}</div></div>
+    </div>
+    <div class="card rb">
+      <p class="note">Hint: is this moderate violence with little or no injury detail, or realistic violence with injury shown?</p>
+      <label for="rb-c">Claim <span>Your action, the final rating, and the descriptor, in one line</span><input id="rb-c" data-rb="c" value="${esc(r.c)}" placeholder="Override to ..." autocomplete="off"></label>
+      <label for="rb-e">Evidence <span>The moments, with timestamps from the log</span><textarea id="rb-e" data-rb="e" placeholder="Name the scenes and their timestamps">${esc(r.e)}</textarea></label>
+      <label for="rb-p">Policy <span>The guideline and principle that apply</span><input id="rb-p" data-rb="p" value="${esc(r.p)}" placeholder="TV Parental Guidelines: ..." autocomplete="off"></label>
+      <div class="row"><button class="btn" id="rbgo">${ck ? "Check again" : "Check my rationale"}</button></div>
+      ${ck ? `<div class="stack" id="rbresult" tabindex="-1" style="gap:10px">
+        <div class="tscroll"><table class="t rubric"><caption class="sr-only">Rationale check results</caption><tr><th scope="col">Rubric line</th><th scope="col">Result</th><th scope="col">What the checker looked for</th></tr>
+          ${row("Structurally complete", g.structural, "All three parts filled in, with at least one timestamp")}
+          ${row("Claim matches the decision", g.claimOk, "The action and final rating in the answer key")}
+          ${row("Supported by relevant evidence", g.evidenceOk, "Timestamps from the log that show the violence itself")}
+          ${row("Consistent with policy", g.policyOk, "The TV principle that separates TV-PG from TV-14")}
+          <tr><th scope="row">Needs human review</th><td><span class="pill hr">Always</span></td><td>This checker matches keywords and timestamps. It cannot tell whether your reasoning is sound. Compare with the model answer below.</td></tr></table></div>
+        ${g.notes.length ? `<div class="fb no"><b>What to fix</b><ul class="fixes">${g.notes.map(([k, t]) => `<li><strong>${k}:</strong> ${esc(t)}</li>`).join("")}</ul></div>` : `<div class="fb ok"><b>Every rubric line was met.</b>That means your wording matched what the checker looks for. Now judge the reasoning yourself against the model answer.</div>`}
+        <div class="rationale"><span class="label">Model answer, for comparison</span><div><b>Claim</b><p>${esc(RB.model.c)}</p></div><div><b>Evidence</b><p>${esc(RB.model.e)}</p></div><div><b>Policy</b><p>${esc(RB.model.p)}</p></div></div>
+        <fieldset class="selfchk"><legend>Self-check against the model</legend>${SELF.map((t, k) => `<label><input type="checkbox" data-self="${k}" ${state.rbSelf[k] ? "checked" : ""}> ${t}</label>`).join("")}</fieldset>
+      </div>` : ""}
+    </div>
+  </div></section>`;
+};
+R.s9.after = () => {
+  document.querySelectorAll("[data-ex]").forEach(b => b.addEventListener("click", () => { state.ex = +b.dataset.ex; render({ focus: "#ex-tab-" + state.ex }); }));
+  tabKeys('[role="tab"][data-ex]', j => { state.ex = j; render({ focus: "#ex-tab-" + j }); });
+  document.querySelectorAll("[data-rb]").forEach(el => el.addEventListener("input", () => { state.rb[el.dataset.rb] = el.value; }));
+  document.querySelectorAll("[data-self]").forEach(el => el.addEventListener("change", () => { state.rbSelf[el.dataset.self] = el.checked; }));
+  $("#rbgo").addEventListener("click", () => { state.rbChecked = true; render({ focus: "#rbresult" }); const g = gradeRationale(state.rb); announce(`Rationale checked. ${[g.structural, g.claimOk, g.evidenceOk, g.policyOk].filter(Boolean).length} of 4 rubric lines met. Human review is still needed.`); });
+};
+
+/* Screen 10: practice queue. Each case scores the decision and the reasoning separately. */
+const ACTIONS = ["Accept", "Modify", "Override", "Escalate"];
+const CASES = [
+  { id: "c1", title: "Harbor Lights", genre: "Family drama · series episode · 44m", fmt: "TV", hue: "#1A3F99", check: ["Evidence"], purpose: "Correct suggestion",
+    sug: { band: "TV-PG", warns: [["Coarse language (L)", "moderate", "00:22:15 · 00:31:30 · 00:40:02"]], conf: 3 },
+    read: "Suggested rating: TV-PG. Coarse language, moderate. Three instances. Confidence: high.",
+    log: [["00:22:15", "Father and son argue at dinner. One use of “damn.”"], ["00:31:30", "Sisters argue in the car. One use of “hell.”"], ["00:40:02", "Heated phone call. One use of “damn.”"], ["", "No other flagged content."]],
+    key: { action: "Accept", band: "TV-PG" }, evKey: [0, 1, 2], evBad: [],
+    evWhy: "Accepting TV-PG rests on the whole pattern: three single mild words across the episode. Citing only some of them leaves the frequency undocumented, and frequency is what separates infrequent coarse language from a higher level.",
+    pol: ["TV-PG may contain infrequent coarse language (L)", "Any coarse language requires TV-14", "High co-pilot confidence confirms the rating", "MPA: one harsher expletive requires at least PG-13"], polA: 0,
+    fb: "Three single mild words across a 44-minute episode fits infrequent coarse language, the TV-PG wording. Nothing else is flagged, so the suggestion passes all four checks.",
+    model: "Claim: Accept TV-PG, Coarse language (L). Evidence: one mild word each at 00:22:15, 00:31:30, and 00:40:02; nothing else flagged. Policy: TV-PG may contain infrequent coarse language." },
+  { id: "c2", title: "Pip and the Pancake Factory", genre: "Animated children's comedy · 24m", fmt: "TV", hue: "#4F86EA", check: ["Context"], purpose: "Context-based modification",
+    sug: { band: "TV-PG", warns: [["Violence (V)", "moderate", "4 instances"]], conf: 2 },
+    read: "Suggested rating: TV-PG. Violence, moderate. Four instances. Confidence: medium.",
+    log: [["00:03:40", "Pip is flattened by a falling pancake stack and pops back up laughing."], ["00:09:12", "A flying spatula knocks Pip's hat off. Pip bounces off a counter."], ["00:15:55", "Two cooks bonk heads. Cartoon stars circle. Both laugh."], ["00:21:30", "Pip slides into a flour bin and climbs out unhurt."]],
+    key: { action: "Modify", band: "TV-Y7" }, evKey: [0, 1, 2, 3], evBad: [],
+    evWhy: "Lowering the level means every flagged moment has to be shown as comedic and harmless. Any moment left unreviewed could be the one that supports the co-pilot's TV-PG.",
+    pol: ["Any violence on screen requires TV-PG", "TV-Y7 covers mild fantasy or comedic violence; FV is reserved for more intense or combative fantasy violence", "Animated programs are always TV-Y", "Four instances is a repeated pattern, so the level rises"], polA: 1,
+    fb: "Every moment is comedic cartoon violence with no harm, which TV-Y7 names. The slapstick is not combative, so it does not call for the FV designation. Modify to TV-Y7.",
+    model: "Claim: Modify to TV-Y7, Violence (V) lowered to mild. Evidence: four slapstick moments (00:03:40, 00:09:12, 00:15:55, 00:21:30); no one is hurt. Policy: TV-Y7 may include mild fantasy or comedic violence; nothing here is intense or combative enough for FV." },
+  { id: "c3", title: "Night Market", genre: "Cooking series · 42m", fmt: "TV", hue: "#26324A", check: ["Evidence"], purpose: "Over-flagging",
+    sug: { band: "TV-PG", warns: [["Violence (V)", "moderate", "00:12:40 · 00:31:00"]], conf: 2 },
+    read: "Suggested rating: TV-PG. Violence, moderate. Two instances. Confidence: medium.",
+    log: [["00:12:40", "A chef breaks down a whole fish with a cleaver."], ["00:31:00", "A butcher cuts steaks at a market stall."], ["", "No other flagged content."]],
+    key: { action: "Modify", band: "TV-G" }, evKey: [0, 1], evBad: [],
+    evWhy: "Removing the Violence descriptor means clearing both flagged moments. If one stays unreviewed, the descriptor is still partly supported.",
+    pol: ["Visible knives count as violence (V)", "Medium confidence means the descriptor should be kept", "Remove a descriptor the moment does not support; TV-G has little or no violence", "Cooking programs are exempt from ratings"], polA: 2,
+    fb: "Cooking with knives is not violence. Remove the descriptor. With nothing else flagged, TV-G fits: little or no violence and no strong language. (News and sports are the exempt categories; cooking shows are rated.)",
+    model: "Claim: Modify to TV-G, remove Violence (V). Evidence: 00:12:40 and 00:31:00 show food preparation only. Policy: a descriptor needs a moment that supports it; TV-G contains little or no violence." },
+  { id: "c4", title: "Blackout Road", genre: "Thriller · series episode · 46m", fmt: "TV", hue: "#0B0D10", check: ["Context", "Count"], purpose: "Under-rating",
+    sug: { band: "TV-PG", warns: [["Violence (V)", "moderate", "6 instances"]], conf: 3 },
+    read: "Suggested rating: TV-PG. Violence, moderate. Six instances. Confidence: high.",
+    log: [["00:08:45", "A stranger stands outside the window at night."], ["00:31:00", "The power cuts out. The family hears footsteps."], ["00:34:20", "The intruder breaks down a bedroom door."], ["00:37:10", "The intruder grabs the mother and slams her against a wall."], ["00:40:05", "Her bloodied face is shown as she escapes."], ["00:43:00", "They find the phone line cut."]],
+    key: { action: "Override", band: "TV-14" }, evKey: [3, 4], evBad: [0, 5],
+    evWhy: "The assault and the injury shot together establish realistic violence with injury shown. Either one alone is weaker support for raising the rating to TV-14.",
+    pol: ["Six separate moderate moments each stay moderate", "TV-PG is limited to moderate violence; a sustained realistic attack with injury shown fits intense violence (TV-14)", "Blood on screen always requires TV-MA", "Fear and threat alone require TV-14"], polA: 1,
+    fb: "The co-pilot scored each moment alone. Taken together, the attack builds across a sustained sequence and ends with injury shown, which is intense violence under the training classification. TV-PG is limited to moderate violence. Override to TV-14. The window and phone-line moments add menace, but they do not show violence, so they cannot carry the rating.",
+    model: "Claim: Override to TV-14, Violence (V). Evidence: assault at 00:37:10 and her bloodied face at 00:40:05, inside a sustained break-in from 00:31:00. Policy: TV-PG covers moderate violence; TV-14 may contain intense violence, and a realistic attack with injury shown is intense under the training classification." },
+  { id: "c5", title: "Weekend Shift", genre: "Feature film · workplace comedy · 1h 38m", fmt: "Film", hue: "#1A56DB", check: ["Count", "Evidence"], purpose: "Drug-use classification",
+    meta: "No MPA certificate on file. Provisional estimate against MPA criteria.",
+    sug: { band: "PG", warns: [["Drug use", "mild", "00:12:30"]], conf: 3 },
+    read: "Suggested rating: PG. Drug use, mild. One instance. Confidence: high.",
+    log: [["00:12:30", "Two coworkers share a joint on their break, played for laughs."], ["00:47:10", "A running gag about cannabis edibles in the break room; one character eats one."]],
+    key: { action: "Override", band: "PG-13" }, evKey: [0, 1], evBad: [],
+    evWhy: "00:47:10 is a second drug-use incident that the co-pilot did not log. Documenting it shows the co-pilot under-counted, which QA needs to see in an override.",
+    pol: ["Comic tone lowers a drug-use rating", "MPA: any drug use initially requires at least PG-13; a PG film has no drug use content", "One instance of drug use is allowed at PG", "TV-PG may contain some suggestive dialogue"], polA: 1,
+    fb: "Under the MPA rules, any drug use initially requires at least PG-13, and a PG-rated film has no drug use content. Comic tone does not change that. The co-pilot also logged one instance where the log shows two. Override to PG-13; an official MPA certificate, if one is issued, replaces the estimate.",
+    model: "Claim: Override to PG-13, drug use. Evidence: a shared joint at 00:12:30 and edible use at 00:47:10; the co-pilot logged only the first. Policy: MPA rules: any drug use initially requires at least PG-13." },
+  { id: "c6", title: "The Old Flag", genre: "Feature film · historical drama · 2h 06m", fmt: "Film", hue: "#3A4250", check: ["System", "Escalation"], purpose: "Escalation",
+    meta: "No MPA certificate on file. Distribution: Training Market X (fictional).",
+    market: true,
+    sug: { band: "PG-13", warns: [["Violence", "intense", "00:55:00 · 01:20:00"]], conf: 3 },
+    read: "Suggested rating: PG-13. Violence. Two battle sequences. Confidence: high. Publication: automatic.",
+    log: [["00:55:00", "Battle sequence with gunfire. No graphic injury detail."], ["01:02:10", "Parade scene. Banners show a designated restricted symbol, and the film presents it approvingly."], ["01:20:00", "Second battle sequence. No graphic injury detail."]],
+    key: { action: "Escalate", band: null, hold: "hold" }, evKey: [1], evBad: [],
+    evWhy: "The parade scene at 01:02:10 is the moment that triggers the Training Market X referral. Without it, the escalation has no stated cause.",
+    pol: ["Battle violence without graphic injury fits PG-13, so publish", "Training Market X (fictional): approving depiction of a designated restricted symbol must be referred to Policy before publication", "MPA rules require R for any hate symbol", "High confidence means no further review is needed"], polA: 1,
+    fb: "The violence estimate of PG-13 may well be right, and that is the point: the rating alone does not settle this title. The parade scene at 01:02:10 triggers a separate market-specific review, and the co-pilot did not flag it. Hold publication and escalate to Policy. The MPA rules do not address this; the referral rule is the Training Market X card.",
+    model: "Claim: Escalate to Policy and hold publication in Training Market X. Evidence: approving depiction of a designated restricted symbol in the parade scene at 01:02:10, which the co-pilot did not flag. Policy: Training Market X card requires Policy referral before publication. Open question: whether the title may publish in that market, and with what treatment. Violence estimate PG-13 is unaffected." }
+];
+const MARKET_CARD = `<div class="polcard" role="note" aria-label="Synthetic policy card">
+  <div class="row" style="justify-content:space-between"><span class="label">Synthetic internal policy card</span><span class="illus">Fictional</span></div>
+  <p><b>Training Market X:</b> titles containing the approving depiction of a designated restricted symbol must be referred to Policy before publication.</p>
+  <p class="note">Training Market X is invented for this module. This card is not a real country's regulation, a published MPA requirement, or an Amazon internal policy. It exists to practice one skill: recognizing when a rating is necessary but not sufficient.</p></div>`;
+const blankAns = () => ({ action: null, band: null, conf: null, ev: [], pol: null, why: "", hold: null, locked: false });
+/* A decision is correct only when the action, any final rating, and any mandatory publication hold all match the key. */
+const needsHold = c => c.key.hold === "hold";
+const isActionRight = (c, a) => a.action === c.key.action && (!["Modify", "Override"].includes(c.key.action) || a.band === c.key.band);
+const isDecisionRight = (c, a) => isActionRight(c, a) && (!needsHold(c) || a.hold === "hold");
+/* Full evidence credit requires every essential entry in evKey and none of the irrelevant entries in evBad.
+   Entries in neither list are relevant context and are allowed. */
+const evMissing = (c, a) => c.evKey.filter(i => !a.ev.includes(i));
+const evWrong = (c, a) => a.ev.filter(i => c.evBad.includes(i));
+const isEvRight = (c, a) => evMissing(c, a).length === 0 && evWrong(c, a).length === 0;
+/* Critical safety: in a mandatory-hold case, any decision that lets the title publish fails the assessment. */
+const isCriticalFail = (c, a) => needsHold(c) && !!a && a.locked && !(a.action === "Escalate" && a.hold === "hold");
+const isPolRight = (c, a) => a.pol === c.polA;
+const isHoldRight = (c, a) => !needsHold(c) || a.action !== "Escalate" || a.hold === "hold";
+const correct = c => { const a = state.ans[c.id]; return !!(a && a.locked && isDecisionRight(c, a)); };
+const needsBand = a => a.action === "Modify" || a.action === "Override";
+const needsWhy = a => a.action === "Override" || a.action === "Escalate";
+function missing(c, a) {
+  const m = [];
+  if (!a.action) m.push("an action");
+  if (needsBand(a) && !a.band) m.push("the final rating");
+  if (a.action === "Escalate" && !a.hold) m.push("a publication status");
+  if (!a.ev.length) m.push("at least one log entry");
+  if (a.pol === null) m.push("a policy principle or escalation reason");
+  if (needsWhy(a) && a.why.trim().split(/\s+/).filter(Boolean).length < 6) m.push("a short written rationale (6 words or more)");
+  if (a.conf === null) m.push("your confidence");
+  return m;
+}
+function trustNote(c, a) {
+  const k = c.key.action, l = a.action;
+  if (needsHold(c) && l === "Escalate" && a.hold !== "hold") return "You recognized the policy question, then let the title publish anyway. A mandatory hold means nothing goes live until Policy decides.";
+  if (isDecisionRight(c, a) && k === "Escalate") return "Calibrated trust: the suggestion looked complete, and you saw that the rating alone could not settle this title.";
+  if (isDecisionRight(c, a)) return k === "Accept" ? "Calibrated trust: the suggestion was right, and you accepted it without redoing the work." : "Calibrated trust: you checked the suggestion and changed what was wrong.";
+  if (l === "Accept") return "Too trusting: you accepted a suggestion the checks show was wrong.";
+  if (k === "Accept") return "Overly skeptical: this suggestion was right. Changing a correct suggestion costs time and can introduce errors.";
+  if (k === "Escalate") return "You noticed a problem, but this one needed Policy. A rating change alone cannot settle it.";
+  if (l === "Escalate") return "Overly cautious: the published guidelines settle this one. Escalating sends Policy a question you could answer.";
+  if (l === k) return "Right action, but the final rating is off. Recheck which rating names this level.";
+  return k === "Override" ? "Wrong direction: the co-pilot rated too low, so this is an override, which carries a full rationale." : "Wrong direction: the co-pilot rated too high or mislabeled a descriptor, so this is a modify.";
+}
+R.s10 = s => {
+  const c = CASES[state.q], a = state.ans[c.id] || (state.ans[c.id] = blankAns());
+  const list = c.fmt === "TV" ? TVR : MPA, miss = missing(c, a), ready = !miss.length, L = a.locked;
+  const selectable = c.log.map((l, i) => [l, i]).filter(([l]) => l[0]);
+  const done = CASES.filter(k => (state.ans[k.id] || {}).locked).length;
+  const mark = (ok) => `<span class="pill ${ok ? "pass" : "miss"}">${ok ? "Correct" : "Missed"}</span>`;
+  return head(s, `<b>Work through</b> the six cases below, in any order. For each case:<ol><li><b>Read</b> the co-pilot suggestion and the evidence log.</li><li><b>Choose</b> an action. If you choose Modify or Override, also <b>choose</b> the final rating.</li><li><b>Select</b> the log entries your decision rests on, and the policy principle or escalation reason.</li><li>For Override or Escalate, <b>write</b> a short rationale.</li><li><b>Set</b> your confidence. Nothing is preset.</li><li><b>Select</b> Submit decision to see feedback.</li></ol>`) + `
+  <div class="queue">
+    <nav class="qmenu" aria-label="Cases"><div class="qmenu-h"><b>Cases</b><span class="note">${done} of 6 done</span></div>
+      <div class="qlist">${CASES.map((k, i) => { const x = state.ans[k.id]; const started = x && !x.locked && (x.action || x.ev.length || x.pol !== null || x.conf !== null);
+        const st = x && x.locked ? (correct(k) ? '<span class="st ok">✓ Decision matched</span>' : '<span class="st no">✕ Decision missed</span>') : started ? '<span class="st open">In progress</span>' : '<span class="st open">Open</span>';
+      return `<button class="qitem ${i === state.q ? "on" : ""}" ${i === state.q ? 'aria-current="true"' : ""} data-q="${i}" id="qitem${i}"><span class="qn" aria-hidden="true">${i + 1}</span><span class="qt"><span class="tt">${esc(k.title)}</span><span class="n">${k.fmt === "TV" ? "TV series" : "Film"} · ${st}</span></span></button>`; }).join("")}</div></nav>
+    <div class="qdetail stack" id="qdetail">
+      <div class="titlecard"><div class="poster" style="background:${c.hue}" aria-hidden="true">${esc(c.title)}</div>
+        <div class="stack" style="gap:4px"><h2 id="qtitle" tabindex="-1">Case ${state.q + 1}: ${esc(c.title)}</h2><span class="note">${esc(c.genre)}</span><div class="row"><span class="mpill">${c.fmt === "TV" ? "TV Parental Guidelines" : "MPA criteria"}</span>${c.meta ? `<span class="note">${esc(c.meta)}</span>` : ""}</div></div></div>
+      <div class="grid2">
+        <div class="console"><div class="chead"><span class="tag">Co-pilot suggestion</span><span class="ttl">Case ${state.q + 1}</span></div>
+          <div class="zone"><div class="zl">Suggested rating</div>${band(c.sug.band)}</div>
+          <div class="zone"><div class="zl">Descriptors</div>${c.sug.warns.map(w => `<div class="warn"><b>${w[0]}</b><span class="lvl">${w[1]}</span><span class="ts">${w[2]}</span></div>`).join("")}</div>
+          <div class="zone"><div class="zl">Confidence</div><div class="row">${conf(c.sug.conf)}<span class="mono" style="font-size:12.5px">${["", "LOW", "MEDIUM", "HIGH"][c.sug.conf]}</span></div></div>
+          <div class="zone"><div class="zl">Readout</div><div class="readout">${esc(c.read)}</div></div>
+        </div>
+        <div class="card stack"><span class="label">Evidence log</span><ul class="evlog">${c.log.map(l => `<li><span class="ts">${l[0] || "—"}</span><span>${esc(l[1])}</span></li>`).join("")}</ul></div>
+      </div>
+      ${c.market ? MARKET_CARD : ""}
+      <div class="card stack">
+        <h3>Your decision</h3>
+        <fieldset class="fs"><legend>1. Action</legend><div class="row">${ACTIONS.map(x => `<button class="chipbtn ${L ? (x === c.key.action ? "right" : x === a.action ? "wrong" : "") : ""}" aria-pressed="${a.action === x}" data-act="${x}" ${L ? "disabled" : ""}>${x}</button>`).join("")}</div></fieldset>
+        ${needsBand(a) || (L && ["Modify", "Override"].includes(c.key.action)) ? `<fieldset class="fs"><legend>Final rating</legend><div class="row">${list.map(b => `<button class="chipbtn ${L ? (b === c.key.band && ["Modify", "Override"].includes(c.key.action) ? "right" : b === a.band ? "wrong" : "") : ""}" aria-pressed="${a.band === b}" data-band="${b}" ${L ? "disabled" : ""} aria-label="${b}">${band(b)}</button>`).join("")}</div></fieldset>` : ""}
+        ${a.action === "Escalate" ? `<fieldset class="fs"><legend>Publication status</legend><div class="row">${[["hold", "Hold publication pending Policy"], ["publish", "Publish on schedule"]].map(([v, t]) => `<button class="chipbtn ${L ? (v === "hold" && c.key.action === "Escalate" ? "right" : v === a.hold ? "wrong" : "") : ""}" aria-pressed="${a.hold === v}" data-hold="${v}" ${L ? "disabled" : ""}>${t}</button>`).join("")}</div></fieldset>` : ""}
+        <fieldset class="fs"><legend>2. Evidence: which log entries does your decision rest on?</legend><div class="picks">${selectable.map(([l, i]) => `<label class="pick ${L ? (c.evKey.includes(i) ? "key" : c.evBad.includes(i) && a.ev.includes(i) ? "bad" : "") : ""}"><input type="checkbox" data-ev-pick="${i}" ${a.ev.includes(i) ? "checked" : ""} ${L ? "disabled" : ""}><span class="ts mono">${l[0]}</span><span>${esc(l[1])}</span></label>`).join("")}</div></fieldset>
+        <fieldset class="fs"><legend>3. Policy principle or escalation reason</legend><div class="picks">${c.pol.map((p, i) => `<label class="pick ${L ? (i === c.polA ? "key" : i === a.pol ? "bad" : "") : ""}"><input type="radio" name="pol-${c.id}" data-pol="${i}" ${a.pol === i ? "checked" : ""} ${L ? "disabled" : ""}><span>${esc(p)}</span></label>`).join("")}</div></fieldset>
+        ${needsWhy(a) ? `<div class="rb"><label for="why">4. Your rationale <span>Claim, evidence, policy. ${a.action === "Escalate" ? "Include the unresolved question." : ""} Not machine-graded; you will compare it with a model.</span><textarea id="why" data-why ${L ? "disabled" : ""}>${esc(a.why)}</textarea></label></div>` : ""}
+        <fieldset class="fs"><legend>${needsWhy(a) ? "5" : "4"}. How confident are you?</legend><div class="confbtns" role="radiogroup" aria-label="Confidence from 1, guessing, to 5, certain">${[1, 2, 3, 4, 5].map(n => `<button role="radio" class="cb" aria-checked="${a.conf === n}" data-conf="${n}" ${L ? "disabled" : ""} tabindex="${a.conf === n || (a.conf === null && n === 1) ? 0 : -1}">${n}</button>`).join("")}</div>
+          <div class="conf-scale"><span>1 · Guessing</span><span>5 · Certain</span></div></fieldset>
+        ${L ? (() => { const d = isDecisionRight(c, a), e = isEvRight(c, a), p = isPolRight(c, a), h = isHoldRight(c, a);
+          return `<div class="fb ${d && e && p && h ? "ok" : "no"}" id="casefb" tabindex="-1">
+            <b>${d ? "Decision correct." : isActionRight(c, a) && needsHold(c) ? "Correct escalation action, incorrect publication disposition. This title had to be held until Policy decides." : "Correct decision: " + c.key.action + (["Modify", "Override"].includes(c.key.action) ? " to " + c.key.band : c.key.action === "Escalate" ? " to Policy, with publication on hold" : " " + c.key.band) + "."}</b>
+            <ul class="result-list"><li>Decision ${mark(d)}</li><li>Evidence ${e ? mark(true) : `<span class="pill miss">${evWrong(c, a).length ? "Missed" : "Incomplete"}</span>`}${e ? "" : `${evMissing(c, a).length ? ` Missing: ${evMissing(c, a).map(i => c.log[i][0]).join(", ")}. ${esc(c.evWhy)}` : ""}${evWrong(c, a).length ? ` These entries do not show the content being rated: ${evWrong(c, a).map(i => c.log[i][0]).join(", ")}.` : ""}`}</li><li>Policy ${mark(p)}${p ? "" : ` The applicable principle: “${esc(c.pol[c.polA])}.”`}</li>${needsHold(c) ? `<li>Publication hold ${a.action === "Escalate" ? mark(h) : `<span class="pill miss">Missed</span> No hold was placed, so this decision lets the title publish.`}</li>` : ""}<li>Confidence recorded: <strong class="mono">${a.conf}</strong> / 5</li></ul>
+            ${isCriticalFail(c, a) ? `<p class="critical"><strong>Critical safety error.</strong> This case requires a publication hold. A decision that lets it publish fails the assessment, whatever the score. Review the escalation and publication-hold procedure on <a href="#" data-go-lesson="8">Screen 8</a>.</p>` : ""}
+            <p>${esc(c.fb)}</p>
+            <p><strong>Check that applies:</strong> ${c.check.map(k => `<a href="#" data-go-lesson="${CHECK_SCREEN[k]}">${k}</a>`).join(", ")} · <strong>Trust:</strong> ${esc(trustNote(c, a))}</p>
+            <div class="rationale" style="margin-top:8px"><span class="label">A defensible rationale would include</span><p>${esc(c.model)}</p>${a.why ? `<span class="label">Yours (compare; not machine-graded)</span><p>${esc(a.why)}</p>` : ""}</div></div>
+          <div class="row">${done < 6 ? `<button class="btn" data-q="${nextOpen()}">Next open case</button>` : `<button class="btn" data-go="11">See results</button>`}</div>`; })()
+        : `<div class="row"><button class="btn" id="lock" ${ready ? "" : "disabled"} aria-describedby="lockhint">Submit decision</button><span class="note" id="lockhint">${ready ? "Ready to submit. Your choices lock once submitted." : "Still needed: " + miss.join(", ") + "."}</span></div>`}
+      </div>
+    </div>
+  </div>`;
+};
+function nextOpen() { for (let k = 1; k <= 6; k++) { const j = (state.q + k) % 6; if (!(state.ans[CASES[j].id] || {}).locked) return j; } return state.q; }
+function refreshLock() {
+  const c = CASES[state.q], a = state.ans[c.id], m = missing(c, a), b = $("#lock"), h = $("#lockhint");
+  if (b) b.disabled = !!m.length; if (h) h.textContent = m.length ? "Still needed: " + m.join(", ") + "." : "Ready to submit. Your choices lock once submitted.";
+}
+R.s10.after = () => {
+  const c = CASES[state.q], a = state.ans[c.id];
+  document.querySelectorAll("[data-q]").forEach(b => b.addEventListener("click", () => { state.q = +b.dataset.q; render({ focus: "#qtitle" }); const d = $("#qdetail"); if (d && window.innerWidth <= 900) window.scrollTo({ top: d.getBoundingClientRect().top + window.scrollY - 90, behavior: "smooth" }); }));
+  document.querySelectorAll("[data-go-lesson]").forEach(b => b.addEventListener("click", e => { e.preventDefault(); go(+b.dataset.goLesson); }));
+  document.querySelectorAll("[data-act]").forEach(b => b.addEventListener("click", () => { a.action = b.dataset.act; if (!needsBand(a)) a.band = null; if (a.action !== "Escalate") a.hold = null; render({ focus: `[data-act="${a.action}"]` }); }));
+  document.querySelectorAll("[data-band]").forEach(b => b.addEventListener("click", () => { a.band = b.dataset.band; render({ focus: `[data-band="${a.band}"]` }); }));
+  document.querySelectorAll("[data-hold]").forEach(b => b.addEventListener("click", () => { a.hold = b.dataset.hold; render({ focus: `[data-hold="${a.hold}"]` }); }));
+  document.querySelectorAll("[data-ev-pick]").forEach(el => el.addEventListener("change", () => { const i = +el.dataset.evPick; a.ev = el.checked ? [...new Set([...a.ev, i])].sort() : a.ev.filter(x => x !== i); refreshLock(); }));
+  document.querySelectorAll("[data-pol]").forEach(el => el.addEventListener("change", () => { a.pol = +el.dataset.pol; refreshLock(); }));
+  const w = $("[data-why]"); if (w) w.addEventListener("input", () => { a.why = w.value; refreshLock(); });
+  const cbs = [...document.querySelectorAll("[data-conf]")];
+  const setConf = n => { a.conf = n; cbs.forEach(b => { const on = +b.dataset.conf === n; b.setAttribute("aria-checked", on); b.tabIndex = on ? 0 : -1; }); refreshLock(); };
+  cbs.forEach((b, k) => { b.addEventListener("click", () => setConf(+b.dataset.conf));
+    b.addEventListener("keydown", e => { let j = null; if (e.key === "ArrowRight" || e.key === "ArrowUp") j = Math.min(4, k + 1); if (e.key === "ArrowLeft" || e.key === "ArrowDown") j = Math.max(0, k - 1);
+      if (j !== null) { e.preventDefault(); setConf(j + 1); cbs[j].focus(); } }); });
+  const l = $("#lock"); if (l) l.addEventListener("click", () => {
+    if (missing(c, a).length) return;
+    if (!needsWhy(a)) a.why = ""; if (!needsBand(a)) a.band = null; if (a.action !== "Escalate") a.hold = null;
+    a.locked = true; stopAudio(); render({ focus: "#casefb" });
+    announce((isDecisionRight(c, a) ? "Decision correct. " : isActionRight(c, a) && needsHold(c) ? "Correct escalation action, incorrect publication disposition. " : "Decision missed. Correct decision: " + c.key.action + ". ") + (isCriticalFail(c, a) ? "Critical safety error: this title required a publication hold. " : "") + (isEvRight(c, a) ? "Evidence correct. " : "Evidence missed. ") + (isPolRight(c, a) ? "Policy correct." : "Policy missed."));
+  });
+};
+
+/* Screen 11: results */
+const SKILL_OF = { Evidence: "evidence", Context: "context", Count: "count", System: "system", Escalation: "escalation" };
+function missedPatterns() {
+  const out = {};
+  CASES.forEach(c => { const a = state.ans[c.id]; if (!a || !a.locked) return;
+    const d = isDecisionRight(c, a), e = isEvRight(c, a), p = isPolRight(c, a), h = isHoldRight(c, a);
+    if (d && e && p && h) return;
+    const checks = new Set(c.check); if (!e) checks.add("Evidence");
+    checks.forEach(k => { (out[k] = out[k] || []).push(c); }); });
+  return out;
+}
+R.s11 = s => {
+  const done = CASES.filter(c => (state.ans[c.id] || {}).locked), open = CASES.filter(c => !(state.ans[c.id] || {}).locked);
+  const complete = open.length === 0;
+  const right = done.filter(correct), wrong = done.filter(c => !correct(c));
+  const evN = done.filter(c => isEvRight(c, state.ans[c.id])).length, polN = done.filter(c => isPolRight(c, state.ans[c.id])).length;
+  const full = done.filter(c => { const a = state.ans[c.id]; return isDecisionRight(c, a) && isEvRight(c, a) && isPolRight(c, a) && isHoldRight(c, a); }).length;
+  const written = done.filter(c => state.ans[c.id].why).length;
+  const avg = arr => arr.length ? (arr.reduce((t, c) => t + state.ans[c.id].conf, 0) / arr.length).toFixed(1) : "–";
+  const pats = missedPatterns();
+  const W = 640, H = 220, x0 = 60, x1 = 610, y0 = 30, y1 = 170, X = i => x0 + i * (x1 - x0) / 5, Y = v => y1 - (v - 1) * (y1 - y0) / 4;
+  const crit = done.filter(c => isCriticalFail(c, state.ans[c.id]));
+  const passed = complete && right.length >= 5 && !crit.length;
+  const critMsg = crit.length ? `<div class="critical-box" role="alert"><b>Critical safety requirement not met.</b> ${crit.map(c => `Case ${CASES.indexOf(c) + 1} (${esc(c.title)})`).join("; ")} required a publication hold, and your decision let the title publish. This error must be corrected: it fails the assessment even when 5 or more decisions are correct. <div class="row" style="margin-top:8px"><button class="btn sm" data-go="8">Review escalation and publication holds (Screen 8)</button><button class="btn ghost sm" data-open-case="${CASES.indexOf(crit[0])}">Reread the case feedback</button></div></div>` : "";
+  const status = complete ? (passed
+      ? `<div class="status done" role="status"><b>Assessment complete: passed.</b> You met the decision-accuracy target of 5 of 6, and every mandatory publication hold was respected.</div>`
+      : `<div class="status open" role="status"><b>Assessment complete: not passed.</b> ${crit.length ? "A mandatory publication hold was not respected (see below)." : ""} ${right.length < 5 ? `Decision accuracy is ${right.length} of 6; the target is 5 of 6.` : `Decision accuracy is ${right.length} of 6, which meets the target, but the critical safety requirement overrides it.`} Review the patterns below, then try targeted practice.</div>`) + critMsg
+    : `<div class="status open" role="status"><b>Assessment incomplete: ${done.length} of 6 cases decided.</b> Scores below are partial. Still open: ${open.map(c => `<a href="#" data-open-case="${CASES.indexOf(c)}">Case ${CASES.indexOf(c) + 1}, ${esc(c.title)}</a>`).join(", ")}.</div>` + critMsg;
+  const chartLabel = done.map(c => `Case ${CASES.indexOf(c) + 1}: confidence ${state.ans[c.id].conf}, decision ${correct(c) ? "matched" : "missed"}`).join("; ");
+  return head(s, done.length ? `You have decided ${done.length} of 6 cases. <b>Review</b> your results below. The printable job aid is at the bottom.` : "<b>Complete</b> the practice queue on Screen 10 to see your results here. The job aid is at the bottom of this screen.", "Your results") + `
+  <div class="stack">
+    ${status}
+    <div class="kv">
+      <div class="card stack"><span class="label">Decision accuracy</span><span class="big mono">${right.length}<span style="font-size:24px;color:var(--muted)"> / 6</span></span><span class="note">Action, final rating, and any required publication hold match the key. Target: 5 of 6, with every mandatory hold respected.</span></div>
+      <div class="card stack"><span class="label">Evidence selections</span><span class="big mono">${evN}<span style="font-size:24px;color:var(--muted)"> / 6</span></span><span class="note">Picked every essential log entry, and none that don't show the content.</span></div>
+      <div class="card stack"><span class="label">Policy principle</span><span class="big mono">${polN}<span style="font-size:24px;color:var(--muted)"> / 6</span></span><span class="note">Picked the principle or escalation reason that applies.</span></div>
+    </div>
+    <div class="kv">
+      <div class="card stack"><span class="label">Fully defensible cases</span><span class="big mono">${full}<span style="font-size:24px;color:var(--muted)"> / 6</span></span><span class="note">Decision, evidence, and policy all correct.</span></div>
+      <div class="card stack"><span class="label">Avg. confidence when decision matched</span><span class="big mono">${avg(right)}</span></div>
+      <div class="card stack"><span class="label">Avg. confidence when decision missed</span><span class="big mono">${avg(wrong)}</span></div>
+    </div>
+    <p class="note">Written rationales: ${written} submitted for self-comparison. They are not machine-graded; in a live program, QA would review them against a rubric.</p>
+    <div class="card stack"><h2>Confidence against decision accuracy</h2>
+      <p class="note">An introductory signal only. Six cases are too few to measure calibration reliably; use the chart to notice possible overconfidence (high and missed) or underconfidence (low and matched).</p>
+      <div class="tscroll"><svg viewBox="0 0 ${W} ${H}" class="tl" role="img" aria-label="${done.length ? esc(chartLabel) : "No cases decided yet"}">
+        ${[1, 2, 3, 4, 5].map(v => `<line x1="${x0}" x2="${x1}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--rule)"/><text x="${x0 - 12}" y="${Y(v) + 4}" text-anchor="end" font-size="12" fill="var(--muted)" font-family="var(--font-mono)">${v}</text>`).join("")}
+        ${CASES.map((c, i) => { const x = state.ans[c.id]; const lk = x && x.locked; return `<text x="${X(i)}" y="${y1 + 26}" text-anchor="middle" font-size="12" fill="var(--muted)" font-family="var(--font-mono)">C${i + 1}</text>${lk ? `<circle cx="${X(i)}" cy="${Y(x.conf)}" r="9" fill="${correct(c) ? "var(--good)" : "var(--surface)"}" stroke="${correct(c) ? "var(--good)" : "var(--bad)"}" stroke-width="3"/>` : `<text x="${X(i)}" y="${(y0 + y1) / 2}" text-anchor="middle" font-size="11" fill="var(--muted)" font-family="var(--font-mono)">open</text>`}`; }).join("")}
+        <text x="14" y="${(y0 + y1) / 2}" font-size="12" fill="var(--muted)" transform="rotate(-90 14 ${(y0 + y1) / 2})" text-anchor="middle">confidence</text>
+      </svg></div>
+      <div class="row note"><span><svg width="14" height="14" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="var(--good)"/></svg> Decision matched</span><span><svg width="14" height="14" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="var(--surface)" stroke="var(--bad)" stroke-width="2.5"/></svg> Decision missed</span></div>
+    </div>
+    <div class="card stack"><h2>Patterns to review</h2>
+      ${Object.keys(pats).length ? `<p class="note">Any case where the decision, evidence, or policy pick was missed is grouped by the check that covers it.</p><div class="tscroll"><table class="t"><tr><th scope="col">Check</th><th scope="col">Cases</th><th scope="col">Lesson</th></tr>${Object.entries(pats).map(([k, cs]) => `<tr><td><b>${k}</b></td><td>${cs.map(c => `Case ${CASES.indexOf(c) + 1}, ${esc(c.title)}`).join("; ")}</td><td><button class="btn ghost sm" data-go="${CHECK_SCREEN[k]}">Review Screen ${CHECK_SCREEN[k]}</button></td></tr>`).join("")}</table></div>`
+        : done.length ? `<p>No missed patterns in the cases you have decided.</p>` : `<p class="note">Patterns appear once you decide cases.</p>`}
+    </div>
+    <section class="jobaid" aria-labelledby="ja">
+      <div class="row" style="justify-content:space-between"><h2 id="ja">Verification job aid</h2><a class="btn ghost sm" href="job-aid.html" target="_blank" rel="noopener">Open printable job aid<span class="sr-only"> (opens in a new tab)</span></a></div>
+      <div class="ja-grid">
+        <div class="stack"><span class="label">The four checks</span><ol>
+          <li><b>Evidence.</b> Does every descriptor point to a moment that supports both the descriptor and its level?</li>
+          <li><b>Context.</b> How does tone, genre, and injury detail change the level? The TV guidelines name the levels; use your team's approved classification to place a scene.</li>
+          <li><b>Count.</b> What do frequency, duration, and persistence change? MPA: one harsher expletive, at least PG-13; more than one, or one in a sexual context, ordinarily R (Rating Board special-vote exception). Any drug use, at least PG-13.</li>
+          <li><b>System and policy.</b> Which system does the approved rating metadata name? Does any additional policy layer, such as a market review, apply?</li></ol></div>
+        <div class="stack"><span class="label">The four actions ${ILLUS}</span><ol>
+          <li><b>Accept</b> when the suggestion passes all four checks.</li><li><b>Modify</b> when too high or a descriptor is wrong. Short note.</li>
+          <li><b>Override</b> when too low. Full rationale.</li><li><b>Escalate</b> when the guidelines do not settle it, the system is unconfirmed, or another policy layer requires review. Hold publication where required.</li></ol></div>
+        <div class="stack"><span class="label">Rationale format</span><p style="font-size:14.5px"><b>Claim:</b> action, rating, descriptor<br><b>Evidence:</b> moments with timestamps<br><b>Policy:</b> the guideline or rule that applies</p></div>
+        <div class="stack"><span class="label">TV levels</span><p style="font-size:14.5px">${band("TV-Y7")} mild fantasy or comedic violence (FV: more intense or combative)<br>${band("TV-G")} little or no violence<br>${band("TV-PG")} moderate V, infrequent L, some S and D<br>${band("TV-14")} intense V, strong L, intense S and D<br>${band("TV-MA")} graphic V, crude indecent L, explicit S</p></div>
+      </div>
+    </section>
+    <section class="part part-blue"><div class="round" style="margin-top:0"><span class="qlabel">What next</span><h2>Finish the module</h2></div>
+      <div class="row"><button class="btn" id="submitres" ${state.submitted || !complete ? "disabled" : ""} aria-describedby="subnote">${state.submitted ? "Assessment submitted (demo)" : complete ? "Submit my assessment" : "Submit available when all 6 cases are decided"}</button><button class="btn ghost" data-go="12">Start targeted practice</button></div>
+      <p class="note" id="subnote">${state.submitted ? "" : complete ? "Submitting records that you finished. " : `${open.length} ${open.length === 1 ? "case is" : "cases are"} still open, so results cannot be submitted yet. `}This is a demo: nothing is sent to Amazon, an LMS, or a team lead.</p>
+      ${state.submitted ? `<div class="fb ok" id="subfb" tabindex="-1"><b>Submitted (demo). Result recorded: ${passed ? "passed" : "not passed"}.</b>In a live program, this step would send your scores, confidence ratings, and missed patterns to your learning record. This demo does not send anything anywhere.</div>` : ""}
+    </section>
+    <p class="note">${SOURCES_ALL}. This is a stand-alone demonstration module; the other modules in the proposed curriculum have not been built.</p>
+  </div>`;
+};
+R.s11.after = () => {
+  const b = $("#submitres"); if (b) b.addEventListener("click", () => { if (CASES.some(c => !(state.ans[c.id] || {}).locked)) return; state.submitted = true; render({ focus: "#subfb" }); announce("Assessment submitted. Demo only, nothing was sent."); });
+  document.querySelectorAll("[data-open-case]").forEach(x => x.addEventListener("click", e => { e.preventDefault(); state.q = +x.dataset.openCase; go(10); }));
+};
+
+/* Screen 12: targeted practice. Pre-written synthetic items, chosen by fixed rules from missed patterns.
+   Nothing here is generated at run time. */
+const XP = {
+  evidence: [
+    { id: "e1", t: "Deckhands", d: "Co-pilot: Violence (V), moderate, at 00:19:20. At that timestamp, a carpenter swings a hammer to drive nails while building a deck.", q: "What do you do with this descriptor?", o: ["Keep it: a hammer is a weapon", "Remove it: the moment shows no violence", "Lower it to mild"], a: 1, fb: "A tool used for its purpose is not violence. Remove the descriptor and note why. This is the same over-flagging pattern as Night Market." },
+    { id: "e2", t: "Low Tide", d: "Co-pilot: Coarse language (L), moderate, three instances. Two timestamps show a mild word in an argument. The third, 00:00:45, lands on the opening credits.", q: "How do you treat the third instance?", o: ["Count it: the co-pilot is usually right", "Treat it as unsupported until you find the moment, then recheck the descriptor with what you can confirm", "Escalate the whole title"], a: 1, fb: "A descriptor instance with no matching moment stays unsupported. Find the real moment or drop the instance, then recheck whether the descriptor and level are still supported." }
+  ],
+  context: [
+    { id: "x1", t: "The Hendersons", d: "A live-action family sitcom for general audiences. A dad falls off a ladder into a pile of leaves and gets up laughing. Co-pilot: TV-PG, Violence (V), moderate.", q: "Which rating fits best?", o: ["TV-PG", "TV-Y7", "TV-G"], a: 2, fb: "Comedic harm with no injury is mild. In a general-audience program, little or no violence points to TV-G. TV-Y7 is a children's-programming category." },
+    { id: "x2", t: "Gearbots", d: "An animated children's series. Two robot heroes battle a giant monster across a city for most of the episode. No one is hurt.", q: "Which rating fits best?", o: ["TV-Y", "TV-Y7", "TV-Y7-FV", "TV-PG"], a: 2, fb: "Combative fantasy action that runs most of the episode is more intense than ordinary TV-Y7 slapstick, which is what the FV designation marks." }
+  ],
+  count: [
+    { id: "n1", t: "Crowd Noise", d: "A feature film with no MPA certificate on file. Two uses of a harsher sexually derived word as an expletive, both half-buried under stadium noise but audible.", q: "Which statement is accurate?", o: ["PG-13: muffled words count as one", "Ordinarily R; only the Rating Board can rate it PG-13, by a two-thirds special vote", "The analyst can apply the special vote if the words are hard to hear"], a: 1, fb: "More than one such expletive ordinarily requires R. The rules let the Rating Board rate it PG-13 by a two-thirds special vote, for example when the use is inconspicuous. That vote belongs to the Board, so an estimate stays at R and the note can mention the context." },
+    { id: "n2", t: "Still Life", d: "A feature film with no MPA certificate on file. One non-sexual shot of nudity lasting about three seconds. Nothing else is flagged.", q: "What is the lowest rating the published rules allow?", o: ["G", "PG", "PG-13"], a: 1, fb: "G contains no nudity. PG may include brief nudity. More than brief nudity would require at least PG-13." }
+  ],
+  system: [
+    { id: "s1", t: "Harbor City (theatrical cut)", d: "Feature film. Metadata: MPA certificate PG-13. The delivered file is the unedited theatrical cut.", q: "Which rating displays?", o: ["The MPA rating and its descriptor", "A new TV rating", "Whatever the co-pilot suggests"], a: 0, fb: "An unedited theatrical film with an MPA rating displays that rating and descriptor." },
+    { id: "s2", t: "Harbor City (edited version)", d: "The same film, but the delivered file was edited after the MPA rated it. Metadata does not say which system applies to this version.", q: "What do you do?", o: ["Keep the MPA PG-13", "Rate this version under the system your approved metadata names; with no system named, escalate", "Pick whichever system gives the lower rating"], a: 1, fb: "The MPA rating belongs to the version the MPA rated. Edited content needs its own rating, and an unconfirmed system is an escalation." }
+  ],
+  escalation: [
+    { id: "z1", t: "The Salute", d: "Distribution: Training Market X (fictional). A sympathetic character salutes a designated restricted symbol. The film's stance toward it is ambiguous.", q: "What do you do?", o: ["Decide the depiction is critical and publish", "Escalate to Policy and hold publication in Training Market X, noting the ambiguity", "Lower the rating to remove the problem"], a: 1, fb: "If you cannot settle whether the depiction is approving, the referral question is open. Escalate with the timestamp and the open question, and hold publication in that market." },
+    { id: "z2", t: "Pending", d: "You escalated a title for Training Market X yesterday. Policy has not answered, and the scheduled publish time is in one hour.", q: "What happens to publication?", o: ["Publish on schedule; Policy can pull it later", "Keep the hold in place and note the pending escalation in the record", "Withdraw the escalation"], a: 1, fb: "A referral rule requires review before publication. The hold stays until Policy decides; the record should show the escalation is pending." }
+  ]
+};
+const SKILL_NAME = { evidence: "Evidence", context: "Context", count: "Count", system: "System", escalation: "Escalation" };
+function practicePlan() {
+  const pats = missedPatterns(), skills = [...new Set(Object.keys(pats).map(k => SKILL_OF[k]))];
+  const order = ["evidence", "context", "count", "system", "escalation"];
+  if (skills.length) return { reason: "targeted", skills: order.filter(k => skills.includes(k)) };
+  return { reason: CASES.some(c => (state.ans[c.id] || {}).locked) ? "clean" : "none", skills: order };
+}
+R.s12 = s => {
+  const plan = practicePlan(), sk = state.xpSkill && plan.skills.includes(state.xpSkill) ? state.xpSkill : plan.skills[0];
+  const items = plan.reason === "targeted" ? XP[sk] : [XP[sk][0], XP[sk][1]];
+  const doneN = plan.skills.reduce((t, k) => t + XP[k].filter(x => state.xp[x.id] !== undefined).length, 0), total = plan.skills.reduce((t, k) => t + XP[k].length, 0);
+  return `<div class="screen-head fade"><div class="kicker"><span>Optional</span><span class="obj">Targeted practice</span></div>
+  <h1 tabindex="-1">Targeted practice</h1></div>
+  <div class="narr"><p>${plan.reason === "targeted" ? `This set was chosen from the patterns you missed in the queue: <b>${plan.skills.map(k => SKILL_NAME[k]).join(", ")}</b>.` : plan.reason === "clean" ? "You missed no patterns in the cases you decided, so this is a mixed review across all five skills." : "You have not decided any queue cases yet, so this is a mixed review across all five skills. Finish the queue for a set chosen from your misses."} The items are pre-written synthetic cases selected by a fixed rule (each missed check maps to its skill). Nothing here is generated by AI while you work, and nothing here counts toward your assessment score.</p></div>
+  ${scoreBar(doneN, total, "Practice items answered")}
+  <div class="tabs" role="tablist" aria-label="Practice skills">${plan.skills.map(k => `<button role="tab" id="xp-tab-${k}" aria-controls="xp-panel" class="tab ${k === sk ? "on" : ""}" aria-selected="${k === sk}" tabindex="${k === sk ? 0 : -1}" data-xpskill="${k}"><span class="tt">${SKILL_NAME[k]}</span></button>`).join("")}</div>
+  <div class="stack" role="tabpanel" id="xp-panel" aria-labelledby="xp-tab-${sk}">${items.map((x, n) => { const p = state.xp[x.id]; return `
+    <div class="card stack" role="group" aria-labelledby="xpq-${x.id}"><span class="qlabel">${SKILL_NAME[sk]} · item ${n + 1} of ${items.length}</span><h2>${esc(x.t)}</h2><p>${esc(x.d)}</p>
+      <h3 id="xpq-${x.id}" style="font-size:17px">${esc(x.q)}</h3>
+      <div class="stack" style="gap:8px">${x.o.map((o, oi) => `<button class="chipbtn ${p === undefined ? "" : oi === x.a ? "right" : oi === p ? "wrong" : ""}" data-xp="${x.id}:${oi}" ${p !== undefined ? "disabled" : ""} ${p === oi ? 'aria-pressed="true"' : ""}>${esc(o)}</button>`).join("")}</div>
+      ${p !== undefined ? `<div class="fb ${p === x.a ? "ok" : "no"}" id="xpfb-${x.id}" tabindex="-1">${verdict(p === x.a, "Right.")}${esc(x.fb)}</div>` : ""}</div>`; }).join("")}</div>
+  <div class="row" style="margin-top:18px"><button class="btn ghost" data-go="11">Back to results</button><button class="btn ghost" data-go="${CHECK_SCREEN[SKILL_NAME[sk]]}">Review the ${SKILL_NAME[sk]} lesson</button></div>
+  <details class="card" style="margin-top:18px"><summary><b>How a full practice library would scale this</b> (design concept, not built)</summary>
+    <div class="stack" style="margin-top:12px"><p>This page shows the selection logic with ten hand-written items. A production library would add many more items per skill, spaced review of patterns already mastered, and a practice mode inside the review tool that serves titles QA has already rated. The authoring and quality-assurance workflow for those items is described in the case study.</p></div></details>`;
+};
+R.s12.after = () => {
+  document.querySelectorAll("[data-xpskill]").forEach(b => b.addEventListener("click", () => { state.xpSkill = b.dataset.xpskill; render({ focus: "#xp-tab-" + state.xpSkill }); }));
+  tabKeys('[role="tab"][data-xpskill]', j => { const k = practicePlan().skills[j]; state.xpSkill = k; render({ focus: "#xp-tab-" + k }); });
+  document.querySelectorAll("[data-xp]").forEach(b => b.addEventListener("click", () => { const [id, o] = b.dataset.xp.split(":"); state.xp[id] = +o; render({ focus: "#xpfb-" + id });
+    const x = Object.values(XP).flat().find(y => y.id === id); announce((+o === x.a ? "Right. " : "Not quite. ") + x.fb); }));
+};
+
+/* ---------- Case study (opening page) ---------- */
+const csFlow = [
+  ["Identify the need", "Desk job and gap analysis from the role description: what changes when a co-pilot drafts the rating", "done"],
+  ["Sequence the program", "Five-module curriculum proposed in the design document; only this module (Module 3) is built", "partial"],
+  ["Write objectives", "A two-part terminal objective and six enabling objectives, each tied to practice", "done"],
+  ["Stakeholder review", "Policy, Ops and QA, Product, Science, and analyst reps review scope and answer keys", "planned"],
+  ["Outline and script", "Screen-by-screen outline and narration written for text-to-speech", "done"],
+  ["Design system", "Type, color, and components applied after the copy was final", "done"],
+  ["Build", "Standalone HTML module with practice, feedback, targeted practice, and a printable job aid", "done"],
+  ["Pilot", "Small analyst group takes it first; comments and item data collected", "planned"],
+  ["Measure", "The proposed evaluation plan below", "planned"],
+  ["Revise", "Design-review revisions done for this sample; pilot-driven revisions planned", "partial"]
+];
+const OBJ = [
+  ["EO1", "Explain what the co-pilot produces, what its confidence signal means, and where it tends to err", "Screens 1–3"],
+  ["EO2", "Verify that each suggested descriptor and level is supported by the cited moment", "Screen 4"],
+  ["EO3", "Apply context, count, and rating-system rules from the published guidelines", "Screens 5–7"],
+  ["EO4", "Choose accept, modify, override, or escalate from the results of the four checks", "Screen 8"],
+  ["EO5", "Write a claim, evidence, and policy rationale", "Screen 9"],
+  ["EO6", "Recognize when a decision needs Policy, including when a rating alone is insufficient", "Screens 8, 10"]
+];
+const EVAL = [
+  ["Baseline rating accuracy", "Agreement with QA gold-standard decisions before training", "Blind sample of each new analyst's first reviews, scored by QA", "Week 1, before the module", "QA lead"],
+  ["Post-training rating accuracy", "The same agreement after training, by error pattern", "Matched blind sample, same scoring", "Weeks 2 and 6", "QA lead with the designer"],
+  ["Time to competency", "Days from start to independent review", "Certification date against start date", "At certification", "Operations manager"],
+  ["Time per completed review", "Whether checking stays efficient", "Review-tool timestamps, per title", "Weekly, first 8 weeks", "Operations analyst"],
+  ["Evidence-verification behavior", "Whether analysts open the cited moments before deciding", "Tool logs of evidence clicks before submit", "Weekly, first 8 weeks", "Product and Science"],
+  ["Rationale quality", "Claim, evidence, and policy present and correct", "QA rubric on a sample of overrides and escalations", "Monthly", "QA reviewers"],
+  ["Escalation accuracy", "Escalations that Policy agrees were needed, and missed escalations", "Policy disposition of each escalation; QA audit for misses", "Monthly", "Policy lead"],
+  ["Confidence against accuracy", "Whether stated confidence tracks being right", "Confidence rating logged with each practice and live decision", "Per practice set, then monthly", "Designer"],
+  ["QA audit agreement", "How often QA upholds analyst decisions on audit", "Existing QA audit sample", "Monthly, against pre-launch trend", "QA lead"]
+];
+R.cs = () => `
+  <div class="cs-hero fade">
+    <div class="kicker"><span>Instructional design case study</span><span class="obj">Work sample</span></div>
+    <h1>Reviewing with the Co-Pilot</h1>
+    <p class="lead">A training module that teaches content analysts to check AI-suggested age ratings and content descriptors before they publish them.</p>
+    <div class="cs-meta"><span><b>Designer:</b> Tonja Ryan</span><span><b>Audience:</b> content rating analysts, new and tenured</span><span><b>Format:</b> narrated HTML module, ${DURATION} (estimate, not yet user-tested)</span><span><b>Standards:</b> TV Parental Guidelines and MPA ratings</span></div>
+    <p class="note">Prepared as an independent work sample for an Instructional Designer role on a streaming Trust and Safety team: one completed demonstration module from a proposed onboarding curriculum. Not produced by or for any company, and not reviewed or approved by any. This independent training simulation uses published U.S. television and film rating guidelines alongside fictional titles, scenes, and simulated AI suggestions. The co-pilot interface and analyst review procedures are illustrative and do not represent Amazon's proprietary tools or policies.</p>
+    <div class="cta"><button class="btn big" data-live>View the live module</button><a class="btn ghost big" href="job-aid.html" target="_blank" rel="noopener">Open printable job aid<span class="sr-only"> (opens in a new tab)</span></a></div>
+  </div>
+
+  <section class="cs-sec">
+    <span class="qlabel">Purpose</span><h2>Why this training</h2>
+    <p>AI tools can now draft the rating, the content descriptors, and the evidence before the analyst presses play. The analyst's job shifts from writing a rating to checking one. Checking is a separate skill, and without practice people tend to accept confident machine output. That tendency is called automation bias, and it can lower quality even as speed goes up.</p>
+    <div class="grid2">
+      <div class="card stack"><span class="label">Performance gap (assumed for this sample)</span><ul class="points"><li>Analysts accept suggestions without opening the evidence</li><li>Tone, counting, and rating-system errors slip through</li><li>Override notes vary in quality and are hard for QA to check</li></ul></div>
+      <div class="card stack"><span class="label">Terminal objective</span>
+        <p><b>Decision accuracy.</b> Given six synthetic titles with AI-suggested ratings, the analyst chooses the correct action, the correct final rating where one applies, and the required publication status, in at least 5 of 6 cases.</p>
+        <p><b>Critical safety requirement.</b> When a case requires a publication hold, the analyst holds the title. Any decision that lets it publish fails the assessment, even when 5 or more decisions are correct. A correct escalation with the wrong publication status is reported separately from a wrong action.</p>
+        <p><b>Rationale quality.</b> For each decision, the analyst selects the evidence and the policy principle or escalation rule that support it, and for overrides and escalations writes a claim, evidence, and policy rationale.</p>
+        <p class="note"><b>What the module actually measures:</b> action, rating, and publication hold against the key; evidence selections against the key, with credit only when every essential log entry is cited and no irrelevant one; policy selections against the key; the critical-safety rule as a pass/fail gate. Written rationales are self-compared with a model answer and are not machine-graded. The Screen 9 checker is a transparent keyword-and-timestamp rubric that flags gaps and always calls for human review.</p></div>
+    </div>
+    <div class="card tscroll"><span class="label">Enabling objectives</span><table class="t"><tr><th scope="col">Code</th><th scope="col">Objective</th><th scope="col">Where</th></tr>${OBJ.map(o => `<tr><td class="mono">${o[0]}</td><td>${o[1]}</td><td>${o[2]}</td></tr>`).join("")}</table></div>
+  </section>
+
+  <section class="cs-sec">
+    <span class="qlabel">Scope</span><h2>What this work sample is, and is not</h2>
+    <p>This is one completed demonstration module. It was designed as Module 3 of a proposed five-module onboarding curriculum; Modules 1, 2, 4, and 5 are outlined in the design document only and have not been built.</p>
+    <div class="card tscroll"><table class="t"><tr><th scope="col">Category</th><th scope="col">What it covers here</th></tr>
+      <tr><td><b>Implemented</b></td><td>This module: twelve screens, the six-case scored queue, the Screen 9 rationale rubric, targeted practice, the printable job aid, ElevenLabs narration for all twelve screens, and an automated browser test suite (QA_REPORT.md).</td></tr>
+      <tr><td><b>AI-assisted development (actually used)</b></td><td>The module, its narration scripts, and its revisions were built with an AI assistant (Claude) under the designer's direction. Narration audio was generated with ElevenLabs text-to-speech. The designer reviewed each round and directed the corrections; policy statements were checked against the published sources listed in POLICY_SOURCES.md.</td></tr>
+      <tr><td><b>Illustrative examples</b></td><td>The sample prompt, AI draft, and tagging scheme in the section below, the co-pilot interface, the four-action workflow, QA sampling, the violence ladder, and Training Market X. None of these is a real tool, logged prompt history, or real policy.</td></tr>
+      <tr><td><b>Planned for a production deployment</b></td><td>Stakeholder review, Policy sign-off on answer keys, a pilot with analysts, an in-tool practice mode, and a larger tagged practice library. None of these has happened.</td></tr>
+      <tr><td><b>Proposed, not collected</b></td><td>Every measure in the evaluation plan. No learner data, pilot results, or performance improvements exist.</td></tr></table></div>
+    <p class="note">No Amazon employee or other stakeholder has reviewed this module, no analysts have piloted it, and no performance results have been measured.</p>
+  </section>
+
+  <section class="cs-sec">
+    <span class="qlabel">What is real</span><h2>Three layers of content</h2>
+    ${LAYERS}
+    <p class="note">Every policy statement and its source is listed in POLICY_SOURCES.md, packaged with the module.</p>
+  </section>
+
+  <section class="cs-sec">
+    <span class="qlabel">Process</span><h2>How it was built</h2>
+    <p>Ten steps, from needs analysis through revision. Each step is marked as done for this sample or planned for a real deployment. Steps 8 to 10 would repeat for as long as the module is in use.</p>
+    <ol class="flow flow-wrap">${csFlow.map(([b, s, st], i) => `<li class="${i >= 7 ? "loop" : ""}"><b>${b}</b><span>${s}</span><span class="tagp ${st}">${{ done: "Done in this sample", planned: "Planned", partial: "Partly done" }[st]}</span></li>`).join("")}</ol>
+    <p class="loopnote">Pilot, measure, and revise would run as a cycle after launch.</p>
+  </section>
+
+  <section class="cs-sec">
+    <span class="qlabel">AI in the workflow</span><h2>AI-Assisted Scenario Design & Quality Assurance</h2>
+    <p>Generative AI is fast at producing varied scenario drafts. It is also confident when it is wrong, which is the same problem this module teaches analysts to catch. The workflow below pairs AI drafting with human validation against the published sources.</p>
+    <div class="card stack"><span class="label">What was actually done for this sample, and what is a demonstration</span>
+      <ul class="points">
+        <li><b>Done:</b> The module and this revision were produced with an AI assistant (Claude), and the narration with ElevenLabs. The designer reviewed the module against the published TV Parental Guidelines and MPA Classification and Rating Rules, and the corrections in the “QA correction” column below are real ones made in that review.</li>
+        <li><b>Demonstration:</b> The sample prompt, the AI draft, and the tagging scheme shown here were written for this case study to illustrate the process. They are not a logged history from a production system, and no AI system is deployed in the module. The module's practice items are fixed and hand-checked.</li>
+      </ul></div>
+    <ol class="build">
+      <li><div><b>Define the objective and error pattern.</b> Example: EO3, Count. Error pattern: treating a rule with an exception as absolute.</div></li>
+      <li><div><b>Prompt for a fictional scenario.</b> See the sample prompt below.</div></li>
+      <li><div><b>Require a structured output.</b> Scene descriptions, evidence timestamps, proposed rating, rationale, anticipated misconception.</div></li>
+      <li><div><b>Compare against the approved source.</b> Every rule in the draft is checked word by word against the published guideline it claims to follow.</div></li>
+      <li><div><b>Correct the draft.</b> Fix factual errors, invented rules, ambiguous answer keys, and unrealistic evidence.</div></li>
+      <li><div><b>Approve for practice.</b> In a live program, Policy signs off on the answer key. For this sample, the designer approved it.</div></li>
+      <li><div><b>Tag it.</b> Skill, error pattern, difficulty, rating system, and policy version.</div></li>
+      <li><div><b>Select by tag.</b> Missed patterns choose the next items, as the targeted-practice screen does with its ten fixed items.</div></li>
+    </ol>
+    <div class="grid2">
+      <div class="card stack"><span class="label">Sample prompt (illustrative)</span><pre class="code">You are drafting a FICTIONAL practice scenario for content-rating
+analysts. Do not use real titles, people, or brands.
+Objective: EO3 (Count). Error pattern: treating a rule that has an
+exception as if it had none.
+System: MPA Classification and Rating Rules (effective as revised
+July 24, 2020). Quote the rule you rely on.
+Return JSON with: title, format, plot (60 words), scenes
+[{timestamp, description}], proposed_rating, rationale
+{claim, evidence, policy}, anticipated_misconception.
+Do not invent numerical thresholds the rules do not state.</pre></div>
+      <div class="card stack"><span class="label">Example AI draft (illustrative)</span><pre class="code">title: "Crowd Noise"   format: feature film
+scenes: 00:41:10 harsher expletive, shouted
+        01:15:30 harsher expletive, shouted
+proposed_rating: R
+rationale.policy: "MPA rules: two or more harsher
+  expletives automatically require R. A third use
+  within 10 minutes requires NC-17."
+anticipated_misconception: "Muffled words don't count."</pre></div>
+    </div>
+    <div class="card tscroll"><span class="label">Quality-assurance review</span><table class="t"><tr><th scope="col">Issue found</th><th scope="col">Type</th><th scope="col">QA correction</th></tr>
+      <tr><td>“Automatically require R”</td><td>Rule stated too absolutely</td><td>The rules say more than one such expletive requires R, but also allow PG-13 by a two-thirds special vote of the Rating Board. Rewritten as “ordinarily R,” with the exception named. <i>This same correction was made to the module's own rule cards and feedback in this revision.</i></td></tr>
+      <tr><td>“Third use within 10 minutes requires NC-17”</td><td>Invented rule</td><td>No such threshold exists. Removed.</td></tr>
+      <tr><td>Analyst assigns “R”</td><td>Ambiguous answer key</td><td>Only the Rating Board issues MPA ratings. Reframed as a provisional estimate for a film with no certificate on file.</td></tr>
+      <tr><td>Both words “shouted”</td><td>Unrealistic evidence for the target misconception</td><td>Changed to half-buried under stadium noise but audible, so the scene actually tests the misconception it names.</td></tr>
+      <tr><td>Blood treated as setting the TV level</td><td>Invented rule (found in the module, not the draft)</td><td>The TV guidelines name levels without blood rules. The ladder is now labeled as an illustrative training classification.</td></tr></table></div>
+    <div class="grid2">
+      <div class="rationale"><span class="label">Final approved item</span><p><b>Crowd Noise.</b> Feature film, no MPA certificate on file. Two uses of a harsher sexually derived word as an expletive, both half-buried under stadium noise but audible.</p><p><b>Key:</b> Ordinarily R. Only the Rating Board can rate it PG-13, by a two-thirds special vote, for example when use is inconspicuous. An analyst estimate stays at R and notes the context.</p></div>
+      <div class="card stack"><span class="label">Tags</span><p class="mono" style="font-size:13px">skill: count · error: absolute-rule · difficulty: 2 of 3 · system: MPA · policy version: rating rules rev. 2020-07-24 · status: approved (designer)</p><p class="note">This item is live in the targeted-practice screen.</p></div>
+    </div>
+  </section>
+
+  <section class="cs-sec">
+    <span class="qlabel">Stakeholders</span><h2>Who would review, and on what</h2>
+    <p class="note">Proposed review roles for a real deployment. No stakeholder has reviewed or approved this independent sample.</p>
+    <div class="card tscroll"><table class="t"><tr><th scope="col">Partner</th><th scope="col">What they need</th><th scope="col">What the program needs from them</th><th scope="col">Would sign off on</th></tr>
+      <tr><td><b>Policy</b></td><td>Ratings applied exactly as written</td><td>Gold-standard answers for every practice case</td><td>Answer keys and rationale format</td></tr>
+      <tr><td><b>Operations and QA</b></td><td>Faster ramp with steady quality</td><td>Baselines for accuracy and time to competency; time for pilots</td><td>Measures and schedule</td></tr>
+      <tr><td><b>Product</b></td><td>Analysts who use the co-pilot as designed</td><td>How the tool shows ratings, evidence, and confidence</td><td>Tool walkthrough and in-tool tips</td></tr>
+      <tr><td><b>Science</b></td><td>Clean data on where the model is wrong</td><td>Known error patterns; what practice should log</td><td>Error patterns and data capture</td></tr>
+      <tr><td><b>Analyst representatives</b></td><td>Training that respects their time and expertise</td><td>Pilot feedback on draft cases</td><td>Pilot readiness</td></tr></table></div>
+  </section>
+
+  <section class="cs-sec">
+    <span class="qlabel">Assessment</span><h2>How I would check accuracy</h2>
+    <p>Accuracy here means two things: whether the training itself is right, and whether analysts get the ratings right after it.</p>
+    <div class="grid2">
+      <div class="part part-blue" style="margin-top:0"><h3>Is the training accurate?</h3><ul class="points">
+        <li>Every rule on screen links to the published TV or MPA source it comes from, and anything illustrative is labeled</li>
+        <li>Policy would approve the answer key for every practice case before launch</li>
+        <li>After a pilot, items that strong performers miss would be flagged and rewritten</li>
+        <li>Each item is tagged by rule, so a guideline change finds every item it affects</li></ul></div>
+      <div class="part part-plain" style="margin-top:0"><h3>Are analysts accurate after it?</h3><ul class="points">
+        <li><b>Agreement</b> with gold-standard decisions, broken down by error pattern</li>
+        <li><b>Calibration:</b> whether confidence ratings track correct answers, over many more cases than six</li>
+        <li><b>Override quality:</b> share of overrides that QA agrees with on audit</li>
+        <li><b>Time to competency:</b> days from start to independent review</li></ul></div>
+    </div>
+  </section>
+
+  <section class="cs-sec">
+    <span class="qlabel">Evaluation</span><h2>Proposed evaluation plan</h2>
+    <p>How I would find out whether the training changed operational performance. These are proposed measures only. No pilot has run, and no results have been collected.</p>
+    <div class="card tscroll"><table class="t"><tr><th scope="col">Measure</th><th scope="col">What it measures</th><th scope="col">How it would be collected</th><th scope="col">When</th><th scope="col">Who reviews it</th></tr>
+      ${EVAL.map(r => `<tr><td><b>${r[0]}</b></td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td></tr>`).join("")}</table></div>
+  </section>
+
+  <section class="cs-sec">
+    <span class="qlabel">Feedback</span><h2>How I would make changes</h2>
+    <div class="cycle">
+      <div><b>Collect</b><span>Pilot comments, practice data, QA audits, guideline and tool changes</span></div>
+      <div><b>Sort</b><span>Content error, unclear wording, missing practice, or tool change</span></div>
+      <div><b>Fix</b><span>Owner assigned: designer for wording, Policy for rules, Product for tool</span></div>
+      <div><b>Re-review</b><span>Policy re-approves any changed rule or answer key</span></div>
+      <div><b>Release</b><span>New version shipped with a change note analysts can read</span></div>
+    </div>
+    <div class="card stack"><span class="label">Feedback from the designer's own review rounds (no external reviewers), and what changed</span>
+      <div class="tscroll"><table class="t"><tr><th scope="col">Feedback</th><th scope="col">Change</th></tr>
+        <tr><td>Narration was audio only</td><td>Every screen opens with the narration as text, with an optional Listen button</td></tr>
+        <tr><td>Hard to tell where instructions end and the activity begins</td><td>A “Now you try” divider, plain directions, and bolded action words</td></tr>
+        <tr><td>A made-up rating standard would not transfer to the job</td><td>Rebuilt on the TV Parental Guidelines and MPA rules, with source links</td></tr>
+        <tr><td>Too much text beside the co-pilot panel</td><td>Explanations moved into numbered notes that open by hover, keyboard, or tap</td></tr>
+        <tr><td>Not enough practice</td><td>12 evidence items, 6 context scenes, 6 counting examples, 13 system items, 4 decision-tree cases, and 10 targeted-practice items</td></tr>
+        <tr><td>Practice queue read as one block of text</td><td>A separate case menu with status, and each case in its own panel</td></tr>
+        <tr><td>Some policy statements were too absolute, such as the MPA profanity rule</td><td>Exceptions named, sources updated to the official pages, illustrative rules labeled</td></tr>
+        <tr><td>Assessment claimed to measure rationales it did not check</td><td>Objective split into decision accuracy and rationale quality; structured evidence and policy choices scored; written rationales self-compared</td></tr>
+        <tr><td>“More practice” led to a plan page</td><td>A working targeted-practice set chosen from missed patterns</td></tr>
+        <tr><td>A learner could escalate The Old Flag but let it publish, and still pass with 6 of 6</td><td>The publication hold now counts toward the decision, and a hold violation fails the assessment regardless of score</td></tr>
+        <tr><td>Evidence credit was given for citing one of several essential moments</td><td>Evidence now requires every essential log entry, and feedback names any that are missing</td></tr></table></div></div>
+  </section>
+
+  <div class="part part-blue" style="margin-top:34px"><div class="cta" style="justify-content:space-between"><div class="stack" style="gap:4px"><h2>See it in action</h2><p>Twelve screens plus optional targeted practice, ${DURATION} (estimate), with narration text on every screen.</p></div><button class="btn big" data-live>View the live module</button></div></div>`;
+
+/* ---------- render with focus restoration ---------- */
+function focusKey(el) {
+  if (!el || el === document.body || !stage.contains(el)) return null;
+  if (el.id) return "#" + CSS.escape(el.id);
+  for (const a of el.attributes) if (a.name.startsWith("data-") && a.name !== "data-listen") return `[${a.name}="${CSS.escape(a.value)}"]`;
+  return null;
+}
+function render(opt = {}) {
+  const prev = opt.keepFocus === false ? null : focusKey(document.activeElement);
+  if (state.cs) {
+    stage.innerHTML = R.cs();
+    $("#steps").innerHTML = "";
+    $("#abar").hidden = true;
+    document.querySelectorAll("[data-live]").forEach(b => b.addEventListener("click", () => { state.cs = false; go(state.i); }));
+    return;
+  }
+  $("#abar").hidden = false;
+  const s = SCREENS[state.i];
+  stage.innerHTML = R[s.id](s);
+  if (R[s.id].after) R[s.id].after();
+  steps();
+  $("#back").disabled = state.i === 0;
+  $("#next").hidden = state.i >= LAST;
+  $("#next").textContent = state.i === 10 ? "Results" : "Next";
+  $("#where").textContent = state.i > LAST ? "Optional page" : `Screen ${state.i} of ${LAST}`;
+  /* Restore focus: an explicit target first, else the element that had focus, else nothing. */
+  let target = opt.focus ? stage.querySelector(opt.focus) : null;
+  if (!target && prev) { const t = stage.querySelector(prev); if (t && !t.disabled) target = t; }
+  if (target) { if (target.tabIndex < 0 && !target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1"); target.focus({ preventScroll: !opt.focus }); }
+}
+render();
+
+</script>
+
+</body></html>
