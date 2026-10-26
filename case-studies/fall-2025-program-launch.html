@@ -7,7 +7,7 @@
 <meta name="description" content="Case study: a four-month redesign and rollout of Supplemental Instruction leader training and operations at UT Austin's Sanger Learning Center.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/portfolio.css">
 </head>
 <body>
@@ -29,7 +29,7 @@
 <main id="main" class="frame">
   <p class="crumb"><a href="../index.html#work">← All work</a></p>
 
-  <section class="sheet cs-hero" id="overview" aria-labelledby="title">
+  <section class="card cs-hero" id="overview" aria-labelledby="title">
     <p class="feature-category">Learning program management</p>
     <h1 id="title">Fall 2025 SI Program Launch</h1>
     <p class="lead">Four months of training redesign and operational rollout for the Supplemental Instruction program at UT Austin's Sanger Learning Center, so that every SI Leader started the semester trained, scheduled, and connected to a faculty partner.</p>
@@ -65,7 +65,8 @@
     </ul>
   </nav>
 
-  <section class="sheet cs-section" id="problem" aria-labelledby="h-problem">
+  <div class="cs-body">
+  <section class="cs-section" id="problem" aria-labelledby="h-problem">
     <h2 id="h-problem">The problem</h2>
     <div class="prose">
       <p>Each fall the Sanger Learning Center launches a new cohort of SI Leaders, peer educators who run weekly study sessions for 2,500+ students in historically difficult courses across 13 undergraduate colleges. By spring 2025, three things needed to be true at once:</p>
@@ -78,7 +79,7 @@
     </div>
   </section>
 
-  <section class="sheet cs-section" id="analysis" aria-labelledby="h-analysis">
+  <section class="cs-section" id="analysis" aria-labelledby="h-analysis">
     <h2 id="h-analysis">Discovery</h2>
     <div class="prose">
       <p>In early May I interviewed current SI Leaders and the supervisor team and synthesized their pain points. Three findings shaped the design:</p>
@@ -91,7 +92,7 @@
     </div>
   </section>
 
-  <section class="sheet cs-section" id="decisions" aria-labelledby="h-decisions">
+  <section class="cs-section" id="decisions" aria-labelledby="h-decisions">
     <h2 id="h-decisions">Design decisions</h2>
     <ol class="decisions">
       <li class="decision">
@@ -133,7 +134,7 @@
     </ol>
   </section>
 
-  <section class="sheet cs-section" id="process" aria-labelledby="h-process">
+  <section class="cs-section" id="process" aria-labelledby="h-process">
     <h2 id="h-process">Rollout</h2>
     <div class="table-wrap" tabindex="0" role="region" aria-label="Table 1, scrollable">
       <table>
@@ -183,7 +184,7 @@
     </div>
   </section>
 
-  <section class="sheet cs-section" id="solution" aria-labelledby="h-solution">
+  <section class="cs-section" id="solution" aria-labelledby="h-solution">
     <h2 id="h-solution">The onboarding module</h2>
     <div class="prose">
       <p>The self-paced module is a single-page web app with 21 screens in six sections: SI foundations, a facilitation toolkit, preparation for the first session, a professor email generator, lesson planning, and a closing summary. Its builders produce working drafts: a five-step lesson plan, a professor email with a live preview, a 60-second class pitch, and a weekly schedule. It also includes 12 branching scenario moments, an 83-strategy library, and knowledge checks throughout.</p>
@@ -201,7 +202,7 @@
     </div>
   </section>
 
-  <section class="sheet cs-section" id="evaluation" aria-labelledby="h-evaluation">
+  <section class="cs-section" id="evaluation" aria-labelledby="h-evaluation">
     <h2 id="h-evaluation">Results</h2>
     <h3 style="margin-top: 0;"><span class="tag tag-done">Documented</span>Implementation outcomes</h3>
     <dl class="stats" style="margin-top: var(--s-4);">
@@ -216,7 +217,7 @@
     </div>
   </section>
 
-  <section class="sheet cs-section" id="results" aria-labelledby="h-results">
+  <section class="cs-section" id="results" aria-labelledby="h-results">
     <h2 id="h-results">Lessons</h2>
     <div class="prose">
       <p><strong>Treat it as one project.</strong> Curriculum and operations were planned together because each depended on the other. Sequencing around the late-arriving registrar data mattered more than any single workstream.</p>
@@ -225,7 +226,7 @@
     </div>
   </section>
 
-  <section class="sheet cs-section" aria-labelledby="h-related">
+  <section class="cs-section cs-related" aria-labelledby="h-related">
     <h2 id="h-related">More work</h2>
     <div class="related">
       <a href="student-educator-forum.html"><span class="shot"><img src="../assets/img/sef.webp" width="1200" height="750" loading="lazy" alt=""></span><h3>Student Educator Forum</h3><p>Event operations</p></a>
@@ -233,11 +234,15 @@
       <a href="reviewing-with-the-copilot.html"><span class="shot"><img src="../assets/img/copilot.webp" width="1200" height="750" loading="lazy" alt=""></span><h3>Reviewing with the Co&#8209;Pilot</h3><p>Scenario-based technical training</p></a>
     </div>
   </section>
+  </div>
 </main>
 
 <footer class="site-footer">
-  <span>Tonja Ryan, Austin, Texas</span>
-  <span><a href="../index.html">Back to the portfolio</a></span>
+  <div class="colophon">
+    <span>Tonja Ryan · Austin, Texas</span>
+    <span><a href="../index.html">Back to the portfolio</a></span>
+    <span><span class="accent">✦</span> Case study</span>
+  </div>
 </footer>
 </body>
 </html>

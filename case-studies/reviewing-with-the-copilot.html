@@ -7,7 +7,7 @@
 <meta name="description" content="Case study: a scenario-based simulation that trains content-rating analysts to verify AI-suggested age ratings before publication.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/portfolio.css">
 </head>
 <body>
@@ -29,7 +29,7 @@
 <main id="main" class="frame">
   <p class="crumb"><a href="../index.html#work">← All work</a></p>
 
-  <section class="sheet cs-hero" id="overview" aria-labelledby="title">
+  <section class="card cs-hero" id="overview" aria-labelledby="title">
     <p class="feature-category">Scenario-based technical training</p>
     <h1 id="title">Reviewing with the Co&#8209;Pilot</h1>
     <p class="lead">A narrated simulation that teaches content-rating analysts to check an AI co-pilot's suggested age rating and content descriptors before a title is published, then choose and justify a review action.</p>
@@ -70,7 +70,8 @@
     </ul>
   </nav>
 
-  <section class="sheet cs-section" id="problem" aria-labelledby="h-problem">
+  <div class="cs-body">
+  <section class="cs-section" id="problem" aria-labelledby="h-problem">
     <h2 id="h-problem">The problem</h2>
     <div class="prose">
       <p>Rating tools can now draft the age rating, the content descriptors, and the supporting timestamps before an analyst presses play. That changes the work. The analyst reviews a finished-looking answer, and checking is a different skill from authoring. Without practice, reviewers drift toward accepting confident output, a pattern known as automation bias, and quality can fall even as throughput rises.</p>
@@ -87,7 +88,7 @@
     </div>
   </section>
 
-  <section class="sheet cs-section" id="analysis" aria-labelledby="h-analysis">
+  <section class="cs-section" id="analysis" aria-labelledby="h-analysis">
     <h2 id="h-analysis">Analysis</h2>
     <div class="prose">
       <p>I started from the task the analyst performs once a co-pilot is in the loop and broke it into the checks a reviewer has to make before acting on a suggestion. That produced four verification checks, which became the spine of the module and of the job aid:</p>
@@ -102,7 +103,7 @@
     </div>
   </section>
 
-  <section class="sheet cs-section" id="objectives" aria-labelledby="h-objectives">
+  <section class="cs-section" id="objectives" aria-labelledby="h-objectives">
     <h2 id="h-objectives">Objectives and alignment</h2>
     <div class="prose">
       <p>The terminal objective has two parts. <strong>Decision accuracy:</strong> given six synthetic titles with AI-suggested ratings, the analyst chooses the correct action, final rating, and publication status in at least five of six cases. <strong>Rationale quality:</strong> for each decision, the analyst selects the supporting evidence and policy, and for overrides and escalations writes a claim, evidence, and policy rationale. A critical safety rule sits on top: any decision that lets a title publish when a hold is required fails the assessment.</p>
@@ -123,7 +124,7 @@
     </div>
   </section>
 
-  <section class="sheet cs-section" id="decisions" aria-labelledby="h-decisions">
+  <section class="cs-section" id="decisions" aria-labelledby="h-decisions">
     <h2 id="h-decisions">Design decisions</h2>
     <ol class="decisions">
       <li class="decision">
@@ -168,7 +169,7 @@
     </ol>
   </section>
 
-  <section class="sheet cs-section" id="process" aria-labelledby="h-process">
+  <section class="cs-section" id="process" aria-labelledby="h-process">
     <h2 id="h-process">Design and development</h2>
     <div class="prose">
       <p>The module's documentation lays out ten steps from needs analysis through revision and marks each one as done, partly done, or planned. Done for this sample: the gap analysis, objectives, screen-by-screen outline and narration script, design system, build, and the designer's own review rounds. Partly done: program sequencing (five modules outlined, one built). Planned: stakeholder review, pilot, and measurement.</p>
@@ -199,7 +200,7 @@
     </ul>
   </section>
 
-  <section class="sheet cs-section" id="solution" aria-labelledby="h-solution">
+  <section class="cs-section" id="solution" aria-labelledby="h-solution">
     <h2 id="h-solution">The finished module</h2>
     <div class="prose">
       <p>Twelve screens plus optional targeted practice, estimated at two to three hours (not yet timed with users). Each screen opens with its narration as text and an optional audio track. Learners meet the co-pilot panel, work through each check with immediate feedback, then clear a queue of six titles, choosing an action, a final rating, the evidence, the policy, a publication status, and a confidence level for each.</p>
@@ -216,7 +217,7 @@
     </div>
   </section>
 
-  <section class="sheet cs-section" id="evaluation" aria-labelledby="h-evaluation">
+  <section class="cs-section" id="evaluation" aria-labelledby="h-evaluation">
     <h2 id="h-evaluation">Evaluation</h2>
     <h3 style="margin-top: 0;"><span class="tag tag-done">Completed</span>Review and testing of the module itself</h3>
     <div class="prose">
@@ -245,7 +246,7 @@
     </div>
   </section>
 
-  <section class="sheet cs-section" id="results" aria-labelledby="h-results">
+  <section class="cs-section" id="results" aria-labelledby="h-results">
     <h2 id="h-results">Status and lessons</h2>
     <div class="prose">
       <p><strong>Status.</strong> Complete as a demonstration module. Modules 1, 2, 4, and 5 exist only as outlines in the design document. Answer keys were approved by me; in a real program, Policy would sign off.</p>
@@ -255,7 +256,7 @@
     </div>
   </section>
 
-  <section class="sheet cs-section" aria-labelledby="h-related">
+  <section class="cs-section cs-related" aria-labelledby="h-related">
     <h2 id="h-related">More work</h2>
     <div class="related">
       <a href="trust-services-criteria.html"><span class="shot"><img src="../assets/img/tsc.webp" width="1200" height="750" loading="lazy" alt=""></span><h3 id="r1">Trust Services Criteria for GRC Staff</h3><p>Compliance learning</p></a>
@@ -263,11 +264,15 @@
       <a href="geol-1403.html"><span class="shot"><img src="../assets/img/geol-1403.webp" width="1200" height="750" loading="lazy" alt=""></span><h3>GEOL 1403: Activate Your Core</h3><p>Curriculum design</p></a>
     </div>
   </section>
+  </div>
 </main>
 
 <footer class="site-footer">
-  <span>Tonja Ryan, Austin, Texas</span>
-  <span><a href="../index.html">Back to the portfolio</a></span>
+  <div class="colophon">
+    <span>Tonja Ryan · Austin, Texas</span>
+    <span><a href="../index.html">Back to the portfolio</a></span>
+    <span><span class="accent">✦</span> Case study</span>
+  </div>
 </footer>
 </body>
 </html>

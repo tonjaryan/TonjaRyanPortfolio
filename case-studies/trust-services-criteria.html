@@ -7,7 +7,7 @@
 <meta name="description" content="Case study: a ten-module self-paced course teaching GRC staff to read and apply the AICPA Trust Services Criteria behind SOC 2.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/portfolio.css">
 </head>
 <body>
@@ -29,7 +29,7 @@
 <main id="main" class="frame">
   <p class="crumb"><a href="../index.html#work">← All work</a></p>
 
-  <section class="sheet cs-hero" id="overview" aria-labelledby="title">
+  <section class="card cs-hero" id="overview" aria-labelledby="title">
     <p class="feature-category">Compliance learning</p>
     <h1 id="title">Trust Services Criteria for GRC Staff</h1>
     <p class="lead">A ten-module self-paced course that prepares governance, risk, and compliance staff to read, interpret, and apply the AICPA Trust Services Criteria, the standard every SOC 2 report is built on.</p>
@@ -69,7 +69,8 @@
     </ul>
   </nav>
 
-  <section class="sheet cs-section" id="problem" aria-labelledby="h-problem">
+  <div class="cs-body">
+  <section class="cs-section" id="problem" aria-labelledby="h-problem">
     <h2 id="h-problem">The problem</h2>
     <div class="prose">
       <p>GRC staff are expected to read the criteria accurately, apply them to their organization's system, and produce scoping decisions, control narratives, evidence, and a system description that a service auditor can test. The standard does not make that easy. Its conventions, such as what italic text means or what the [C] and [P] markers on privacy points of focus signal, are explained briefly or in footnotes.</p>
@@ -88,7 +89,7 @@
     <p class="small note"><span class="tag tag-assumed">Assumed</span>These describe typical difficulty areas reasoned from the standard and a content review of an earlier draft. They are not measured findings.</p>
   </section>
 
-  <section class="sheet cs-section" id="analysis" aria-labelledby="h-analysis">
+  <section class="cs-section" id="analysis" aria-labelledby="h-analysis">
     <h2 id="h-analysis">Analysis</h2>
     <div class="prose">
       <p>The needs analysis is the strongest process artifact in this project. It runs twelve sections and draws on four stated sources: a close reading of TSP 100, the tasks GRC staff perform across the SOC 2 cycle, a content gap analysis of an earlier draft of Modules 1 to 5, and explicit assumptions, each paired with a validation method.</p>
@@ -111,7 +112,7 @@
     </figure>
   </section>
 
-  <section class="sheet cs-section" id="objectives" aria-labelledby="h-objectives">
+  <section class="cs-section" id="objectives" aria-labelledby="h-objectives">
     <h2 id="h-objectives">Objectives and alignment</h2>
     <div class="prose">
       <p>Seven terminal objectives come straight out of the gap analysis and move from understanding the standard to evaluating an organization's readiness. The course home page shows an alignment matrix marking where each objective is introduced, developed, and assessed across the ten modules, and a sequencing map listing what each module builds on.</p>
@@ -132,7 +133,7 @@
     </div>
   </section>
 
-  <section class="sheet cs-section" id="decisions" aria-labelledby="h-decisions">
+  <section class="cs-section" id="decisions" aria-labelledby="h-decisions">
     <h2 id="h-decisions">Design decisions</h2>
     <ol class="decisions">
       <li class="decision">
@@ -175,7 +176,7 @@
     </ol>
   </section>
 
-  <section class="sheet cs-section" id="process" aria-labelledby="h-process">
+  <section class="cs-section" id="process" aria-labelledby="h-process">
     <h2 id="h-process">Design and development</h2>
     <div class="prose">
       <p>Analysis produced the gap table, profiles, task ratings, and objectives. Design set the module structure, the lesson pattern (orientation and key terms, explanation, worked example, activity, checkpoint), and fourteen engagement types, each matched in the learning design document to the cognitive task it supports. A Material Design 3 system with color roles generated from my palette came next, then an iterative build of all ten modules.</p>
@@ -197,7 +198,7 @@
     </ul>
   </section>
 
-  <section class="sheet cs-section" id="solution" aria-labelledby="h-solution">
+  <section class="cs-section" id="solution" aria-labelledby="h-solution">
     <h2 id="h-solution">The finished course</h2>
     <div class="prose">
       <p>Ten modules, from foundations to a synthesis module with role-based playbooks for situations such as a first SOC 2 preparation, an annual cycle, vendor review, and a learner's first 30 days in a GRC role. Learners move lesson by lesson; each lesson ends in a checkpoint whose format varies (complete the statement, highlight, classify, sequence, multiple choice). Feedback is explanatory and the course records no scores. It runs as a single file with deep-linkable sections, so it also works offline and as a bookmarkable reference.</p>
@@ -214,7 +215,7 @@
     </div>
   </section>
 
-  <section class="sheet cs-section" id="evaluation" aria-labelledby="h-evaluation">
+  <section class="cs-section" id="evaluation" aria-labelledby="h-evaluation">
     <h2 id="h-evaluation">Evaluation</h2>
     <h3 style="margin-top: 0;"><span class="tag tag-done">Completed</span>Accuracy and quality review</h3>
     <div class="prose">
@@ -230,7 +231,7 @@
     </div>
   </section>
 
-  <section class="sheet cs-section" id="results" aria-labelledby="h-results">
+  <section class="cs-section" id="results" aria-labelledby="h-results">
     <h2 id="h-results">Status and lessons</h2>
     <div class="prose">
       <p><strong>Status.</strong> Development complete. No pilot or organizational deployment has taken place, and the assumptions in Section 11 of the needs analysis remain to be validated with practitioners.</p>
@@ -238,7 +239,7 @@
     </div>
   </section>
 
-  <section class="sheet cs-section" aria-labelledby="h-related">
+  <section class="cs-section cs-related" aria-labelledby="h-related">
     <h2 id="h-related">More work</h2>
     <div class="related">
       <a href="reviewing-with-the-copilot.html"><span class="shot"><img src="../assets/img/copilot.webp" width="1200" height="750" loading="lazy" alt=""></span><h3>Reviewing with the Co&#8209;Pilot</h3><p>Scenario-based technical training</p></a>
@@ -246,11 +247,15 @@
       <a href="fall-2025-program-launch.html"><span class="shot"><img src="../assets/img/fall-2025.webp" width="1200" height="750" loading="lazy" alt=""></span><h3>Fall 2025 SI Program Launch</h3><p>Learning program management</p></a>
     </div>
   </section>
+  </div>
 </main>
 
 <footer class="site-footer">
-  <span>Tonja Ryan, Austin, Texas</span>
-  <span><a href="../index.html">Back to the portfolio</a></span>
+  <div class="colophon">
+    <span>Tonja Ryan · Austin, Texas</span>
+    <span><a href="../index.html">Back to the portfolio</a></span>
+    <span><span class="accent">✦</span> Case study</span>
+  </div>
 </footer>
 </body>
 </html>

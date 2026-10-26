@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tonja Ryan · Learning Experience Design Portfolio</title>
+<title>Tonja Ryan · Portfolio</title>
 <meta name="description" content="Portfolio of Tonja Ryan: learning experience design, training systems, and program management. Case studies covering analysis, design decisions, implementation, and evaluation.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/portfolio.css">
 </head>
 <body>
@@ -31,166 +31,172 @@
 
 <main id="main" class="frame">
 
-  <!-- ===================== Introduction ===================== -->
-  <section class="sheet" aria-labelledby="intro-title">
-    <div class="hero">
+  <!-- ===================== Intro (restored composition) ===================== -->
+  <section class="card intro" id="about" aria-labelledby="intro-title" style="margin-top: 36px;">
+    <div class="intro-head">
+      <p class="intro-tag">Portfolio</p>
+      <p class="intro-sub">Selected work · Learning design &amp; operations</p>
+      <h1 id="intro-title" class="intro-title">Tonja Ryan</h1>
+    </div>
+    <ul class="practices" aria-label="Practice areas">
+      <li>Learning Experience Design</li>
+      <li>Training Systems</li>
+      <li>Program Management</li>
+    </ul>
+    <div class="about-grid">
       <div>
-        <h1 id="intro-title" class="hero-name">Tonja Ryan</h1>
-        <p class="hero-role">Learning experience design, training systems, and program management</p>
-        <p class="lead">I design training and the systems that support it, from analyzing performance needs and developing practical learning experiences to coordinating implementation and evaluating results. My work spans technical training, higher education, and large-scale program operations.</p>
+        <h2 class="about-title">About Me</h2>
+        <div class="about-rule" aria-hidden="true"></div>
+        <p class="about-lead">I design training and the systems that support it, from analyzing performance needs and developing practical learning experiences to coordinating implementation and evaluating results. My work spans technical training, higher education, and large-scale program operations.</p>
+        <p class="about-body">As <strong>Supplemental Instruction Coordinator</strong> at the Sanger Learning Center at UT Austin, I oversee the Biology and Physical Sciences cohorts and manage the training and scheduling of 50 to 70+ peer educators across 13 undergraduate colleges, serving more than 2,500 students a semester. I also design course materials as a contract instructional designer with <strong>iDesign</strong>.</p>
+        <p class="about-body">Before UT, I was a lead science teacher in Austin ISD and a camp director at Lavner Education. I hold a master's degree in Educational Psychology.</p>
         <div class="actions">
           <a class="btn btn-primary" href="#work">See selected work</a>
           <a class="btn btn-secondary" href="https://www.linkedin.com/in/tonja-ryan" target="_blank" rel="noopener">LinkedIn<span class="sr-only"> (opens in a new tab)</span></a>
-          <a class="btn btn-secondary" href="mailto:tonjaryan@gmail.com">Email me</a>
+          <a class="btn btn-secondary" href="mailto:tonjaryan@gmail.com">Email</a>
         </div>
       </div>
-      <img class="hero-photo" src="assets/img/headshot.webp" width="480" height="600" alt="Portrait of Tonja Ryan">
+      <img class="about-photo" src="assets/img/headshot.webp" width="480" height="600" alt="Portrait of Tonja Ryan">
     </div>
-    <dl class="hero-facts">
-      <div>
-        <dt>Current role</dt>
-        <dd>Supplemental Instruction Coordinator, Sanger Learning Center, UT Austin</dd>
-      </div>
-      <div>
-        <dt>Contract work</dt>
-        <dd>Instructional designer with iDesign</dd>
-      </div>
-      <div>
-        <dt>Background</dt>
-        <dd>Master's in Educational Psychology; former lead science teacher, Austin ISD</dd>
-      </div>
-    </dl>
   </section>
 
   <!-- ===================== Selected work ===================== -->
-  <div class="canvas-heading" id="work">
-    <h2>Selected work</h2>
-    <p>Four projects, each with a case study covering the problem, analysis, design decisions, and how the work was or would be evaluated. Each one is labeled as professional work or an independent work sample.</p>
+  <section class="banner" id="work" aria-labelledby="work-title">
+    <h2 id="work-title">Selected Work<span class="pd">.</span></h2>
+    <div>
+      <p>Four projects, each with a case study that covers the problem, the analysis, the design decisions, and how the work was or would be evaluated. Every project is labeled as professional work or an independent work sample.</p>
+      <ul class="chips" aria-label="Capabilities shown">
+        <li>Needs analysis</li>
+        <li>Objectives &amp; alignment</li>
+        <li>Scenario-based practice</li>
+        <li>Assessment design</li>
+        <li>Program operations</li>
+        <li>AI-assisted development</li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="stack">
+    <article class="card feature" aria-labelledby="f-copilot">
+      <a class="shot" href="case-studies/reviewing-with-the-copilot.html" tabindex="-1" aria-hidden="true">
+        <img src="assets/img/copilot.webp" width="1200" height="750" loading="lazy" alt="">
+      </a>
+      <div>
+        <p class="kicker"><span class="cat">Scenario-based training</span><span class="sep">·</span><span>Independent work sample</span></p>
+        <h3 id="f-copilot">Reviewing with the Co&#8209;Pilot</h3>
+        <p class="feature-desc">A narrated simulation in which content-rating analysts check an AI co-pilot's suggested age ratings against the TV Parental Guidelines and MPA rules, then accept, modify, override, or escalate each one and record the evidence behind the call.</p>
+        <dl class="meta">
+          <dt>For</dt><dd>Content-rating analysts, new and tenured</dd>
+          <dt>Format</dt><dd>12-screen narrated module, six-case scored queue, job aid</dd>
+          <dt>Role</dt><dd>Analysis, objectives, scripting, assessment design, build</dd>
+          <dt>Status</dt><dd>Complete demonstration module; not piloted</dd>
+        </dl>
+        <div class="actions">
+          <a class="btn btn-primary" href="case-studies/reviewing-with-the-copilot.html">Read the case study</a>
+          <a class="btn btn-secondary" href="reviewing-with-the-copilot/index.html#module" target="_blank" rel="noopener">Launch the simulation<span class="sr-only"> (opens in a new tab)</span></a>
+        </div>
+      </div>
+    </article>
+
+    <article class="card feature" aria-labelledby="f-tsc">
+      <a class="shot" href="case-studies/trust-services-criteria.html" tabindex="-1" aria-hidden="true">
+        <img src="assets/img/tsc.webp" width="1200" height="750" loading="lazy" alt="">
+      </a>
+      <div>
+        <p class="kicker"><span class="cat">Compliance learning</span><span class="sep">·</span><span>Independent work sample</span></p>
+        <h3 id="f-tsc">Trust Services Criteria for GRC Staff</h3>
+        <p class="feature-desc">A ten-module self-paced course that teaches GRC staff to read and apply the AICPA Trust Services Criteria behind SOC 2 reports, written from the 75-page standard and cited to it by paragraph.</p>
+        <dl class="meta">
+          <dt>For</dt><dd>GRC staff and control owners at SaaS service organizations</dd>
+          <dt>Format</dt><dd>Self-paced web course, about 10 hours, optional capstone</dd>
+          <dt>Role</dt><dd>Needs analysis, course architecture, writing, UI, build</dd>
+          <dt>Status</dt><dd>Complete; not deployed</dd>
+        </dl>
+        <div class="actions">
+          <a class="btn btn-primary" href="case-studies/trust-services-criteria.html">Read the case study</a>
+          <a class="btn btn-secondary" href="tsc-grc-course.html#home" target="_blank" rel="noopener">Open the course<span class="sr-only"> (opens in a new tab)</span></a>
+        </div>
+      </div>
+    </article>
+
+    <article class="card feature" aria-labelledby="f-launch">
+      <a class="shot" href="case-studies/fall-2025-program-launch.html" tabindex="-1" aria-hidden="true">
+        <img src="assets/img/fall-2025.webp" width="1200" height="750" loading="lazy" alt="">
+      </a>
+      <div>
+        <p class="kicker"><span class="cat">Program management</span><span class="sep">·</span><span>Professional project</span></p>
+        <h3 id="f-launch">Fall 2025 SI Program Launch</h3>
+        <p class="feature-desc">A four-month rollout for UT Austin's Supplemental Instruction program: a redesigned three-track training curriculum, a self-paced onboarding module, and the room, Canvas, and faculty logistics behind 70+ SI Leaders.</p>
+        <dl class="meta">
+          <dt>For</dt><dd>70+ peer educators across 13 undergraduate colleges</dd>
+          <dt>Format</dt><dd>Three training tracks, onboarding module, five operational workstreams</dd>
+          <dt>Role</dt><dd>Program lead, curriculum and operations</dd>
+          <dt>Status</dt><dd>Implemented, August 2025</dd>
+        </dl>
+        <div class="actions">
+          <a class="btn btn-primary" href="case-studies/fall-2025-program-launch.html">Read the case study</a>
+          <a class="btn btn-secondary" href="si_onboarding_module.html" target="_blank" rel="noopener">Open the onboarding module<span class="sr-only"> (opens in a new tab)</span></a>
+        </div>
+      </div>
+    </article>
+
+    <article class="card feature" aria-labelledby="f-geol">
+      <a class="shot" href="case-studies/geol-1403.html" tabindex="-1" aria-hidden="true">
+        <img src="assets/img/geol-1403.webp" width="1200" height="750" loading="lazy" alt="">
+      </a>
+      <div>
+        <p class="kicker"><span class="cat">Curriculum design</span><span class="sep">·</span><span>Professional project</span></p>
+        <h3 id="f-geol">GEOL 1403: Activate Your Core</h3>
+        <p class="feature-desc">A workbook and interactive notebook for Physical Geology at Dallas College, written for future EC&#8209;6 teachers. Each module ties readings and activities to Texas certification competencies and wraps them in plan, monitor, and evaluate prompts.</p>
+        <dl class="meta">
+          <dt>For</dt><dd>Students preparing for the Texas Core Subjects EC&#8209;6 (391) exam</dd>
+          <dt>Format</dt><dd>Printable workbook and interactive notebook, introduction and Modules 1–2</dd>
+          <dt>Role</dt><dd>Instructional design and writing, iDesign contract</dd>
+          <dt>Status</dt><dd>Workbook shown as a pre-final draft</dd>
+        </dl>
+        <div class="actions">
+          <a class="btn btn-primary" href="case-studies/geol-1403.html">Read the case study</a>
+          <a class="btn btn-secondary" href="geol1403-module.html" target="_blank" rel="noopener">Open the notebook<span class="sr-only"> (opens in a new tab)</span></a>
+        </div>
+      </div>
+    </article>
   </div>
-
-  <article class="sheet feature" aria-labelledby="f-copilot">
-    <a class="shot" href="case-studies/reviewing-with-the-copilot.html" tabindex="-1" aria-hidden="true">
-      <img src="assets/img/copilot.webp" width="1200" height="750" loading="lazy" alt="">
-    </a>
-    <div>
-      <p class="feature-category">Scenario-based technical training</p>
-      <h3 id="f-copilot">Reviewing with the Co&#8209;Pilot</h3>
-      <p class="feature-desc">A narrated simulation in which content-rating analysts check an AI co-pilot's suggested age ratings against the TV Parental Guidelines and MPA rules, then accept, modify, override, or escalate each suggestion and record the evidence behind the call.</p>
-      <dl class="meta">
-        <dt>Audience</dt><dd>Content-rating analysts, new and tenured</dd>
-        <dt>Format</dt><dd>12-screen narrated HTML module with a six-case scored review queue and a printable job aid</dd>
-        <dt>Role</dt><dd>Analysis, objectives, scripting, assessment design, build</dd>
-        <dt>Status</dt><dd><span class="status is-sample">Independent work sample</span> Not piloted</dd>
-      </dl>
-      <div class="actions">
-        <a class="btn btn-primary" href="case-studies/reviewing-with-the-copilot.html">Read the case study</a>
-        <a class="btn btn-secondary" href="reviewing-with-the-copilot/index.html#module" target="_blank" rel="noopener">Launch the simulation<span class="sr-only"> (opens in a new tab)</span></a>
-      </div>
-    </div>
-  </article>
-
-  <article class="sheet feature" aria-labelledby="f-tsc">
-    <a class="shot" href="case-studies/trust-services-criteria.html" tabindex="-1" aria-hidden="true">
-      <img src="assets/img/tsc.webp" width="1200" height="750" loading="lazy" alt="">
-    </a>
-    <div>
-      <p class="feature-category">Compliance learning</p>
-      <h3 id="f-tsc">Trust Services Criteria for GRC Staff</h3>
-      <p class="feature-desc">A ten-module self-paced course that teaches governance, risk, and compliance staff to read and apply the AICPA Trust Services Criteria behind SOC 2 reports. Written from the 75-page standard and cited to it by paragraph, with a full needs analysis and objective alignment.</p>
-      <dl class="meta">
-        <dt>Audience</dt><dd>GRC staff and control owners at SaaS service organizations</dd>
-        <dt>Format</dt><dd>Self-paced web course, about 10 hours, with knowledge checks and an optional capstone</dd>
-        <dt>Role</dt><dd>Needs analysis, course architecture, writing, UI design, build</dd>
-        <dt>Status</dt><dd><span class="status is-sample">Independent work sample</span> Not deployed</dd>
-      </dl>
-      <div class="actions">
-        <a class="btn btn-primary" href="case-studies/trust-services-criteria.html">Read the case study</a>
-        <a class="btn btn-secondary" href="tsc-grc-course.html#home" target="_blank" rel="noopener">Open the course<span class="sr-only"> (opens in a new tab)</span></a>
-      </div>
-    </div>
-  </article>
-
-  <article class="sheet feature" aria-labelledby="f-launch">
-    <a class="shot" href="case-studies/fall-2025-program-launch.html" tabindex="-1" aria-hidden="true">
-      <img src="assets/img/fall-2025.webp" width="1200" height="750" loading="lazy" alt="">
-    </a>
-    <div>
-      <p class="feature-category">Learning program management</p>
-      <h3 id="f-launch">Fall 2025 SI Program Launch</h3>
-      <p class="feature-desc">A four-month rollout for UT Austin's Supplemental Instruction program: a redesigned three-track training curriculum, a self-paced onboarding module, and the room, Canvas, and faculty logistics that had 70+ SI Leaders ready for the first week of classes.</p>
-      <dl class="meta">
-        <dt>Audience</dt><dd>70+ peer educators across 13 undergraduate colleges</dd>
-        <dt>Format</dt><dd>Three training tracks, a virtual onboarding module, five operational workstreams</dd>
-        <dt>Role</dt><dd>Program lead, curriculum and operations</dd>
-        <dt>Status</dt><dd><span class="status">Professional project</span> Implemented, August 2025</dd>
-      </dl>
-      <div class="actions">
-        <a class="btn btn-primary" href="case-studies/fall-2025-program-launch.html">Read the case study</a>
-        <a class="btn btn-secondary" href="si_onboarding_module.html" target="_blank" rel="noopener">Open the onboarding module<span class="sr-only"> (opens in a new tab)</span></a>
-      </div>
-    </div>
-  </article>
-
-  <article class="sheet feature" aria-labelledby="f-geol">
-    <a class="shot" href="case-studies/geol-1403.html" tabindex="-1" aria-hidden="true">
-      <img src="assets/img/geol-1403.webp" width="1200" height="750" loading="lazy" alt="">
-    </a>
-    <div>
-      <p class="feature-category">Curriculum design</p>
-      <h3 id="f-geol">GEOL 1403: Activate Your Core</h3>
-      <p class="feature-desc">A course workbook and interactive notebook for Physical Geology at Dallas College, written for future EC&#8209;6 teachers. Each module ties readings and activities to Texas EC-6 certification competencies and wraps them in plan, monitor, and evaluate prompts.</p>
-      <dl class="meta">
-        <dt>Audience</dt><dd>Dallas College students preparing for the Texas Core Subjects EC-6 (391) exam</dd>
-        <dt>Format</dt><dd>Printable workbook and interactive notebook; this draft covers the introduction and Modules 1 and 2</dd>
-        <dt>Role</dt><dd>Instructional design and writing, iDesign contract</dd>
-        <dt>Status</dt><dd><span class="status">Professional project</span> Workbook shown as a pre-final draft</dd>
-      </dl>
-      <div class="actions">
-        <a class="btn btn-primary" href="case-studies/geol-1403.html">Read the case study</a>
-        <a class="btn btn-secondary" href="geol1403-module.html" target="_blank" rel="noopener">Open the notebook<span class="sr-only"> (opens in a new tab)</span></a>
-      </div>
-    </div>
-  </article>
 
   <!-- ===================== Additional work ===================== -->
-  <div class="canvas-heading" id="more-work">
-    <h2>Additional work</h2>
-    <p>Supporting projects, grouped by the kind of work they show. Some are complete training tools in use; others are prototypes or drafts, and each is marked.</p>
-  </div>
+  <section class="banner" id="more-work" aria-labelledby="more-title">
+    <h2 id="more-title">Additional Work<span class="pd">.</span></h2>
+    <p>Supporting projects, grouped by the kind of work they show. Some are training tools in active use; others are prototypes or drafts, and each one is marked.</p>
+  </section>
 
-  <section class="sheet" aria-label="Additional work">
-
-    <div class="work-group">
-      <div class="work-group-head">
-        <h3>Instructional design and learning experiences</h3>
-        <p>Interactive modules and course materials, including one in active revision.</p>
-      </div>
+  <div class="stack">
+    <div class="tile-group">
+      <h3 class="tile-group-label">Instructional design <span>Modules and course materials</span></h3>
       <ul class="tiles">
-        <li class="tile">
+        <li class="card tile">
           <a class="shot" href="case-studies/sharing-data-protecting-people.html" tabindex="-1" aria-hidden="true"><img src="assets/img/sharing-data.webp" width="1200" height="750" loading="lazy" alt=""></a>
-          <span><span class="status is-progress">In revision</span></span>
+          <p class="kicker"><span class="cat">Technical training</span><span class="sep">·</span><span class="status is-progress">In revision</span></p>
           <h4>Sharing Data, Protecting People</h4>
-          <p>A self-paced module on re-identification risk for staff who prepare or approve data releases, with documented cases, a live k-anonymity model, and a scored release-review exercise. Module 01 of a planned four. Independent work sample.</p>
+          <p>A self-paced module on re-identification risk for staff who approve data releases, with documented cases, a live k-anonymity model, and a scored release review. Independent work sample.</p>
           <div class="tile-links">
             <a href="case-studies/sharing-data-protecting-people.html">Case study</a>
             <a href="Data_Training.html">Open the module</a>
           </div>
         </li>
-        <li class="tile">
+        <li class="card tile">
           <a class="shot" href="activate-your-core-workbook.pdf" tabindex="-1" aria-hidden="true"><img src="assets/img/workbook-p1.webp" width="980" height="1268" loading="lazy" alt="" style="object-position: top center;"></a>
-          <span><span class="status is-progress">Pre-final draft</span></span>
+          <p class="kicker"><span class="cat">Course workbook</span><span class="sep">·</span><span class="status is-progress">Pre-final draft</span></p>
           <h4>Activate Your Core Workbook</h4>
-          <p>The 23-page printable workbook behind the GEOL 1403 notebook, written for iDesign and Dallas College. Shared as a development draft; bracketed notes mark where icons go before final production.</p>
+          <p>The printable workbook behind the GEOL 1403 notebook, written for iDesign and Dallas College. Bracketed notes mark where artwork goes before final production.</p>
           <div class="tile-links">
             <a href="activate-your-core-workbook.pdf">Open the PDF</a>
-            <a href="case-studies/geol-1403.html#solution">How it fits the project</a>
+            <a href="case-studies/geol-1403.html#solution">How it fits</a>
           </div>
         </li>
-        <li class="tile">
+        <li class="card tile">
           <a class="shot" href="Pixel-solar-system2.html" tabindex="-1" aria-hidden="true"><img src="assets/img/pixel.webp" width="1200" height="750" loading="lazy" alt=""></a>
-          <span><span class="status is-sample">Interactive prototype</span></span>
+          <p class="kicker"><span class="cat">Prototype</span><span class="sep">·</span><span class="status is-sample">Concept demo</span></p>
           <h4>Pixel Solar System</h4>
-          <p>An explorable solar system with adjustable orbit speed, distances, travel times, and links to NASA pages, built with Claude as a worked example of AI-assisted tool building for educators. Included to show interaction development.</p>
+          <p>An explorable solar system with adjustable orbit speed, distances, travel times, and NASA links, built with Claude as a worked example of AI-assisted tool building for educators.</p>
           <div class="tile-links">
             <a href="Pixel-solar-system2.html">Open the prototype</a>
           </div>
@@ -198,27 +204,24 @@
       </ul>
     </div>
 
-    <div class="work-group">
-      <div class="work-group-head">
-        <h3>Training and performance support</h3>
-        <p>Tools built for and used by the UT Austin Supplemental Instruction program.</p>
-      </div>
+    <div class="tile-group">
+      <h3 class="tile-group-label">Training &amp; performance support <span>Tools used by the UT Austin SI program</span></h3>
       <ul class="tiles">
-        <li class="tile">
+        <li class="card tile">
           <a class="shot" href="si_onboarding_module.html" tabindex="-1" aria-hidden="true"><img src="assets/img/si-onboarding.webp" width="1200" height="750" loading="lazy" alt=""></a>
-          <span><span class="status">Professional project</span></span>
+          <p class="kicker"><span class="cat">Onboarding</span><span class="sep">·</span><span class="status">Professional</span></p>
           <h4>SI Leader Onboarding</h4>
-          <p>Self-paced onboarding for new SI Leaders: program foundations, facilitation scenarios, an 83-strategy library, and builders that produce a draft lesson plan, a professor email, and a class pitch before in-person training.</p>
+          <p>Self-paced onboarding for new SI Leaders, with builders that produce a draft lesson plan, a professor email, and a class pitch before in-person training.</p>
           <div class="tile-links">
             <a href="si_onboarding_module.html">Open the module</a>
             <a href="case-studies/fall-2025-program-launch.html#solution">Its role in the launch</a>
           </div>
         </li>
-        <li class="tile">
+        <li class="card tile">
           <a class="shot" href="biology-cohort-hub.html" tabindex="-1" aria-hidden="true"><img src="assets/img/biology-hub.webp" width="1200" height="750" loading="lazy" alt=""></a>
-          <span><span class="status">Professional project</span></span>
+          <p class="kicker"><span class="cat">Cohort tooling</span><span class="sep">·</span><span class="status">Professional</span></p>
           <h4>Biology Cohort Hub</h4>
-          <p>A planning hub for the Spring 2026 Biology SI cohort: a step-by-step lesson-plan builder, a searchable library of 118 strategy cards adapted from UMKC, DePaul, and Sanger Learning Center sources, upcoming deadlines, and after-dark safety resources leaders can share with students.</p>
+          <p>A planning hub for the Spring 2026 Biology cohort: a lesson-plan builder, 118 strategy cards adapted from UMKC, DePaul, and Sanger sources, deadlines, and after-dark safety resources.</p>
           <div class="tile-links">
             <a href="biology-cohort-hub.html">Open the hub</a>
           </div>
@@ -226,54 +229,55 @@
       </ul>
     </div>
 
-    <div class="work-group">
-      <div class="work-group-head">
-        <h3>Program management and implementation</h3>
-        <p>Operations work at the Sanger Learning Center, with measured results where they exist. The Fall 2025 launch, featured above, also belongs in this group.</p>
-      </div>
+    <div class="tile-group">
+      <h3 class="tile-group-label">Program management <span>Operations at the Sanger Learning Center, alongside the Fall 2025 launch</span></h3>
       <ul class="tiles tiles-single">
-        <li class="tile tile-wide">
+        <li class="card tile tile-wide">
           <a class="shot" href="case-studies/student-educator-forum.html" tabindex="-1" aria-hidden="true"><img src="assets/img/sef.webp" width="1200" height="750" loading="lazy" alt=""></a>
-          <span><span class="status">Professional project</span></span>
+          <p class="kicker"><span class="cat">Event operations</span><span class="sep">·</span><span class="status">Professional</span></p>
           <h4>Student Educator Forum</h4>
-          <p>Co-led operations to relaunch a peer-educator conference dormant since 2022: a twelve-week build, a virtual three-track program, and a run of show for the day. 70 attendees against a target of 40; 4.6 of 5 average satisfaction.</p>
+          <p>Co-led operations to relaunch a peer-educator conference dormant since 2022: a twelve-week build, a virtual three-track program, and the day's run of show. 70 attendees against a target of 40, and 4.6 of 5 average satisfaction.</p>
           <div class="tile-links">
             <a href="case-studies/student-educator-forum.html">Case study</a>
           </div>
         </li>
       </ul>
     </div>
-  </section>
-
-  <!-- ===================== Approach ===================== -->
-  <div class="canvas-heading" id="approach">
-    <h2>How I work</h2>
-    <p>The stages I move through on a project, each linked to a place in the case studies where you can see it. Not every project went through every stage; the case studies say which ones did.</p>
   </div>
 
-  <section class="sheet" aria-label="Design process">
+  <!-- ===================== Approach (restored ink divider) ===================== -->
+  <section class="banner ink" id="approach" aria-labelledby="approach-title">
+    <div class="banner-head">
+      <h2 id="approach-title">How I Work<span class="pd">.</span></h2>
+      <p>The stages I move through on a project, each linked to the case study where you can see it. Not every project went through every stage; each case study says which ones did.</p>
+    </div>
     <ol class="process">
       <li>
+        <span class="stage-num">01</span>
         <h3>Analyze</h3>
-        <p>Identify the performance problem, the audience, current conditions, and constraints, and separate what training can fix from what it can't.</p>
+        <p>Identify the performance problem, audience, conditions, and constraints, and separate what training can fix from what it can't.</p>
         <p class="example"><span>Example</span><a href="case-studies/trust-services-criteria.html#analysis">TSC needs and task analysis</a></p>
       </li>
       <li>
+        <span class="stage-num">02</span>
         <h3>Design</h3>
-        <p>Write observable objectives, choose the instructional strategy, and set the assessment criteria before building.</p>
+        <p>Write observable objectives, choose the instructional strategy, and set assessment criteria before building.</p>
         <p class="example"><span>Example</span><a href="case-studies/reviewing-with-the-copilot.html#decisions">Co-Pilot design decisions</a></p>
       </li>
       <li>
+        <span class="stage-num">03</span>
         <h3>Develop</h3>
-        <p>Build and revise the content, interactions, job aids, and reference material, with review rounds documented.</p>
+        <p>Build and revise content, interactions, job aids, and references, with review rounds documented.</p>
         <p class="example"><span>Example</span><a href="case-studies/geol-1403.html#process">From workbook to notebook</a></p>
       </li>
       <li>
+        <span class="stage-num">04</span>
         <h3>Implement</h3>
         <p>Coordinate delivery: schedules, rooms, platforms, stakeholder communication, and onboarding.</p>
-        <p class="example"><span>Example</span><a href="case-studies/fall-2025-program-launch.html#process">Fall 2025 operational rollout</a></p>
+        <p class="example"><span>Example</span><a href="case-studies/fall-2025-program-launch.html#process">Fall 2025 rollout</a></p>
       </li>
       <li>
+        <span class="stage-num">05</span>
         <h3>Evaluate</h3>
         <p>Review evidence, find the gaps, and revise the training or the program around it.</p>
         <p class="example"><span>Example</span><a href="case-studies/student-educator-forum.html#evaluation">Forum survey and debrief</a></p>
@@ -281,49 +285,36 @@
     </ol>
   </section>
 
-  <!-- ===================== About ===================== -->
-  <section class="sheet two-col" id="about" aria-labelledby="about-title">
-    <div>
-      <h2 id="about-title">Background</h2>
-      <div class="prose">
-        <p>I'm the Supplemental Instruction Coordinator at the Sanger Learning Center at UT Austin. I oversee the Biology and Physical Sciences SI cohorts and manage the training, scheduling, and support of 50 to 70+ peer educators who lead weekly sessions across 13 undergraduate colleges, serving more than 2,500 students a semester.</p>
-        <p>I also work as a contract instructional designer with iDesign, writing course materials for partner institutions such as Dallas College.</p>
-        <p>Before UT, I was a lead science teacher in Austin ISD and a camp director at Lavner Education. I hold a master's degree in Educational Psychology.</p>
+  <!-- ===================== Thank you / contact (restored) ===================== -->
+  <section class="card thanks" id="contact" aria-labelledby="thanks-title">
+    <div class="thanks-left">
+      <div>
+        <p class="thanks-tag">Get in touch</p>
+        <p class="thanks-note" style="margin-top: 12px;">I'm open to roles in learning experience design, instructional design, and learning program management. Email is the fastest way to reach me, and I'm glad to share a resume or walk through any project in more depth.</p>
+      </div>
+      <div class="contact-block">
+        <span class="label">Contact</span>
+        <div>Tonja Ryan</div>
+        <div>Austin, Texas</div>
+        <div><a href="tel:+15124669914">(512) 466-9914</a></div>
+        <div><a href="mailto:tonjaryan@gmail.com">tonjaryan@gmail.com</a></div>
+        <div style="margin-top: 10px;"><a href="https://www.linkedin.com/in/tonja-ryan" target="_blank" rel="noopener">linkedin.com/in/tonja-ryan<span class="sr-only"> (opens in a new tab)</span></a></div>
       </div>
     </div>
-    <div>
-      <h2 id="skills-title">What I bring</h2>
-      <ul class="skill-list" aria-labelledby="skills-title">
-        <li>Needs, task, and gap analysis</li>
-        <li>Objectives, alignment, and assessment design</li>
-        <li>Scenario-based practice and feedback design</li>
-        <li>Facilitator training and peer-educator development</li>
-        <li>Program operations: scheduling, Canvas, stakeholder coordination</li>
-        <li>HTML, CSS, JavaScript, and React builds with accessibility testing</li>
-        <li>AI-assisted development with documented human review</li>
-      </ul>
+    <div class="thanks-right">
+      <p class="sub">Selected work</p>
+      <h2 id="thanks-title" class="thanks-title">Thank<br>You<span class="pd">.</span></h2>
     </div>
-  </section>
-
-  <!-- ===================== Contact ===================== -->
-  <section class="sheet two-col" id="contact" aria-labelledby="contact-title">
-    <div>
-      <h2 id="contact-title">Contact</h2>
-      <p class="lead">I'm open to roles in learning experience design, instructional design, and learning program management. Email is the fastest way to reach me, and I'm glad to share a resume or walk through any project in more depth.</p>
-    </div>
-    <ul class="contact-list">
-      <li><span>Email</span><a href="mailto:tonjaryan@gmail.com">tonjaryan@gmail.com</a></li>
-      <li><span>LinkedIn</span><a href="https://www.linkedin.com/in/tonja-ryan" target="_blank" rel="noopener">linkedin.com/in/tonja-ryan<span class="sr-only"> (opens in a new tab)</span></a></li>
-      <li><span>Phone</span><a href="tel:+15124669914">(512) 466-9914</a></li>
-      <li><span>Location</span>Austin, Texas</li>
-    </ul>
   </section>
 
 </main>
 
 <footer class="site-footer">
-  <span>Tonja Ryan, Austin, Texas</span>
-  <span>Projects labeled as independent work samples were not commissioned by any organization.</span>
+  <div class="colophon">
+    <span>Sanger Learning Center · UT Austin · iDesign</span>
+    <span>Independent work samples were not commissioned by any organization</span>
+    <span><span class="accent">✦</span> Portfolio</span>
+  </div>
 </footer>
 </body>
 </html>

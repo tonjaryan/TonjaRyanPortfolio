@@ -7,7 +7,7 @@
 <meta name="description" content="Case study: a self-paced module on re-identification risk and data-release review, with documented cases, a k-anonymity model, and a scored review exercise.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/portfolio.css">
 </head>
 <body>
@@ -29,7 +29,7 @@
 <main id="main" class="frame">
   <p class="crumb"><a href="../index.html#more-work">← All work</a></p>
 
-  <section class="sheet cs-hero" id="overview" aria-labelledby="title">
+  <section class="card cs-hero" id="overview" aria-labelledby="title">
     <p class="feature-category">Technical training</p>
     <h1 id="title">Sharing Data, Protecting People</h1>
     <p class="lead">A self-paced module for staff who prepare, request, or approve data releases. It shows how data stripped of names can still identify people, and gives reviewers a structured way to decide whether a release should go ahead.</p>
@@ -66,7 +66,8 @@
     </ul>
   </nav>
 
-  <section class="sheet cs-section" id="problem" aria-labelledby="h-problem">
+  <div class="cs-body">
+  <section class="cs-section" id="problem" aria-labelledby="h-problem">
     <h2 id="h-problem">The problem</h2>
     <div class="prose">
       <p>Organizations share data with vendors, researchers, and partners every day, and the usual safeguard is to remove names. Published research and documented incidents show that this often isn't enough. A few ordinary attributes, matched against another source, can identify a person; aggregated activity data can expose sensitive locations; and once a copy is shared it usually can't be recalled.</p>
@@ -75,7 +76,7 @@
     </div>
   </section>
 
-  <section class="sheet cs-section" id="objectives" aria-labelledby="h-objectives">
+  <section class="cs-section" id="objectives" aria-labelledby="h-objectives">
     <h2 id="h-objectives">Objectives and alignment</h2>
     <div class="prose">
       <p>The module's goal is that learners can review a proposed release and recommend, with a documented rationale, whether it should proceed with safeguards, be modified, be escalated, or be declined. Six objectives support it, and the overview screen shows each objective's practice and check screens.</p>
@@ -95,7 +96,7 @@
     </div>
   </section>
 
-  <section class="sheet cs-section" id="decisions" aria-labelledby="h-decisions">
+  <section class="cs-section" id="decisions" aria-labelledby="h-decisions">
     <h2 id="h-decisions">Design decisions</h2>
     <ol class="decisions">
       <li class="decision">
@@ -128,7 +129,7 @@
     </ol>
   </section>
 
-  <section class="sheet cs-section" id="solution" aria-labelledby="h-solution">
+  <section class="cs-section" id="solution" aria-labelledby="h-solution">
     <h2 id="h-solution">The module</h2>
     <div class="prose">
       <p>Fifteen screens in five parts: foundations, where releases fail, controls, measuring residual risk, and apply and assess. A contents menu tracks which screens have been opened and which activities are complete. The completion summary states plainly that in a deployed version an LMS would record completion, for example through SCORM or xAPI.</p>
@@ -139,7 +140,7 @@
     </figure>
   </section>
 
-  <section class="sheet cs-section" id="evaluation" aria-labelledby="h-evaluation">
+  <section class="cs-section" id="evaluation" aria-labelledby="h-evaluation">
     <h2 id="h-evaluation">Evaluation</h2>
     <div class="prose">
       <p><span class="tag tag-done">In place</span>The module is built toward WCAG 2.2 AA, with keyboard operation and screen-reader support, and cites its sources on each case. Its technical and functional QA is part of the revision now under way; that documentation is not yet published here.</p>
@@ -147,14 +148,14 @@
     </div>
   </section>
 
-  <section class="sheet cs-section" id="results" aria-labelledby="h-results">
+  <section class="cs-section" id="results" aria-labelledby="h-results">
     <h2 id="h-results">Status</h2>
     <div class="prose">
       <p>In revision. Once the technical and functional review is complete, this module is a candidate for the Selected Work section, either in place of GEOL 1403 or in rotation depending on the role being applied for.</p>
     </div>
   </section>
 
-  <section class="sheet cs-section" aria-labelledby="h-related">
+  <section class="cs-section cs-related" aria-labelledby="h-related">
     <h2 id="h-related">More work</h2>
     <div class="related">
       <a href="trust-services-criteria.html"><span class="shot"><img src="../assets/img/tsc.webp" width="1200" height="750" loading="lazy" alt=""></span><h3>Trust Services Criteria for GRC Staff</h3><p>Compliance learning</p></a>
@@ -162,11 +163,15 @@
       <a href="geol-1403.html"><span class="shot"><img src="../assets/img/geol-1403.webp" width="1200" height="750" loading="lazy" alt=""></span><h3>GEOL 1403: Activate Your Core</h3><p>Curriculum design</p></a>
     </div>
   </section>
+  </div>
 </main>
 
 <footer class="site-footer">
-  <span>Tonja Ryan, Austin, Texas</span>
-  <span><a href="../index.html">Back to the portfolio</a></span>
+  <div class="colophon">
+    <span>Tonja Ryan · Austin, Texas</span>
+    <span><a href="../index.html">Back to the portfolio</a></span>
+    <span><span class="accent">✦</span> Case study</span>
+  </div>
 </footer>
 </body>
 </html>
