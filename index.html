@@ -670,6 +670,58 @@
   }
   .p-status.done { background: #DCE4D3; border-color: #C3D1B8; color: var(--accent-deep); }
   .p-status.wip { background: #EFE0C2; border-color: #E0CC9F; color: #6B4A12; }
+
+  /* ====== CAROUSEL RAILS (Oct 2026): project cards scroll sideways ====== */
+  .rail { grid-column: 1 / -1; position: relative; margin: -6px -10px 0; min-width: 0; }
+  .deck > * { min-width: 0; }
+  .rail-track {
+    display: flex; gap: 28px; overflow-x: auto; overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory; scroll-padding-left: 10px;
+    padding: 14px 10px 30px;              /* room so the lift and green highlight are not clipped */
+    scrollbar-width: thin; scrollbar-color: rgba(242,239,231,.35) transparent;
+  }
+  .rail-track::-webkit-scrollbar { height: 6px; }
+  .rail-track::-webkit-scrollbar-thumb { background: rgba(242,239,231,.3); border-radius: 3px; }
+  .rail-track:focus-visible { outline: 3px solid #1F5FBF; outline-offset: 2px; border-radius: 6px; }
+  .rail-item {
+    position: relative; flex: 0 0 calc((100% - 28px) / 2.25); min-width: 300px;
+    scroll-snap-align: start; display: flex;
+  }
+  .rail-item > .card.project { flex: 1; position: relative; z-index: 1; transition: transform .28s cubic-bezier(.2,.7,.2,1), box-shadow .28s ease; }
+  /* the green highlight that rises from behind the card */
+  .rail-item::before {
+    content: ''; position: absolute; inset: 0; border-radius: 4px; background: var(--accent);
+    transform: translate(0, 0); opacity: 0; z-index: 0;
+    transition: transform .28s cubic-bezier(.2,.7,.2,1), opacity .2s ease;
+  }
+  .rail-item:hover::before, .rail-item:focus-within::before { transform: translate(9px, 9px); opacity: 1; }
+  .rail-item:hover > .card.project, .rail-item:focus-within > .card.project {
+    transform: translate(-3px, -3px);
+    box-shadow: 0 10px 22px rgba(0,0,0,.24), 0 26px 60px rgba(0,0,0,.26);
+  }
+  .rail-btn {
+    position: absolute; top: 50%; z-index: 5; width: 48px; height: 48px; margin-top: -24px;
+    display: grid; place-items: center; border-radius: 50%; cursor: pointer;
+    background: var(--accent); color: var(--card); border: 2px solid var(--card);
+    box-shadow: 0 6px 18px rgba(0,0,0,.35); transition: background .15s, transform .15s;
+  }
+  .rail-btn:hover { background: var(--accent-deep); transform: scale(1.06); }
+  .rail-btn:focus-visible { outline: 3px solid #1F5FBF; outline-offset: 3px; }
+  .rail-btn.next { right: -14px; }
+  .rail-btn.prev { left: -14px; }
+  .rail-btn[hidden] { display: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .rail-item::before, .rail-item > .card.project { transition: none; }
+    .rail-track { scroll-behavior: auto; }
+  }
+  @media (max-width: 720px) {
+    .rail { margin: -6px -16px 0; }
+    .rail-track { gap: 16px; padding: 12px 16px 26px; scroll-padding-left: 16px; }
+    .rail-item { flex-basis: 84%; min-width: 0; }
+    .rail-btn { width: 42px; height: 42px; margin-top: -21px; }
+    .rail-btn.next { right: 4px; } .rail-btn.prev { left: 4px; }
+  }
+
   .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
   a:focus-visible, .p-btn:focus-visible { outline: 3px solid #1F5FBF; outline-offset: 3px; }
   @media (prefers-reduced-motion: reduce) { .p-shot img, .p-btn { transition: none; } }
@@ -797,6 +849,12 @@
       </div>
     </div>
 
+    <div class="rail" data-rail>
+      <button class="rail-btn prev" type="button" aria-label="Scroll instructional design projects left" hidden>
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <div class="rail-track" tabindex="0" role="region" aria-label="Instructional design projects, scrolls sideways">
+    <div class="rail-item">
     <article class="card project">
       <div class="p-kicker">
         <span class="cat-dot"></span>
@@ -820,7 +878,8 @@
         <a class="p-btn" href="reviewing-with-the-copilot/index.html#module" target="_blank" rel="noopener">Launch simulation<span class="sr-only"> (opens in a new tab)</span></a>
       </div>
     </article>
-
+    </div>
+    <div class="rail-item">
     <article class="card project">
       <div class="p-kicker">
         <span class="cat-dot"></span>
@@ -844,7 +903,8 @@
         <a class="p-btn" href="tsc-grc-course.html#home" target="_blank" rel="noopener">Open the course<span class="sr-only"> (opens in a new tab)</span></a>
       </div>
     </article>
-
+    </div>
+    <div class="rail-item">
     <article class="card project">
       <div class="p-kicker">
         <span class="cat-dot"></span>
@@ -868,7 +928,8 @@
         <a class="p-btn" href="Data_Training.html">Open the module</a>
       </div>
     </article>
-
+    </div>
+    <div class="rail-item">
     <article class="card project">
       <div class="p-kicker">
         <span class="cat-dot"></span>
@@ -892,7 +953,8 @@
         <a class="p-btn" href="geol1403-module.html" target="_blank" rel="noopener">Open the notebook<span class="sr-only"> (opens in a new tab)</span></a>
       </div>
     </article>
-
+    </div>
+    <div class="rail-item">
     <article class="card project">
       <div class="p-kicker">
         <span class="cat-dot"></span>
@@ -916,7 +978,8 @@
         <a class="p-btn" href="case-studies/geol-1403.html#solution">How it fits</a>
       </div>
     </article>
-
+    </div>
+    <div class="rail-item">
     <article class="card project">
       <div class="p-kicker">
         <span class="cat-dot"></span>
@@ -940,7 +1003,8 @@
         <a class="p-btn" href="case-studies/fall-2025-program-launch.html#solution">Role in the Fall 2025 launch</a>
       </div>
     </article>
-
+    </div>
+    <div class="rail-item">
     <article class="card project">
       <div class="p-kicker">
         <span class="cat-dot"></span>
@@ -963,6 +1027,12 @@
         <a class="p-btn primary" href="Pixel-solar-system2.html">Open the prototype</a>
       </div>
     </article>
+    </div>
+      </div>
+      <button class="rail-btn next" type="button" aria-label="Scroll instructional design projects right">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>
 
     <!-- ============== 11 PROJECT MANAGEMENT - SECTION DIVIDER ============== -->
     <div class="card section-divider banner" id="program-management">
@@ -986,6 +1056,12 @@
       </div>
     </div>
 
+    <div class="rail" data-rail>
+      <button class="rail-btn prev" type="button" aria-label="Scroll project management projects left" hidden>
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <div class="rail-track" tabindex="0" role="region" aria-label="Project management projects, scrolls sideways">
+    <div class="rail-item">
     <article class="card project">
       <div class="p-kicker">
         <span class="cat-dot"></span>
@@ -1010,7 +1086,8 @@
         <a class="p-btn" href="si_onboarding_module.html" target="_blank" rel="noopener">Open the onboarding module<span class="sr-only"> (opens in a new tab)</span></a>
       </div>
     </article>
-
+    </div>
+    <div class="rail-item">
     <article class="card project">
       <div class="p-kicker">
         <span class="cat-dot"></span>
@@ -1033,6 +1110,12 @@
         <a class="p-btn primary" href="case-studies/student-educator-forum.html">View case study</a>
       </div>
     </article>
+    </div>
+      </div>
+      <button class="rail-btn next" type="button" aria-label="Scroll project management projects right">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>
 
     <!-- ============== 14 THANK YOU ============== -->
     <div class="card thanks" id="contact">
@@ -1062,5 +1145,30 @@
 
 </main>
 
+
+<script>
+/* Carousel rails: arrow buttons scroll one card at a time; arrows hide at the ends */
+document.querySelectorAll('[data-rail]').forEach(rail => {
+  const track = rail.querySelector('.rail-track');
+  const prev = rail.querySelector('.rail-btn.prev');
+  const next = rail.querySelector('.rail-btn.next');
+  const step = () => {
+    const item = track.querySelector('.rail-item');
+    return item ? item.getBoundingClientRect().width + parseFloat(getComputedStyle(track).columnGap || 28) : track.clientWidth * 0.8;
+  };
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const go = dir => track.scrollBy({ left: dir * step(), behavior: reduce ? 'auto' : 'smooth' });
+  prev.addEventListener('click', () => go(-1));
+  next.addEventListener('click', () => go(1));
+  const update = () => {
+    const max = track.scrollWidth - track.clientWidth - 4;
+    prev.hidden = track.scrollLeft <= 4;
+    next.hidden = track.scrollLeft >= max;
+  };
+  track.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update);
+  update();
+});
+</script>
 </body>
 </html>
