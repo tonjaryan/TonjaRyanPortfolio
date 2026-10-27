@@ -1066,6 +1066,14 @@
     .card.process-card { padding: 22px 0 4px; margin-top: 36px; }
     .approach-head .sec-kicker, .process-head .sec-kicker { margin-bottom: -4px; }
   }
+
+  /* ====== ABOUT ME FLOW (Oct 27): text wraps the photo, no gap before the last paragraph ====== */
+  .intro-about-flow { margin-top: 8px; display: flow-root; }
+  .intro-about-flow .about-photo { float: right; margin: 6px 5px 20px 48px; }
+  .intro-about-flow .about-body { max-width: none; }
+  @media (max-width: 720px) {
+    .intro-about-flow .about-photo { float: none; margin: 0 0 24px; }
+  }
 </style>
 </head>
 <body>
@@ -1107,28 +1115,22 @@
       </div>
 
       <div class="intro-about">
-        <div class="intro-about-grid">
-          <div class="intro-about-left">
-            <h2 class="about-title">About Me</h2>
-            <p class="about-body">
-              I design, develop, and manage learning experiences and educational programs with an emphasis on instructional alignment, meaningful engagement, and long-term proficiency. My approach is grounded in learning science, with careful attention to how learning objectives, instructional strategies, and assessments work together to support measurable outcomes.
-            </p>
-            <p class="about-body">
-              My work encompasses the full lifecycle of curriculum and e-learning initiatives, from initial needs analysis and conceptual development through instructional design, production, implementation, and evaluation. I manage the academic and operational dimensions of these projects, including stakeholder collaboration, resource planning, timelines, deliverables, and continuous improvement informed by learner feedback and performance data.
-            </p>
-          </div>
-          <div class="intro-about-right">
-            <div class="about-photo">
+        <div class="intro-about-flow">
+          <div class="about-photo">
             <img src="assets/img/headshot.webp" width="480" height="600" alt="Tonja Ryan" />
           </div>
+          <h2 class="about-title">About Me</h2>
+          <p class="about-body">
+            I design, develop, and manage learning experiences and educational programs with an emphasis on instructional alignment, meaningful engagement, and long-term proficiency. My approach is grounded in learning science, with careful attention to how learning objectives, instructional strategies, and assessments work together to support measurable outcomes.
+          </p>
+          <p class="about-body">
+            My work encompasses the full lifecycle of curriculum and e-learning initiatives, from initial needs analysis and conceptual development through instructional design, production, implementation, and evaluation. I manage the academic and operational dimensions of these projects, including stakeholder collaboration, resource planning, timelines, deliverables, and continuous improvement informed by learner feedback and performance data.
+          </p>
+          <p class="about-body">
+            My experience spans K–12 education, higher education, and digital learning, including curriculum development, educator training, instructional technology, and the management of large-scale learning programs. Across these settings, I focus on creating effective learning experiences while establishing the processes and systems needed to implement and sustain them.
+          </p>
+          <p class="about-cta"><a href="#work">See my work <span aria-hidden="true">↓</span></a></p>
         </div>
-        <div class="intro-about-full">
-            <p class="about-body">
-              My experience spans K–12 education, higher education, and digital learning, including curriculum development, educator training, instructional technology, and the management of large-scale learning programs. Across these settings, I focus on creating effective learning experiences while establishing the processes and systems needed to implement and sustain them.
-            </p>
-            <p class="about-cta"><a href="#work">See my work <span aria-hidden="true">↓</span></a></p>
-        </div>
-      </div>
       </div>
     </div>
 
