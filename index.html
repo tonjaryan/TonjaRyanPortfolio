@@ -1059,6 +1059,9 @@
   .ps-art a:hover { color: var(--accent-deep); }
 
   .ps-foot p { color: var(--ink-2); }
+  .ps-list { list-style: none; margin: 2px 0 0; padding: 0; }
+  .ps-list li { position: relative; padding-left: 16px; font-size: 14px; line-height: 1.5; color: var(--ink-2); margin-bottom: 6px; }
+  .ps-list li::before { content: ''; position: absolute; left: 2px; top: 0.6em; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
   .ps-next { color: var(--ink); border-color: var(--ink); }
   .ps-next:hover { background: var(--ink); color: var(--card); border-color: var(--ink); }
 
@@ -1570,7 +1573,7 @@
           <p class="ps-q">What do learners already know, what are they expected to do, and where are they encountering difficulty?</p>
           <div class="ps-cols">
             <div><p class="ps-lbl">What I do</p><p>Review performance data, gather feedback, consult stakeholders, and examine existing materials and learning conditions.</p></div>
-            <div><p class="ps-lbl">What this produces</p><p>A clearer definition of learner needs, constraints, and the performance gap the experience should address.</p></div>
+            <div><p class="ps-lbl">What this produces</p><ul class="ps-list"><li>A clear definition of learner needs</li><li>Known constraints</li><li>The performance gap the experience should address</li></ul></div>
           </div>
         </div>
         <figure class="ps-art">
@@ -1585,7 +1588,7 @@
           <p class="ps-q">What should learners be able to demonstrate by the end of the experience?</p>
           <div class="ps-cols">
             <div><p class="ps-lbl">What I do</p><p>Translate identified needs into measurable objectives, prioritize essential content, and align activities and assessments with the intended outcomes.</p></div>
-            <div><p class="ps-lbl">What this produces</p><p>Learning objectives, content organization, curriculum maps, and assessment criteria.</p></div>
+            <div><p class="ps-lbl">What this produces</p><ul class="ps-list"><li>Learning objectives</li><li>Content organization and curriculum maps</li><li>Assessment criteria</li></ul></div>
           </div>
         </div>
         <figure class="ps-art">
@@ -1600,7 +1603,7 @@
           <p class="ps-q">How can learners move from understanding an idea to using it with confidence?</p>
           <div class="ps-cols">
             <div><p class="ps-lbl">What I do</p><p>Develop scenarios, collaborative activities, guided practice, reflection, retrieval opportunities, and feedback that supports growing independence.</p></div>
-            <div><p class="ps-lbl">What this produces</p><p>Storyboards, activity designs, facilitation plans, and opportunities to demonstrate learning.</p></div>
+            <div><p class="ps-lbl">What this produces</p><ul class="ps-list"><li>Storyboards and activity designs</li><li>Facilitation plans</li><li>Opportunities to demonstrate learning</li></ul></div>
           </div>
         </div>
         <figure class="ps-art">
@@ -1615,7 +1618,7 @@
           <p class="ps-q">Does the experience work as intended for the people using it?</p>
           <div class="ps-cols">
             <div><p class="ps-lbl">What I do</p><p>Develop and prototype materials, review clarity and navigation, check accessibility and accuracy, and revise based on testing and feedback.</p></div>
-            <div><p class="ps-lbl">What this produces</p><p>Functional learning materials, documented review findings, and targeted improvements.</p></div>
+            <div><p class="ps-lbl">What this produces</p><ul class="ps-list"><li>Functional learning materials</li><li>Documented review findings</li><li>Targeted improvements</li></ul></div>
           </div>
         </div>
         <figure class="ps-art">
@@ -1630,7 +1633,7 @@
           <p class="ps-q">What can learners now demonstrate, and what still needs attention?</p>
           <div class="ps-cols">
             <div><p class="ps-lbl">What I do</p><p>Review assessment results, learner feedback, engagement patterns, and performance evidence. Where feasible, examine whether skills transfer beyond the initial experience.</p></div>
-            <div><p class="ps-lbl">What this produces</p><p>Evaluation findings, recommendations, and priorities for future revisions.</p></div>
+            <div><p class="ps-lbl">What this produces</p><ul class="ps-list"><li>Evaluation findings</li><li>Recommendations</li><li>Priorities for future revisions</li></ul></div>
           </div>
         </div>
         <figure class="ps-art">
