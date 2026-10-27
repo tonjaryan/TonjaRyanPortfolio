@@ -12555,5 +12555,18 @@ updateProgress();
   restore();
 })();
 </script>
+<!-- back-to-portfolio -->
+<style>
+  #tr-back-portfolio { position: fixed; left: 16px; bottom: 16px; z-index: 2147483000; display: inline-flex; align-items: center; gap: 8px;
+    font: 600 13px/1 system-ui, -apple-system, "Segoe UI", Inter, sans-serif; letter-spacing: 0; text-transform: none;
+    color: #F2EFE7; background: #1F2A22; border: 1px solid rgba(242,239,231,.25); border-radius: 999px; padding: 11px 16px 11px 13px;
+    text-decoration: none; box-shadow: 0 6px 18px rgba(0,0,0,.22); transition: background-color .15s, transform .15s; }
+  #tr-back-portfolio:hover { background: #4A6741; transform: translateY(-1px); }
+  #tr-back-portfolio:focus-visible { outline: 3px solid #1F5FBF; outline-offset: 3px; }
+  #tr-back-portfolio svg { width: 16px; height: 16px; flex: none; }
+  @media (max-width: 600px) { #tr-back-portfolio { left: 12px; bottom: 12px; padding: 10px 13px 10px 11px; font-size: 12.5px; } }
+  @media print { #tr-back-portfolio { display: none !important; } }
+</style>
+<a id="tr-back-portfolio" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>Back to portfolio</a>
 </body>
 </html>
